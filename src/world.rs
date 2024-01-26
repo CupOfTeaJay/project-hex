@@ -5,7 +5,7 @@ pub struct WorldPlugin;
 impl Plugin for WorldPlugin 
 {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (spawn_light, spawn_floor));
+        app.add_systems(Startup, (spawn_light, spawn_tile));
     }
 }
 
@@ -23,15 +23,19 @@ fn spawn_light(mut commands: Commands)
     commands.spawn(light);
 }
 
-fn spawn_floor(mut commands: Commands,
-               mut meshes: ResMut<Assets<Mesh>>,
-               mut materials: ResMut<Assets<StandardMaterial>>)
+fn spawn_tile(mut commands: Commands,
+              ass: Res<AssetServer>) 
 {
-    let floor = PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane::from_size(15.0))),
-        material: materials.add(Color::RED.into()),
-        ..default()
+    // note that we have to include the `Scene0` label
+    let tile_asset = ass.load("Tile.glb#Scene0");
+
+    let tile = SceneBundle {
+        scene: tile_asset,
+        transform: Transform::from_xyz(0.0, 0.0, 0.0),
+        ..Default::default()
     };
 
-    commands.spawn(floor);
+    // to position our 3d model, simply use the Transform
+    // in the SceneBundle
+    commands.spawn(tile);
 }
