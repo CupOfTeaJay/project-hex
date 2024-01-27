@@ -5,10 +5,8 @@ use::bevy::prelude::*;
 
 pub struct CameraPlugin;
 
-impl Plugin for CameraPlugin 
-{
-    fn build(&self, app: &mut App)
-    {
+impl Plugin for CameraPlugin {
+    fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_camera);
         app.add_systems(Update, (zoom_perspective, translate_camera));
     }
@@ -21,12 +19,10 @@ impl Plugin for CameraPlugin
 struct PlayerCamera;
 
 /*
- * Spawns the player's camera.
+ * Initializes a Camera3dBundle object.
  */
-fn spawn_camera(mut commands: Commands)
-{
-    // Initialize a camera object.
-    let camera = Camera3dBundle {
+fn init_camera_bundle() -> Camera3dBundle {
+    return Camera3dBundle {
         transform: Transform::from_xyz(0.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
         projection: PerspectiveProjection {
             fov: 45.0_f32.to_radians(),
@@ -34,9 +30,13 @@ fn spawn_camera(mut commands: Commands)
         }.into(),
         ..default()
     };
+}
 
-    // Spawn the PlayerCamera entity.
-    commands.spawn((PlayerCamera, camera));
+/*
+ * Spawns the player's camera.
+ */
+fn spawn_camera(mut commands: Commands) {
+    commands.spawn((PlayerCamera, init_camera_bundle()));
 }
 
 /*
