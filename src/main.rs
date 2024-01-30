@@ -11,6 +11,6 @@ use crate::world::WorldPlugin;
 fn main() 
 {
     App::new()
-        .add_plugins((DefaultPlugins, CameraPlugin, WorldPlugin))
+        .add_plugins((DefaultPlugins, CameraPlugin, MapPlugin, WorldPlugin))
         .run();
 }

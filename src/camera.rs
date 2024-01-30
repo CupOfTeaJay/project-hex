@@ -79,10 +79,10 @@ fn zoom_perspective(mut query: Query<&mut Projection, With<PlayerCamera>>,
         match scroll.unit {
             MouseScrollUnit::Line => {
                 if scroll.y > 0.0 {
-                    persp.fov -= 1.0_f32.to_radians();
+                    persp.fov -= 2.0_f32.to_radians();
                 }
                 else {
-                    persp.fov += 1.0_f32.to_radians();
+                    persp.fov += 2.0_f32.to_radians();
                 }
             }
             MouseScrollUnit::Pixel => {
