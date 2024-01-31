@@ -1,6 +1,4 @@
-use::bevy::input::mouse::MouseMotion;
-use::bevy::input::mouse::MouseScrollUnit;
-use::bevy::input::mouse::MouseWheel;
+use::bevy::input::mouse::*;
 use::bevy::prelude::*;
 
 pub struct CameraPlugin;
@@ -63,7 +61,7 @@ fn translate_camera(mut query: Query<&mut Transform, With<PlayerCamera>>,
 /*
  * Adjusts a camera's field of view based on mouse scroll input.
  */
-fn zoom_perspective(mut query: Query<&mut Projection, With<PlayerCamera>>,
+fn zoom_perspective(mut query: Query<&mut Camera3dBundle>,
                     mut scroll_evr: EventReader<MouseWheel>) 
 {
     for scroll in scroll_evr.read() 
@@ -75,7 +73,6 @@ fn zoom_perspective(mut query: Query<&mut Projection, With<PlayerCamera>>,
         };
 
         // Zoom in or out depending on the scroll direction.
-        // TODO: Handle mousepad case in the future.
         match scroll.unit {
             MouseScrollUnit::Line => {
                 if scroll.y > 0.0 {
@@ -86,7 +83,12 @@ fn zoom_perspective(mut query: Query<&mut Projection, With<PlayerCamera>>,
                 }
             }
             MouseScrollUnit::Pixel => {
-                println!("Implement me! Somebody's probably using a mousepad.");
+                if scroll.y > 0.0 {
+                    persp.fov -= 2.0_f32.to_radians();
+                }
+                else {
+                    persp.fov += 2.0_f32.to_radians();
+                }
             }
         }
     }
