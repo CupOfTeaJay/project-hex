@@ -20,3 +20,11 @@ impl Plugin for TilePlugin{
         fn build(&self, app: &mut App) {
     }
 }
+
+#[repr(u8)]
+pub enum TileTerrainType {
+    Desert    = 0,
+    Grassland = 1,
+    Ocean     = 2,
+    Snow      = 3
+}

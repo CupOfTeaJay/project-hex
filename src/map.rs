@@ -4,10 +4,12 @@
 
 use bevy::prelude::*;
 
-use crate::hex_grid::{HexFile, HexRank, HexGrid};
+use crate::hex_grid::{HexFile, HexRank};
 use crate::tile::TileBundle;
 
 const HEX_FACTOR: f32 = 0.75;
+const MAP_WIDTH: u8 = 9; // TODO: Map size should obviously be configurable.
+const MAP_HEIGHT: u8 = 7;
 const TILE_Y_POS: f32 = 0.0;
 
 pub struct MapPlugin;
@@ -36,10 +38,9 @@ fn determine_z_pos_start(
 fn generate_map(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
-    hex_grid: Res<HexGrid>
 ) {
-    let ranks: u8 = hex_grid.ranks;
-    let files: u8 = hex_grid.files;
+    let ranks: u8 = MAP_HEIGHT;
+    let files: u8 = MAP_WIDTH;
     let mut x_pos: f32 = -HEX_FACTOR*(files as f32) + HEX_FACTOR;
     for i in 0..files {
         let mut z_pos: f32 = determine_z_pos_start(files, i);

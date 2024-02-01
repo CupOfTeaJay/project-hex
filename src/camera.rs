@@ -1,5 +1,5 @@
-use::bevy::input::mouse::*;
-use::bevy::prelude::*;
+use bevy::input::mouse::*;
+use bevy::prelude::*;
 
 const CAMERA_TRANSLATE_SPEED: f32 = 0.015;
 const CAMERA_ZOOM_SPEED: f32 = 2.0;
