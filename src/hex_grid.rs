@@ -6,24 +6,39 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct HexPosition {
-    pub rank: u8,
-    pub file: u8
+use crate::wave_function::WaveFunction;
+
+#[derive(Bundle)]
+pub struct HexBundle {
+    pub transform: Transform,
+    pub grid_pos: HexPosition,
+    pub wave_function: WaveFunction
 }
 
-impl HexPosition {
-    pub fn new(rank: u8, file: u8) -> Self {
-        HexPosition {
-            rank,
-            file
+impl HexBundle {
+    pub fn new(rank: u8, file: u8, pos: Vec3) -> Self {
+        HexBundle {
+            transform: Transform {
+                translation: pos,
+                ..Default::default()
+            },
+            grid_pos: HexPosition::new(rank, file),
+            wave_function: WaveFunction::new()
         }
     }
 }
 
-pub struct HexGridPlugin;
+#[derive(Clone, Component, Copy)]
+pub struct HexPosition {
+    pub file: u8,
+    pub rank: u8
+}
 
-impl Plugin for HexGridPlugin {
-        fn build(&self, app: &mut App) {
+impl HexPosition {
+    pub fn new(file: u8, rank: u8) -> Self {
+        HexPosition {
+            file,
+            rank
+        }
     }
 }

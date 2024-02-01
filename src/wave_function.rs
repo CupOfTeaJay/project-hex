@@ -3,20 +3,24 @@
  */
 
 use bevy::prelude::*;
+use std::collections::HashMap;
 
-use tile::TileTerrainType;
+use crate::tile::TileTerrainType;
 
 #[derive(Component)]
 pub struct WaveFunction {
-    val: HashMap<TileTerrainType, f32>
+    map: HashMap<TileTerrainType, f32>
 }
 
-pub struct WaveFunctionPlugin;
-
-impl Plugin for HexGridPlugin {
-        fn build(&self, app: &mut App) {
-        app.insert_resource(
-            HexGrid::new(MAP_WIDTH, MAP_HEIGHT)
-        );
+impl WaveFunction {
+    pub fn new() -> Self {
+        let mut map: HashMap<TileTerrainType, f32> = HashMap::new();
+        map.insert(TileTerrainType::Desert, 0.25);
+        map.insert(TileTerrainType::Grassland, 0.25);
+        map.insert(TileTerrainType::Ocean, 0.25);
+        map.insert(TileTerrainType::Snow, 0.25);
+        WaveFunction {
+            map
+        }
     }
 }

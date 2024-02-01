@@ -5,10 +5,10 @@ mod camera;
 mod hex_grid;
 mod map;
 mod tile;
+mod wave_function;
 mod world;
 
 use camera::CameraPlugin;
-use hex_grid::HexGridPlugin;
 use map::MapPlugin;
 use world::WorldPlugin;
 
@@ -21,7 +21,6 @@ fn main()
         .add_plugins(
             (
                 CameraPlugin,
-                HexGridPlugin,
                 MapPlugin,
                 WorldPlugin
             )

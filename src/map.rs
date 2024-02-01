@@ -4,19 +4,24 @@
 
 use bevy::prelude::*;
 
-use crate::hex_grid::{HexFile, HexRank};
+use crate::hex_grid::{HexBundle, HexPosition};
 use crate::tile::TileBundle;
+use crate::wave_function::WaveFunction;
 
 const HEX_FACTOR: f32 = 0.75;
 const MAP_WIDTH: u8 = 9; // TODO: Map size should obviously be configurable.
-const MAP_HEIGHT: u8 = 7;
+const MAP_HEIGHT: u8 = 7; // TODO: Map size should obviously be configurable.
 const TILE_Y_POS: f32 = 0.0;
+
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+struct CustomFlush;
 
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin{
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, generate_map);
+        // TODO: Remove apply_deferred after command queue is flushed automatically, probably Bevy 0.13
+        app.add_systems(Startup, (spawn_hex_grid, apply_deferred, generate_map).chain());
     }
 }
 
@@ -25,40 +30,45 @@ fn determine_z_pos_start(
     iteration: u8
 ) -> f32 {
     let height_unit: f32 = HEX_FACTOR.sqrt();
-    let mut z_pos: f32 = 0.0;
     if iteration % 2 == 0 {
-        z_pos = -height_unit*((total_ranks - 1) as f32);
+        -height_unit*((total_ranks - 1) as f32)
     }
     else {
-        z_pos = -height_unit*((total_ranks - 2) as f32);
+        -height_unit*((total_ranks - 2) as f32)
     }
-    return z_pos;
 }
 
-fn generate_map(
-    asset_server: Res<AssetServer>,
+fn spawn_hex_grid(
     mut commands: Commands,
 ) {
-    let ranks: u8 = MAP_HEIGHT;
-    let files: u8 = MAP_WIDTH;
-    let mut x_pos: f32 = -HEX_FACTOR*(files as f32) + HEX_FACTOR;
-    for i in 0..files {
-        let mut z_pos: f32 = determine_z_pos_start(files, i);
-        for j in 0..ranks {
-            commands.spawn(
-                TileBundle {
-                    file: HexFile::new(i),
-                    rank: HexRank::new(j),
-                    model: SceneBundle {
-                        scene: asset_server.load("tiles/greenTile.glb#Scene0"),
-                        transform: Transform::from_xyz(x_pos, TILE_Y_POS, z_pos),
-                        ..Default::default()
-                    }
-                }
-            );
+    let num_ranks: u8 = MAP_HEIGHT;
+    let num_files: u8 = MAP_WIDTH;
+    let mut x_pos: f32 = -HEX_FACTOR*(num_files as f32) + HEX_FACTOR;
+    for i in 0..num_files {
+        let mut z_pos: f32 = determine_z_pos_start(num_files, i);
+        for j in 0..num_ranks {
+            commands.spawn(HexBundle::new(i, j, Vec3::new(x_pos, TILE_Y_POS, z_pos)));
             z_pos += HEX_FACTOR*2.0;
         }
         x_pos += HEX_FACTOR*2.0;
     }
 }
 
+fn generate_map (
+    asset_server: Res<AssetServer>,
+    mut commands: Commands,
+    query: Query<(&Transform, &HexPosition, &WaveFunction)>
+) {
+    for (transform, hex_pos, wave_function) in &query {
+        commands.spawn(
+            TileBundle {
+                grid_pos: hex_pos.clone(),
+                model: SceneBundle {
+                    scene: asset_server.load("tiles/blueTile.glb#Scene0"),
+                    transform: *transform,
+                    ..Default::default()
+                }
+            }
+        );
+    }
+}

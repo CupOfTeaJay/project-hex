@@ -4,24 +4,16 @@
 
 use bevy::prelude::*;
 
-use crate::hex_grid::HexFile;
-use crate::hex_grid::HexRank;
+use crate::hex_grid::HexPosition;
 
 #[derive(Bundle)]
 pub struct TileBundle {
-    pub file: HexFile,
-    pub rank: HexRank,
+    pub grid_pos: HexPosition,
     pub model: SceneBundle
 }
 
-pub struct TilePlugin;
-
-impl Plugin for TilePlugin{
-        fn build(&self, app: &mut App) {
-    }
-}
-
 #[repr(u8)]
+#[derive(Eq, PartialEq, Hash)]
 pub enum TileTerrainType {
     Desert    = 0,
     Grassland = 1,
