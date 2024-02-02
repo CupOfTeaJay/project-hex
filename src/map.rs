@@ -9,8 +9,8 @@ use crate::tile::TileBundle;
 use crate::wave_function::WaveFunction;
 
 const HEX_FACTOR: f32 = 0.75;
-const MAP_WIDTH: u8 = 9; // TODO: Map size should obviously be configurable.
-const MAP_HEIGHT: u8 = 7; // TODO: Map size should obviously be configurable.
+const MAP_WIDTH: u8 = 25; // TODO: Map size should obviously be configurable.
+const MAP_HEIGHT: u8 = 23; // TODO: Map size should obviously be configurable.
 const TILE_Y_POS: f32 = 0.0;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
@@ -43,12 +43,13 @@ fn spawn_hex_grid(
 ) {
     let num_ranks: u8 = MAP_HEIGHT;
     let num_files: u8 = MAP_WIDTH;
+    let height_unit: f32 = HEX_FACTOR.sqrt();
     let mut x_pos: f32 = -HEX_FACTOR*(num_files as f32) + HEX_FACTOR;
     for i in 0..num_files {
         let mut z_pos: f32 = determine_z_pos_start(num_files, i);
         for j in 0..num_ranks {
             commands.spawn(HexBundle::new(i, j, Vec3::new(x_pos, TILE_Y_POS, z_pos)));
-            z_pos += HEX_FACTOR*2.0;
+            z_pos += height_unit*2.0;
         }
         x_pos += HEX_FACTOR*2.0;
     }
@@ -64,7 +65,7 @@ fn generate_map (
             TileBundle {
                 grid_pos: hex_pos.clone(),
                 model: SceneBundle {
-                    scene: asset_server.load("tiles/blueTile.glb#Scene0"),
+                    scene: asset_server.load(wave_function.collapse()),
                     transform: *transform,
                     ..Default::default()
                 }

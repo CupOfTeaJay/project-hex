@@ -3,24 +3,28 @@
  */
 
 use bevy::prelude::*;
-use std::collections::HashMap;
-
-use crate::tile::TileTerrainType;
+use rand::prelude::*;
 
 #[derive(Component)]
 pub struct WaveFunction {
-    map: HashMap<TileTerrainType, f32>
+    domain: [(String, f32); 4]
 }
 
 impl WaveFunction {
     pub fn new() -> Self {
-        let mut map: HashMap<TileTerrainType, f32> = HashMap::new();
-        map.insert(TileTerrainType::Desert, 0.25);
-        map.insert(TileTerrainType::Grassland, 0.25);
-        map.insert(TileTerrainType::Ocean, 0.25);
-        map.insert(TileTerrainType::Snow, 0.25);
+        let domain_size = 4.0;
+        let uniform_prob = 1.0 / domain_size;
         WaveFunction {
-            map
+            domain: [
+                ("tiles/blueTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/greenTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/whiteTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/yellowTile.glb#Scene0".to_string(), uniform_prob)
+            ]
         }
+    }
+    pub fn collapse(&self) -> String {
+        let mut rng = thread_rng();
+        self.domain.choose_weighted(&mut rng, |item| item.1).unwrap().0.clone()
     }
 }
