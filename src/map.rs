@@ -1,5 +1,7 @@
 /*
  * map.rs
+ * 
+ * This file is responsible for randomly generating a map.
  */
 
 use bevy::prelude::*;
@@ -10,7 +12,7 @@ use crate::wave_function::WaveFunction;
 
 const HEX_FACTOR: f32 = 0.75;
 const MAP_WIDTH: u8 = 25; // TODO: Map size should obviously be configurable.
-const MAP_HEIGHT: u8 = 23; // TODO: Map size should obviously be configurable.
+const MAP_HEIGHT: u8 = 13; // TODO: Map size should obviously be configurable.
 const TILE_Y_POS: f32 = 0.0;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
@@ -41,13 +43,11 @@ fn determine_z_pos_start(
 fn spawn_hex_grid(
     mut commands: Commands,
 ) {
-    let num_ranks: u8 = MAP_HEIGHT;
-    let num_files: u8 = MAP_WIDTH;
     let height_unit: f32 = HEX_FACTOR.sqrt();
-    let mut x_pos: f32 = -HEX_FACTOR*(num_files as f32) + HEX_FACTOR;
-    for i in 0..num_files {
-        let mut z_pos: f32 = determine_z_pos_start(num_files, i);
-        for j in 0..num_ranks {
+    let mut x_pos: f32 = -HEX_FACTOR*(MAP_WIDTH as f32) + HEX_FACTOR;
+    for i in 0..MAP_WIDTH {
+        let mut z_pos: f32 = determine_z_pos_start(MAP_WIDTH, i);
+        for j in 0..MAP_HEIGHT {
             commands.spawn(HexBundle::new(i, j, Vec3::new(x_pos, TILE_Y_POS, z_pos)));
             z_pos += height_unit*2.0;
         }
