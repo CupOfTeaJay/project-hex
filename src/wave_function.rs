@@ -7,19 +7,21 @@ use rand::prelude::*;
 
 #[derive(Component)]
 pub struct WaveFunction {
-    domain: [(String, f32); 4]
+    domain: [(String, f32); 6]
 }
 
 impl WaveFunction {
     pub fn new() -> Self {
-        let domain_size = 4.0;
+        let domain_size = 6.0;
         let uniform_prob = 1.0 / domain_size;
         WaveFunction {
             domain: [
-                ("tiles/blueTile.glb#Scene0".to_string(), uniform_prob),
-                ("tiles/greenTile.glb#Scene0".to_string(), uniform_prob),
-                ("tiles/whiteTile.glb#Scene0".to_string(), uniform_prob),
-                ("tiles/yellowTile.glb#Scene0".to_string(), uniform_prob)
+                ("tiles/coastalTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/desertTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/oceanTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/snowTile.glb#Scene0".to_string(), uniform_prob),
+                ("tiles/steppeTile.glb#Scene0".to_string(), uniform_prob)
             ]
         }
     }

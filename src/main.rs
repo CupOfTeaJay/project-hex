@@ -12,6 +12,8 @@ use camera::CameraPlugin;
 use map::MapPlugin;
 use world::WorldPlugin;
 
+// TODO:
+// Migrate to Bevy 0.13
 fn main() 
 {
     App::new()
