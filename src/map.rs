@@ -15,15 +15,12 @@ const MAP_WIDTH: u8 = 25; // TODO: Map size should obviously be configurable.
 const MAP_HEIGHT: u8 = 13; // TODO: Map size should obviously be configurable.
 const TILE_Y_POS: f32 = 0.0;
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-struct CustomFlush;
-
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin{
     fn build(&self, app: &mut App) {
         // TODO: Remove apply_deferred after command queue is flushed automatically, probably Bevy 0.13
-        app.add_systems(Startup, (spawn_hex_grid, apply_deferred, generate_map).chain());
+        app.add_systems(Startup, (spawn_hex_grid, generate_map).chain());
     }
 }
 

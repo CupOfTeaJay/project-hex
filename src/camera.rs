@@ -32,7 +32,7 @@ fn spawn_camera(
 fn translate_camera(
     mut query: Query<&mut Transform, With<Camera>>,
     mut motion_evr: EventReader<MouseMotion>,
-    buttons: Res<Input<MouseButton>>
+    buttons: Res<ButtonInput<MouseButton>>
 ) {
     for motion in motion_evr.read() {
         // Get the camera's position at the time of the mouse motion event.

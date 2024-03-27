@@ -17,7 +17,7 @@ fn spawn_light(
             intensity : 2000.0,
             ..default()
         },
-        transform : Transform::from_xyz(0.0, 5.0, 0.0),
+        transform : Transform::from_xyz(0.0, 10.0, 0.0),
         ..default()
     };
     // Spawn the point light.

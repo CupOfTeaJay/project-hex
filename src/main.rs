@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 mod camera;
 mod hex_grid;
@@ -12,8 +11,6 @@ use camera::CameraPlugin;
 use map::MapPlugin;
 use world::WorldPlugin;
 
-// TODO:
-// Migrate to Bevy 0.13
 fn main() 
 {
     App::new()
@@ -27,7 +24,5 @@ fn main()
                 WorldPlugin
             )
         )
-        // Editor plugin.
-        .add_plugins(WorldInspectorPlugin::new())
         .run();
 }
