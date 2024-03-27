@@ -1,2 +1,3 @@
-- What the heck is going on with the PointLightBundle?
+- Map size should be adjustable prior to generation.
+- What the heck is going on with the PointLightBundle? I think update mesh properties to reflect light?
 

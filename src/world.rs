@@ -23,3 +23,4 @@ fn spawn_light(
     // Spawn the point light.
     commands.spawn(light);
 }
+

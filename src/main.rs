@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 mod camera;
 mod hex_grid;
@@ -24,5 +25,8 @@ fn main()
                 WorldPlugin
             )
         )
+        // "Editor"
+        .add_plugins(WorldInspectorPlugin::new())
         .run();
 }
+

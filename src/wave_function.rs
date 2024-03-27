@@ -7,12 +7,12 @@ use rand::prelude::*;
 
 #[derive(Component)]
 pub struct WaveFunction {
-    domain: [(String, f32); 6]
+    domain: [(String, f32); 6] // Remember to adjust this if adding or removing tiles.
 }
 
 impl WaveFunction {
     pub fn new() -> Self {
-        let domain_size = 6.0;
+        let domain_size = 6.0; // Remember to adjust this if adding or removing tiles.
         let uniform_prob = 1.0 / domain_size;
         WaveFunction {
             domain: [
@@ -30,3 +30,4 @@ impl WaveFunction {
         self.domain.choose_weighted(&mut rng, |item| item.1).unwrap().0.clone()
     }
 }
+

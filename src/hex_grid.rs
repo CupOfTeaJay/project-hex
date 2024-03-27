@@ -10,9 +10,9 @@ use crate::wave_function::WaveFunction;
 
 #[derive(Bundle)]
 pub struct HexBundle {
-    pub transform: Transform,
-    pub grid_pos: HexPosition,
-    pub wave_function: WaveFunction
+    pub transform: Transform,       // Absolute position / transform.
+    pub grid_pos: HexPosition,      // "Position" relative to an artificial hex-grid.
+    pub wave_function: WaveFunction // Possible set of tiles this bundle may "collapse" to.
 }
 
 impl HexBundle {
@@ -42,3 +42,4 @@ impl HexPosition {
         }
     }
 }
+

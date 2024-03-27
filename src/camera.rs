@@ -37,7 +37,7 @@ fn translate_camera(
     for motion in motion_evr.read() {
         // Get the camera's position at the time of the mouse motion event.
         let mut camera_pos = query.single_mut();
-        // Translate the camera.
+        // Translate the camera if the player is "dragging" the screen.
         if buttons.pressed(MouseButton::Left) {
             camera_pos.translation.x -= motion.delta.x*CAMERA_TRANSLATE_SPEED;
             camera_pos.translation.z -= motion.delta.y*CAMERA_TRANSLATE_SPEED;
@@ -76,3 +76,4 @@ fn zoom_camera(
         }
     }
 }
+

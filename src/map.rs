@@ -11,7 +11,7 @@ use crate::tile::TileBundle;
 use crate::wave_function::WaveFunction;
 
 const HEX_FACTOR: f32 = 0.75;
-const MAP_WIDTH: u8 = 25; // TODO: Map size should obviously be configurable.
+const MAP_WIDTH: u8 = 25;  // TODO: Map size should obviously be configurable.
 const MAP_HEIGHT: u8 = 13; // TODO: Map size should obviously be configurable.
 const TILE_Y_POS: f32 = 0.0;
 
@@ -19,11 +19,12 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin{
     fn build(&self, app: &mut App) {
-        // TODO: Remove apply_deferred after command queue is flushed automatically, probably Bevy 0.13
         app.add_systems(Startup, (spawn_hex_grid, generate_map).chain());
     }
 }
 
+/// Helper function that determines where to place the vertical-most HexBundle of a file in the 
+/// hex-grid as a function of the file number (Map is generated sequentially, file by file).
 fn determine_z_pos_start(
     total_ranks: u8,
     iteration: u8
@@ -37,6 +38,7 @@ fn determine_z_pos_start(
     }
 }
 
+/// Spawns a blank hex-grid.
 fn spawn_hex_grid(
     mut commands: Commands,
 ) {
@@ -52,6 +54,7 @@ fn spawn_hex_grid(
     }
 }
 
+/// Generates a map upon the hex-grid by collapsing each hex's wave-function.
 fn generate_map (
     asset_server: Res<AssetServer>,
     mut commands: Commands,
@@ -70,3 +73,4 @@ fn generate_map (
         );
     }
 }
+
