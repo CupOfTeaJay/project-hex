@@ -1,4 +1,4 @@
-/* 
+/*
     This Life of Ours
     Copyright (C) 2024 Clevermeld LLC
 
@@ -30,21 +30,13 @@ use camera::CameraPlugin;
 use map::MapPlugin;
 use world::WorldPlugin;
 
-fn main() 
-{
+fn main() {
     App::new()
         // Default plugins.
         .add_plugins(DefaultPlugins)
         // Custom plugins.
-        .add_plugins(
-            (
-                CameraPlugin,
-                MapPlugin,
-                WorldPlugin
-            )
-        )
+        .add_plugins((CameraPlugin, MapPlugin, WorldPlugin))
         // "Editor"
         .add_plugins(WorldInspectorPlugin::new())
         .run();
 }
-

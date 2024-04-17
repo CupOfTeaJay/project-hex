@@ -1,4 +1,4 @@
-/* 
+/*
     This Life of Ours
     Copyright (C) 2024 Clevermeld LLC
 
@@ -22,9 +22,9 @@ use crate::wave_function::WaveFunction;
 
 #[derive(Bundle)]
 pub struct HexBundle {
-    pub transform: Transform,       // Absolute position / transform.
-    pub grid_pos: HexPosition,      // "Position" relative to an artificial hex-grid.
-    pub wave_function: WaveFunction // Possible set of tiles this bundle may "collapse" to.
+    pub transform: Transform,        // Absolute position / transform.
+    pub grid_pos: HexPosition,       // "Position" relative to an artificial hex-grid.
+    pub wave_function: WaveFunction, // Possible set of tiles this bundle may "collapse" to.
 }
 
 impl HexBundle {
@@ -35,7 +35,7 @@ impl HexBundle {
                 ..Default::default()
             },
             grid_pos: HexPosition::new(rank, file),
-            wave_function: WaveFunction::new()
+            wave_function: WaveFunction::new(),
         }
     }
 }
@@ -43,15 +43,11 @@ impl HexBundle {
 #[derive(Clone, Component, Copy)]
 pub struct HexPosition {
     pub file: u8,
-    pub rank: u8
+    pub rank: u8,
 }
 
 impl HexPosition {
     pub fn new(file: u8, rank: u8) -> Self {
-        HexPosition {
-            file,
-            rank
-        }
+        HexPosition { file, rank }
     }
 }
-

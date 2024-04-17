@@ -1,4 +1,4 @@
-/* 
+/*
     This Life of Ours
     Copyright (C) 2024 Clevermeld LLC
 
@@ -21,7 +21,7 @@ use rand::prelude::*;
 
 #[derive(Component)]
 pub struct WaveFunction {
-    domain: [(String, f32); 6] // Remember to adjust this if adding or removing tiles.
+    domain: [(String, f32); 6], // Remember to adjust this if adding or removing tiles.
 }
 
 impl WaveFunction {
@@ -35,13 +35,16 @@ impl WaveFunction {
                 ("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob),
                 ("tiles/oceanTile.glb#Scene0".to_string(), uniform_prob),
                 ("tiles/snowTile.glb#Scene0".to_string(), uniform_prob),
-                ("tiles/steppeTile.glb#Scene0".to_string(), uniform_prob)
-            ]
+                ("tiles/steppeTile.glb#Scene0".to_string(), uniform_prob),
+            ],
         }
     }
     pub fn collapse(&self) -> String {
         let mut rng = thread_rng();
-        self.domain.choose_weighted(&mut rng, |item| item.1).unwrap().0.clone()
+        self.domain
+            .choose_weighted(&mut rng, |item| item.1)
+            .unwrap()
+            .0
+            .clone()
     }
 }
-

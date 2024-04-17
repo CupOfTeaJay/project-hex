@@ -1,4 +1,4 @@
-/* 
+/*
     This Life of Ours
     Copyright (C) 2024 Clevermeld LLC
 
@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use::bevy::prelude::*;
+use ::bevy::prelude::*;
 
 pub struct WorldPlugin;
 
@@ -26,19 +26,16 @@ impl Plugin for WorldPlugin {
     }
 }
 
-fn spawn_light(
-    mut commands: Commands
-) {
+fn spawn_light(mut commands: Commands) {
     // Initialize a point light.
     let light = PointLightBundle {
-        point_light : PointLight {
-            intensity : 2000.0,
+        point_light: PointLight {
+            intensity: 2000.0,
             ..default()
         },
-        transform : Transform::from_xyz(0.0, 10.0, 0.0),
+        transform: Transform::from_xyz(0.0, 10.0, 0.0),
         ..default()
     };
     // Spawn the point light.
     commands.spawn(light);
 }
-
