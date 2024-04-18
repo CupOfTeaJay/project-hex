@@ -1,5 +1,5 @@
 /*
-    This Life of Ours
+    Such is Life
     Copyright (C) 2024 Clevermeld LLC
 
     This program is free software: you can redistribute it and/or modify

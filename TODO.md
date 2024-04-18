@@ -1,0 +1,1 @@
+- [ ] Organize project into its source crate and lib crate components.
