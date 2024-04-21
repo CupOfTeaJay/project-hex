@@ -18,38 +18,36 @@
 
 use bevy::prelude::*;
 
-/// Cube coordinates relative to the origin of a global hexagonal grid.
-#[derive(Clone, Component, Copy)]
-pub struct HexPos {
-    pub q: f32,
-    pub r: f32,
-    pub s: f32,
-}
+use crate::components::hex_pos::HexPos;
+use crate::components::scaffold::Scaffold;
 
-impl HexPos {
-    /// Creates cube coordinates.
-    pub fn new(q: f32, r: f32, s: f32) -> Self {
-        HexPos { q, r, s }
+const Q_MAX: i8 = 20;
+const R_MAX: i8 = 20;
+const S_MAX: i8 = 20;
+
+// TODO: pretty ugly and probably inefficient.
+pub fn deploy_scaffolding(mut commands: Commands) {
+    // Hex position to be updated as the map is being generated.
+    let mut curr_pos: HexPos = HexPos::new(0.0, 0.0, 0.0);
+    for q in -Q_MAX..=Q_MAX {
+        curr_pos.q = q as f32;
+        for r in -R_MAX..=R_MAX {
+            curr_pos.r = r as f32;
+            for s in -S_MAX..=S_MAX {
+                curr_pos.s = s as f32;
+                if q + r + s == 0 {
+                    commands.spawn(Scaffold::new(curr_pos));
+                }
+            }
+        }
     }
 }
 
+// TODO:
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
-    fn test_hex_pos_new() {
-        // Set up.
-        let q: f32 = 1.0;
-        let r: f32 = 2.0;
-        let s: f32 = 3.0;
-
-        // Call unit under test.
-        let pos = HexPos::new(q, r, s);
-
-        // Validate injected data.
-        assert!(pos.q == q);
-        assert!(pos.r == r);
-        assert!(pos.s == s);
+    fn test_deploy_scaffolding() {
+        // Layout a grid of cell scaffolding.
     }
 }

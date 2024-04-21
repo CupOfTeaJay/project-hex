@@ -23,7 +23,7 @@ const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
 #[derive(Component)]
 pub struct WaveFunc {
-    pub domain: [(String, f32); DOMAIN_SIZE]
+    pub domain: [(String, f32); DOMAIN_SIZE],
 }
 
 impl WaveFunc {
@@ -40,3 +40,5 @@ impl WaveFunc {
         }
     }
 }
+
+// TODO: test WaveFunc::new()

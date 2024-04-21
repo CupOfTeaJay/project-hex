@@ -19,17 +19,33 @@
 use bevy::prelude::*;
 use rand::prelude::*;
 
+use crate::components::cell_bundle::CellBundle;
+use crate::components::hex_pos::HexPos;
 use crate::components::wave_func::WaveFunc;
 
-fn wave_func_collapse(
-    query: Query<&WaveFunc>,
+pub fn wave_func_collapse(
+    asset_server: Res<AssetServer>,
+    mut commands: Commands,
+    query: Query<(&HexPos, &Transform, &WaveFunc)>,
 ) {
-    for wave_func in &query {
-        let mut rng = thread_rng();
-        wave_func.domain
+    for (pos, transform, wave_func) in &query {
+        // Select a cell type.
+        let mut rng: ThreadRng = thread_rng();
+        let choice: String = wave_func
+            .domain
             .choose_weighted(&mut rng, |item| item.1)
             .unwrap()
             .0
             .clone();
+
+        // Initialize the model.
+        let model: SceneBundle = SceneBundle {
+            scene: asset_server.load(choice),
+            transform: *transform,
+            ..Default::default()
+        };
+
+        // Spawn the cell.
+        commands.spawn(CellBundle::new(*pos, model));
     }
 }

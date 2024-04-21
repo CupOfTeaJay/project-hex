@@ -16,4 +16,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod map;
+use bevy::prelude::*;
+
+use crate::systems::generate_map::deploy_scaffolding;
+use crate::systems::wave_func_collapse::wave_func_collapse;
+
+pub struct MapPlugin;
+
+impl Plugin for MapPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, (deploy_scaffolding, wave_func_collapse).chain());
+    }
+}

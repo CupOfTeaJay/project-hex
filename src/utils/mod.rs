@@ -16,20 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
-
-use such_is_life::plugins::camera_plugin::CameraPlugin;
-use such_is_life::plugins::map_plugin::MapPlugin;
-use such_is_life::plugins::world_plugin::WorldPlugin;
-
-fn main() {
-    App::new()
-        // Default plugins.
-        .add_plugins(DefaultPlugins)
-        // Custom plugins.
-        .add_plugins((CameraPlugin, WorldPlugin, MapPlugin))
-        // "Editor"
-        .add_plugins(WorldInspectorPlugin::new())
-        .run();
-}
+pub mod coord_conversions;

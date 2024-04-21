@@ -17,29 +17,41 @@
 */
 
 use bevy::prelude::*;
+use std::f32::consts::FRAC_PI_2;
 
 use crate::components::hex_pos::HexPos;
 use crate::components::wave_func::WaveFunc;
+use crate::utils::coord_conversions::hex_pos_to_vec3;
 
 /// Cell "scaffolding" to be used for generating maps. Should be removed from
 /// the world upon completion of the algorithm.
 #[derive(Bundle)]
-struct Scaffold {
-    transform: Transform,
+pub struct Scaffold {
     pos: HexPos,
+    transform: Transform,
     wave_func: WaveFunc,
 }
 
+// TODO: init scaffold with non-default quaternion instead.
 impl Scaffold {
     /// Creates cell scaffolding.
-    fn new(q: u8, r: u8, s: u8) -> Self {
-        Scaffold {
-            transform: Transform {
-                translation: Vec3::new(0.0, 0.0 ,0.0), // TODO: convert cube-coord args to transform.
+    pub fn new(pos: HexPos) -> Self {
+        // Tile assets are flat side up, so first init a transform...
+        let mut transform = Transform {
+                translation: hex_pos_to_vec3(pos), // TODO: convert cube-coord args to transform.
                 ..Default::default()
-            },
-            pos: HexPos::new(q, r, s),
+        };
+
+        // ...then rotate it by 90 degrees.
+        transform.rotate_y(FRAC_PI_2);
+
+        // Return the scaffold.
+        Scaffold {
+            pos: pos,
+            transform: transform,
             wave_func: WaveFunc::new(),
         }
     }
 }
+
+// TODO: test Scaffold::new()

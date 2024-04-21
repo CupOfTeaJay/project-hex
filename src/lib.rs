@@ -18,5 +18,6 @@
 
 mod components;
 mod systems;
+mod utils;
 
 pub mod plugins;

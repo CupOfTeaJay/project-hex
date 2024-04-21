@@ -20,18 +20,24 @@ use bevy::prelude::*;
 
 use crate::components::hex_pos::HexPos;
 
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct CellBundle {
-    pos: HexPos,
-    model: SceneBundle,
+/// Converts a cartesian three-vector to a hex position (cube coordinates).
+fn vec3_to_hex_pos(cartesian_coords: Vec3) -> HexPos {
+    // Perform coordinate conversion.
+    let q: f32 = (1.0 / 3.0_f32.sqrt()) * cartesian_coords.x;
+    let r: f32 = (2.0 / 3.0) * cartesian_coords.z;
+    let s: f32 = -(1.0 / 3.0_f32.sqrt()) * cartesian_coords.x;
+
+    // Return new cube coordinates.
+    HexPos::new(q, r, s)
 }
 
-impl CellBundle {
-    /// Creates a cell bundle.
-    pub fn new(pos: HexPos, model: SceneBundle) -> Self {
-        CellBundle { pos, model }
-    }
-}
+/// Converts a hex position (cube coordinates) to a cartesian three-vector.
+pub fn hex_pos_to_vec3(cube_coords: HexPos) -> Vec3 {
+    // Perform coordinate conversion.
+    let x: f32 = (3.0_f32.sqrt() / 2.0) * (cube_coords.q - cube_coords.s);
+    let y: f32 = 0.0;
+    let z: f32 = 1.5 * cube_coords.r;
 
-// TODO: test CellBundle::new()
+    // Return the new three-vector.
+    Vec3::new(x, y, z)
+}
