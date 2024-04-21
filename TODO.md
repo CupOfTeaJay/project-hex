@@ -1,1 +1,3 @@
-- [ ] Organize project into its source crate and lib crate components.
+- [ ] Init test-driven development for map generation algorithm.
+- [ ] System that converts cube coordinates to cartesian transforms, and vice-versa.
+- [ ] Fix map generation with new project org.

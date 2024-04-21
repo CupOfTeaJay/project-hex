@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+mod hex_pos;
+mod scaffold;
 
-pub mod plugins;
+pub mod wave_func;

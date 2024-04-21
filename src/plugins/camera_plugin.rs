@@ -16,7 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::prelude::*;
 
-pub mod plugins;
+use crate::systems::spawn_camera::spawn_camera;
+use crate::systems::translate_camera::translate_camera;
+use crate::systems::zoom_camera::zoom_camera;
+
+/// Spawns player camera and moves camera in response to player input.
+pub struct CameraPlugin;
+
+impl Plugin for CameraPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, spawn_camera);
+        app.add_systems(Update, (zoom_camera, translate_camera));
+    }
+}

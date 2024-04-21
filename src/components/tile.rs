@@ -16,7 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::prelude::*;
 
-pub mod plugins;
+use crate::components::hex_pos::HexPos;
+
+/// Suite of components for tile entities.
+#[derive(Bundle)]
+struct CellBundle {
+    pos: HexPos,
+    model: SceneBundle,
+}

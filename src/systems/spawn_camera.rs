@@ -16,7 +16,19 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::prelude::*;
 
-pub mod plugins;
+pub fn spawn_camera(mut commands: Commands) {
+    // Initialize a 3D camera.
+    let camera = Camera3dBundle {
+        transform: Transform::from_xyz(0.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+        projection: PerspectiveProjection {
+            fov: 45.0_f32.to_radians(),
+            ..default()
+        }
+        .into(),
+        ..default()
+    };
+    // Spawn the camera.
+    commands.spawn(camera);
+}

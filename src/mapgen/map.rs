@@ -1,6 +1,6 @@
 /*
     Such is Life
-    Copyright (C) 2024 Clevermeld LLC
+    Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -18,9 +18,9 @@
 
 use bevy::prelude::*;
 
-use crate::hex_grid::{HexBundle, HexPosition};
-use crate::tile::TileBundle;
-use crate::wave_function::WaveFunction;
+use crate::mapgen::hex_grid::{HexBundle, HexPosition};
+use crate::mapgen::tile::CellBundle;
+use crate::mapgen::wave_function::WaveFunction;
 
 const HEX_FACTOR: f32 = 0.75;
 const MAP_WIDTH: u8 = 25; // TODO: Map size should obviously be configurable.
@@ -67,7 +67,7 @@ fn generate_map(
     query: Query<(&Transform, &HexPosition, &WaveFunction)>,
 ) {
     for (transform, hex_pos, wave_function) in &query {
-        commands.spawn(TileBundle {
+        commands.spawn(CellBundle {
             grid_pos: hex_pos.clone(),
             model: SceneBundle {
                 scene: asset_server.load(wave_function.collapse()),

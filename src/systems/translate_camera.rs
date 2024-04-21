@@ -16,7 +16,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::input::mouse::*;
+use bevy::prelude::*;
 
-pub mod plugins;
+const CAMERA_TRANSLATE_SPEED: f32 = 0.015;
+
+pub fn translate_camera(
+    mut query: Query<&mut Transform, With<Camera>>,
+    mut motion_evr: EventReader<MouseMotion>,
+    buttons: Res<ButtonInput<MouseButton>>,
+) {
+    for motion in motion_evr.read() {
+        // Get the camera's position at the time of the mouse motion event.
+        let mut camera_pos = query.single_mut();
+        // Translate the camera if the player is "dragging" the screen.
+        if buttons.pressed(MouseButton::Left) {
+            camera_pos.translation.x -= motion.delta.x * CAMERA_TRANSLATE_SPEED;
+            camera_pos.translation.z -= motion.delta.y * CAMERA_TRANSLATE_SPEED;
+        }
+    }
+}

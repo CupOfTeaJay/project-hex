@@ -1,6 +1,6 @@
 /*
     Such is Life
-    Copyright (C) 2024 Clevermeld LLC
+    Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -18,36 +18,28 @@
 
 use bevy::prelude::*;
 
-use crate::wave_function::WaveFunction;
+use crate::components::hex_pos::HexPos;
+use crate::components::wave_func::WaveFunc;
 
+/// Cell "scaffolding" to be used for generating maps. Should be removed from
+/// the world upon completion of the algorithm.
 #[derive(Bundle)]
-pub struct HexBundle {
-    pub transform: Transform,        // Absolute position / transform.
-    pub grid_pos: HexPosition,       // "Position" relative to an artificial hex-grid.
-    pub wave_function: WaveFunction, // Possible set of tiles this bundle may "collapse" to.
+struct Scaffold {
+    transform: Transform,
+    pos: HexPos,
+    wave_func: WaveFunc,
 }
 
-impl HexBundle {
-    pub fn new(rank: u8, file: u8, pos: Vec3) -> Self {
-        HexBundle {
+impl Scaffold {
+    /// Creates cell scaffolding.
+    fn new(q: u8, r: u8, s: u8) -> Self {
+        Scaffold {
             transform: Transform {
-                translation: pos,
+                translation: Vec3::new(0.0, 0.0 ,0.0), // TODO: convert cube-coord args to transform.
                 ..Default::default()
             },
-            grid_pos: HexPosition::new(rank, file),
-            wave_function: WaveFunction::new(),
+            pos: HexPos::new(q, r, s),
+            wave_func: WaveFunc::new(),
         }
-    }
-}
-
-#[derive(Clone, Component, Copy)]
-pub struct HexPosition {
-    pub file: u8,
-    pub rank: u8,
-}
-
-impl HexPosition {
-    pub fn new(file: u8, rank: u8) -> Self {
-        HexPosition { file, rank }
     }
 }

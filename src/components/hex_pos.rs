@@ -16,7 +16,19 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::prelude::*;
 
-pub mod plugins;
+/// Cube coordinates relative to the origin of a global hexagonal grid.
+#[derive(Clone, Component, Copy)]
+pub struct HexPos {
+    q: u8,
+    r: u8,
+    s: u8,
+}
+
+impl HexPos {
+    /// Creates cube coordinates.
+    pub fn new(q: u8, r: u8, s: u8) -> Self {
+        HexPos { q, r, s }
+    }
+}

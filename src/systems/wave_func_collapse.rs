@@ -16,7 +16,20 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use bevy::prelude::*;
+use rand::prelude::*;
 
-pub mod plugins;
+use crate::components::wave_func::WaveFunc;
+
+fn wave_func_collapse(
+    query: Query<&WaveFunc>,
+) {
+    for wave_func in &query {
+        let mut rng = thread_rng();
+        wave_func.domain
+            .choose_weighted(&mut rng, |item| item.1)
+            .unwrap()
+            .0
+            .clone();
+    }
+}

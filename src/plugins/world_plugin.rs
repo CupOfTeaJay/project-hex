@@ -16,7 +16,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
+use ::bevy::prelude::*;
 
-pub mod plugins;
+use crate::systems::spawn_light::spawn_light;
+
+pub struct WorldPlugin;
+
+impl Plugin for WorldPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, spawn_light);
+    }
+}

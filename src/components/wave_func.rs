@@ -17,18 +17,26 @@
 */
 
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use such_is_life::plugins::camera_plugin::CameraPlugin;
-use such_is_life::plugins::world_plugin::WorldPlugin;
+const DOMAIN_SIZE: usize = 6;
+const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
-fn main() {
-    App::new()
-        // Default plugins.
-        .add_plugins(DefaultPlugins)
-        // Custom plugins.
-        .add_plugins((CameraPlugin, WorldPlugin))
-        // "Editor"
-        .add_plugins(WorldInspectorPlugin::new())
-        .run();
+#[derive(Component)]
+pub struct WaveFunc {
+    pub domain: [(String, f32); DOMAIN_SIZE]
+}
+
+impl WaveFunc {
+    pub fn new() -> Self {
+        WaveFunc {
+            domain: [
+                ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/desertTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/grasslandTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/oceanTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/snowTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/steppeTile.glb#Scene0".to_string(), UNIFORM_PROB),
+            ],
+        }
+    }
 }

@@ -16,7 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod systems;
-
-pub mod plugins;
+pub mod camera_plugin;
+pub mod world_plugin;

@@ -1,6 +1,6 @@
 /*
     Such is Life
-    Copyright (C) 2024 Clevermeld LLC
+    Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -16,12 +16,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::hex_grid::HexPosition;
-
-#[derive(Bundle)]
-pub struct TileBundle {
-    pub grid_pos: HexPosition,
-    pub model: SceneBundle,
-}
+pub mod spawn_camera;
+pub mod spawn_light;
+pub mod translate_camera;
+mod wave_func_collapse;
+pub mod zoom_camera;
