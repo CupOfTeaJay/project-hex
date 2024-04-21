@@ -16,8 +16,9 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+mod wave_func_collapse;
+
 pub mod spawn_camera;
 pub mod spawn_light;
 pub mod translate_camera;
-mod wave_func_collapse;
 pub mod zoom_camera;

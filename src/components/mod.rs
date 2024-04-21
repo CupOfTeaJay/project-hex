@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+mod cell_bundle;
 mod hex_pos;
 mod scaffold;
 
