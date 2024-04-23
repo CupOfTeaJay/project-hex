@@ -18,12 +18,12 @@
 
 use ::bevy::prelude::*;
 
-use crate::systems::spawn_light::spawn_light;
+use crate::systems::stage_setting::spawn_sun::spawn_sun;
 
 pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_light);
+        app.add_systems(Startup, spawn_sun);
     }
 }

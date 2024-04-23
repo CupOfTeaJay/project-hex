@@ -19,8 +19,8 @@
 use bevy::prelude::*;
 use rand::prelude::*;
 
-use crate::components::cell_bundle::CellBundle;
 use crate::components::hex_pos::HexPos;
+use crate::components::tile_bundle::TileBundle;
 use crate::components::wave_func::WaveFunc;
 
 pub fn wave_func_collapse(
@@ -29,7 +29,7 @@ pub fn wave_func_collapse(
     query: Query<(&HexPos, &Transform, &WaveFunc)>,
 ) {
     for (pos, transform, wave_func) in &query {
-        // Select a cell type.
+        // Select tile terrain.
         let mut rng: ThreadRng = thread_rng();
         let choice: String = wave_func
             .domain
@@ -45,7 +45,7 @@ pub fn wave_func_collapse(
             ..Default::default()
         };
 
-        // Spawn the cell.
-        commands.spawn(CellBundle::new(*pos, model));
+        // Spawn the tile.
+        commands.spawn(TileBundle::new(*pos, model));
     }
 }

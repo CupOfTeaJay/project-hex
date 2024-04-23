@@ -18,13 +18,15 @@
 
 use bevy::prelude::*;
 
-use crate::systems::generate_map::deploy_scaffolding;
-use crate::systems::wave_func_collapse::wave_func_collapse;
+use crate::resources::map_resources::MapDimensions;
+use crate::systems::map_generation::deploy_scaffolding::deploy_scaffolding;
+use crate::systems::map_generation::wave_func_collapse::wave_func_collapse;
 
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (deploy_scaffolding, wave_func_collapse).chain());
+        app.insert_resource(MapDimensions::new(20, 15))
+            .add_systems(Startup, (deploy_scaffolding, wave_func_collapse).chain());
     }
 }

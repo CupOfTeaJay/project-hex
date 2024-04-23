@@ -16,6 +16,20 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod camera_management;
-pub mod map_generation;
-pub mod stage_setting;
+use bevy::prelude::*;
+
+/// Spawns a point light bundle (TODO: probably sun in future).
+pub fn spawn_sun(mut commands: Commands) {
+    // Initialize the sun.
+    let sun = DirectionalLightBundle {
+        directional_light: DirectionalLight {
+            illuminance: 5_000.0,
+            ..default()
+        },
+        transform: Transform::from_xyz(0.0, 10.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
+        ..default()
+    };
+
+    // Spawn the sun.
+    commands.spawn(sun);
+}

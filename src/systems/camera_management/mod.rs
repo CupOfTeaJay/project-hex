@@ -16,20 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-/// Spawns a point light bundle (TODO: probably sun in future).
-pub fn spawn_light(mut commands: Commands) {
-    // Initialize a point light.
-    let light = PointLightBundle {
-        point_light: PointLight {
-            intensity: 2000.0,
-            ..default()
-        },
-        transform: Transform::from_xyz(0.0, 10.0, 0.0),
-        ..default()
-    };
-
-    // Spawn the point light.
-    commands.spawn(light);
-}
+pub mod spawn_camera;
+pub mod translate_camera;
+pub mod zoom_camera;

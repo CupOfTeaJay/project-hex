@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod cell_bundle;
 pub mod hex_pos;
 pub mod scaffold;
+pub mod tile_bundle;
 pub mod wave_func;

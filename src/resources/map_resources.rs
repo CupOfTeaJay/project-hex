@@ -16,6 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod camera_management;
-pub mod map_generation;
-pub mod stage_setting;
+use bevy::prelude::*;
+
+#[derive(Resource)]
+pub struct MapDimensions {
+    pub width: i8,
+    pub height: i8,
+}
+
+impl MapDimensions {
+    pub fn new(width: i8, height: i8) -> Self {
+        MapDimensions { width, height }
+    }
+}

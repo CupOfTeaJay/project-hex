@@ -18,9 +18,9 @@
 
 use bevy::prelude::*;
 
-use crate::systems::spawn_camera::spawn_camera;
-use crate::systems::translate_camera::translate_camera;
-use crate::systems::zoom_camera::zoom_camera;
+use crate::systems::camera_management::spawn_camera::spawn_camera;
+use crate::systems::camera_management::translate_camera::translate_camera;
+use crate::systems::camera_management::zoom_camera::zoom_camera;
 
 /// Spawns player camera and moves camera in response to player input.
 pub struct CameraPlugin;

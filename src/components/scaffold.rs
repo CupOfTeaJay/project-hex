@@ -23,7 +23,7 @@ use crate::components::hex_pos::HexPos;
 use crate::components::wave_func::WaveFunc;
 use crate::utils::coord_conversions::hex_pos_to_vec3;
 
-/// Cell "scaffolding" to be used for generating maps. Should be removed from
+/// Tile "scaffolding" to be used for generating maps. Should be removed from
 /// the world upon completion of the algorithm.
 #[derive(Bundle)]
 pub struct Scaffold {
@@ -34,12 +34,12 @@ pub struct Scaffold {
 
 // TODO: init scaffold with non-default quaternion instead.
 impl Scaffold {
-    /// Creates cell scaffolding.
+    /// Creates tile scaffolding.
     pub fn new(pos: HexPos) -> Self {
         // Tile assets are flat side up, so first init a transform...
         let mut transform = Transform {
-                translation: hex_pos_to_vec3(pos), // TODO: convert cube-coord args to transform.
-                ..Default::default()
+            translation: hex_pos_to_vec3(pos), // TODO: convert cube-coord args to transform.
+            ..Default::default()
         };
 
         // ...then rotate it by 90 degrees.

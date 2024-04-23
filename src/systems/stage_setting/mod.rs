@@ -16,22 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::components::hex_pos::HexPos;
-
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct CellBundle {
-    pos: HexPos,
-    model: SceneBundle,
-}
-
-impl CellBundle {
-    /// Creates a cell bundle.
-    pub fn new(pos: HexPos, model: SceneBundle) -> Self {
-        CellBundle { pos, model }
-    }
-}
-
-// TODO: test CellBundle::new()
+pub mod spawn_sun;
