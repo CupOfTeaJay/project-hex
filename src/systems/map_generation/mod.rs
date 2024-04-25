@@ -16,6 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod adjust_for_latitude;
 pub mod deploy_scaffolding;
-pub mod heuristics;
 pub mod wave_func_collapse;

@@ -18,7 +18,7 @@
 
 use bevy::prelude::*;
 
-const DOMAIN_SIZE: usize = 6;
+const DOMAIN_SIZE: usize = 8;
 const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
 #[derive(Component)]
@@ -33,6 +33,8 @@ impl WaveFunc {
                 ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
                 ("tiles/desertTile.glb#Scene0".to_string(), UNIFORM_PROB),
                 ("tiles/grasslandTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/iceTile.glb#Scene0".to_string(), UNIFORM_PROB),
+                ("tiles/jungleTile.glb#Scene0".to_string(), UNIFORM_PROB),
                 ("tiles/oceanTile.glb#Scene0".to_string(), UNIFORM_PROB),
                 ("tiles/snowTile.glb#Scene0".to_string(), UNIFORM_PROB),
                 ("tiles/steppeTile.glb#Scene0".to_string(), UNIFORM_PROB),

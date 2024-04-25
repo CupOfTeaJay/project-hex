@@ -19,17 +19,18 @@
 use bevy::prelude::*;
 
 use crate::resources::map_resources::MapDimensions;
+use crate::systems::map_generation::adjust_for_latitude::adjust_for_latitude;
 use crate::systems::map_generation::deploy_scaffolding::deploy_scaffolding;
-use crate::systems::map_generation::heuristics::adjust_for_latitude;
 use crate::systems::map_generation::wave_func_collapse::wave_func_collapse;
 
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(MapDimensions::new(60, 35)).add_systems(
-            Startup,
-            (deploy_scaffolding, adjust_for_latitude, wave_func_collapse).chain(),
-        );
+        app.insert_resource(MapDimensions::new(106, 66))
+            .add_systems(
+                Startup,
+                (deploy_scaffolding, adjust_for_latitude, wave_func_collapse).chain(),
+            );
     }
 }

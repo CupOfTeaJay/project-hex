@@ -16,16 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(Resource)]
-pub struct MapDimensions {
-    pub width: i32,
-    pub height: i32,
-}
-
-impl MapDimensions {
-    pub fn new(width: i32, height: i32) -> Self {
-        MapDimensions { width, height }
-    }
-}
+mod combat_classes;

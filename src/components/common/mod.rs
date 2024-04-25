@@ -16,22 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::components::hex_pos::HexPos;
-
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct TileBundle {
-    pos: HexPos,
-    model: SceneBundle,
-}
-
-impl TileBundle {
-    /// Creates a tile bundle.
-    pub fn new(pos: HexPos, model: SceneBundle) -> Self {
-        TileBundle { pos, model }
-    }
-}
-
-// TODO: test TileBundle::new()
+pub mod hex_pos;

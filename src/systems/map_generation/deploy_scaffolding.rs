@@ -18,14 +18,14 @@
 
 use bevy::prelude::*;
 
-use crate::components::hex_pos::HexPos;
-use crate::components::scaffold::Scaffold;
+use crate::components::common::hex_pos::HexPos;
+use crate::components::map_generation::scaffold::Scaffold;
 use crate::resources::map_resources::MapDimensions;
 
 pub fn deploy_scaffolding(dims: Res<MapDimensions>, mut commands: Commands) {
     let mut curr_pos: HexPos = HexPos::new(0.0, 0.0, 0.0);
-    let mut q_min: i8 = 0;
-    let mut q_max: i8 = dims.width;
+    let mut q_min: i32 = 0;
+    let mut q_max: i32 = dims.width;
     for r in 0..dims.height {
         curr_pos.r = r as f32;
         if r % 2 == 0 && r != 0 {

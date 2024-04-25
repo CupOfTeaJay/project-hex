@@ -16,7 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod hex_pos;
-pub mod scaffold;
-pub mod tile_bundle;
-pub mod wave_func;
+pub mod common;
+pub mod map_generation;

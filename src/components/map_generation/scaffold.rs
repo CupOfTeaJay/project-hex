@@ -19,8 +19,8 @@
 use bevy::prelude::*;
 use std::f32::consts::FRAC_PI_2;
 
-use crate::components::hex_pos::HexPos;
-use crate::components::wave_func::WaveFunc;
+use crate::components::common::hex_pos::HexPos;
+use crate::components::map_generation::wave_func::WaveFunc;
 use crate::utils::coord_conversions::hex_pos_to_vec3;
 
 /// Tile "scaffolding" to be used for generating maps. Should be removed from

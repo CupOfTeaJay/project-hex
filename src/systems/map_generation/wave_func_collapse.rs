@@ -19,9 +19,9 @@
 use bevy::prelude::*;
 use rand::prelude::*;
 
-use crate::components::hex_pos::HexPos;
-use crate::components::tile_bundle::TileBundle;
-use crate::components::wave_func::WaveFunc;
+use crate::components::common::hex_pos::HexPos;
+use crate::components::map_generation::tile_bundle::TileBundle;
+use crate::components::map_generation::wave_func::WaveFunc;
 
 pub fn wave_func_collapse(
     asset_server: Res<AssetServer>,
