@@ -20,13 +20,13 @@ use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::scaffold::Scaffold;
-use crate::resources::map_resources::MapDimensions;
+use crate::resources::map_parameters::MapParameters;
 
-pub fn deploy_scaffolding(dims: Res<MapDimensions>, mut commands: Commands) {
+pub fn deploy_scaffolding(map: Res<MapParameters>, mut commands: Commands) {
     let mut curr_pos: HexPos = HexPos::new(0.0, 0.0, 0.0);
     let mut q_min: i32 = 0;
-    let mut q_max: i32 = dims.width;
-    for r in 0..dims.height {
+    let mut q_max: i32 = map.width;
+    for r in 0..map.height {
         curr_pos.r = r as f32;
         if r % 2 == 0 && r != 0 {
             q_min -= 1;

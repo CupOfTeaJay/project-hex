@@ -18,7 +18,8 @@
 
 use bevy::prelude::*;
 
-use crate::resources::map_resources::MapDimensions;
+use crate::resources::map_parameters::MapParameters;
+use crate::resources::tile_socket_maps::TileSocketMaps;
 use crate::systems::map_generation::adjust_for_latitude::adjust_for_latitude;
 use crate::systems::map_generation::deploy_scaffolding::deploy_scaffolding;
 use crate::systems::map_generation::wave_func_collapse::wave_func_collapse;
@@ -27,7 +28,10 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(MapDimensions::new(106, 66))
+        let map_settings =
+            MapParameters::new(106, 66, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 3.0, 5.0);
+        app.insert_resource(map_settings)
+            .insert_resource(TileSocketMaps::new())
             .add_systems(
                 Startup,
                 (deploy_scaffolding, adjust_for_latitude, wave_func_collapse).chain(),

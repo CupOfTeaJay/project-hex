@@ -18,7 +18,7 @@
 
 use bevy::prelude::*;
 
-const DOMAIN_SIZE: usize = 8;
+const DOMAIN_SIZE: usize = 9;
 const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
 #[derive(Component)]
@@ -29,18 +29,24 @@ pub struct WaveFunc {
 impl WaveFunc {
     pub fn new() -> Self {
         WaveFunc {
-            domain: [
-                ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/desertTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/grasslandTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/iceTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/jungleTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/oceanTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/snowTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/steppeTile.glb#Scene0".to_string(), UNIFORM_PROB),
-            ],
+            domain: init_domain(),
         }
     }
+}
+
+#[inline]
+fn init_domain() -> [(String, f32); DOMAIN_SIZE] {
+    [
+        ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/desertTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/grasslandTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/iceTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/jungleTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/oceanTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/snowTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/steppeTile.glb#Scene0".to_string(), UNIFORM_PROB),
+        ("tiles/tundraTile.glb#Scene0".to_string(), UNIFORM_PROB),
+    ]
 }
 
 // TODO: test WaveFunc::new()

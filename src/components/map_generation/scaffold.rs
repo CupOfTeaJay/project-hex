@@ -36,9 +36,12 @@ pub struct Scaffold {
 impl Scaffold {
     /// Creates tile scaffolding.
     pub fn new(pos: HexPos) -> Self {
+        // Convert from cube coordinates to cartesian coordinates.
+        let (x, y, z) = hex_pos_to_vec3(pos.q, pos.r, pos.s);
+
         // Tile assets are flat side up, so first init a transform...
         let mut transform = Transform {
-            translation: hex_pos_to_vec3(pos), // TODO: convert cube-coord args to transform.
+            translation: Vec3::new(x, y, z),
             ..Default::default()
         };
 

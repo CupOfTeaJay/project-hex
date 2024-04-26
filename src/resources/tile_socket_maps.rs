@@ -17,15 +17,33 @@
 */
 
 use bevy::prelude::*;
+use std::collections::HashMap;
+use std::vec::Vec;
 
 #[derive(Resource)]
-pub struct MapDimensions {
-    pub width: i32,
-    pub height: i32,
+pub struct TileSocketMaps {
+    pub incompatible: HashMap<String, Vec<String>>,
 }
 
-impl MapDimensions {
-    pub fn new(width: i32, height: i32) -> Self {
-        MapDimensions { width, height }
+impl TileSocketMaps {
+    pub fn new() -> Self {
+        TileSocketMaps {
+            incompatible: init_incompatible(),
+        }
     }
+}
+
+#[inline]
+fn init_incompatible() -> HashMap<String, Vec<String>> {
+    let mut incompatible = HashMap::new();
+    incompatible.insert(
+        "tiles/desertTile.glb#Scene0".to_string(),
+        vec![
+            "tiles/iceTile.glb#Scene0".to_string(),
+            "tiles/jungleTile.glb#Scene0".to_string(),
+            "tiles/snowTile.glb#Scene0".to_string(),
+            "tiles/tundraTile.glb#Scene0".to_string(),
+        ],
+    );
+    incompatible
 }

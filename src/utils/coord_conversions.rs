@@ -16,28 +16,24 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::components::common::hex_pos::HexPos;
-
-/// Converts a cartesian three-vector to a hex position (cube coordinates).
-fn vec3_to_hex_pos(cartesian_coords: Vec3) -> HexPos {
+/// Converts a cartesian coordinates to cube coordinates.
+fn vec3_to_hex_pos(x: f32, y: f32, z: f32) -> (f32, f32, f32) {
     // Perform coordinate conversion.
-    let q: f32 = (1.0 / 3.0_f32.sqrt()) * cartesian_coords.x;
-    let r: f32 = (2.0 / 3.0) * cartesian_coords.z;
-    let s: f32 = -(1.0 / 3.0_f32.sqrt()) * cartesian_coords.x;
+    let q: f32 = (1.0 / 3.0_f32.sqrt()) * x;
+    let r: f32 = (2.0 / 3.0) * z;
+    let s: f32 = -(1.0 / 3.0_f32.sqrt()) * x;
 
     // Return new cube coordinates.
-    HexPos::new(q, r, s)
+    (q, r, s)
 }
 
-/// Converts a hex position (cube coordinates) to a cartesian three-vector.
-pub fn hex_pos_to_vec3(cube_coords: HexPos) -> Vec3 {
+/// Converts cube coordinates to cartesian coordinates.
+pub fn hex_pos_to_vec3(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
     // Perform coordinate conversion.
-    let x: f32 = (3.0_f32.sqrt() / 2.0) * (cube_coords.q - cube_coords.s);
+    let x: f32 = (3.0_f32.sqrt() / 2.0) * (q - s);
     let y: f32 = 0.0;
-    let z: f32 = 1.5 * cube_coords.r;
+    let z: f32 = 1.5 * r;
 
-    // Return the new three-vector.
-    Vec3::new(x, y, z)
+    // Return new cartesian coordinates.
+    (x, y, z)
 }

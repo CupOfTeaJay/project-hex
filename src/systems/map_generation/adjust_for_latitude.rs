@@ -20,40 +20,28 @@ use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::wave_func::WaveFunc;
-use crate::resources::map_resources::MapDimensions;
-
-const DIVERSE_GRASSLAND_BIAS: f32 = 0.40;
-const DIVERSE_STEPPE_BIAS: f32 = 0.40;
-const DIVERSE_BIAS_SUM: f32 = DIVERSE_GRASSLAND_BIAS + DIVERSE_STEPPE_BIAS;
-
-const EQUATORIAL_DESERT_BIAS: f32 = 0.40;
-const EQUATORIAL_JUNGLE_BIAS: f32 = 0.40;
-const EQUATORIAL_BIAS_SUM: f32 = EQUATORIAL_DESERT_BIAS + EQUATORIAL_JUNGLE_BIAS;
-
-const ICECAP_LIMIT: f32 = 5.0;
+use crate::resources::map_parameters::MapParameters;
 
 // TODO: make this as clean as possible.
-pub fn adjust_for_latitude(dims: Res<MapDimensions>, mut query: Query<(&HexPos, &mut WaveFunc)>) {
+pub fn adjust_for_latitude(map: Res<MapParameters>, mut query: Query<(&HexPos, &mut WaveFunc)>) {
     // Constants.
-    let num_regions: f32 = 7.0;
-    let map_height: f32 = dims.height as f32;
+    let num_regions: f32 = 5.0;
+    let map_height: f32 = map.height as f32;
     let region_width: f32 = map_height / num_regions;
 
     // Region labels.
-    let north_snow: f32 = 1.0 * region_width; // Northern hemisphere snowsheets.
-    let north_tund: f32 = 2.0 * region_width; // Northern hemisphere tundra.
-    let north_dive: f32 = 3.0 * region_width; // Northern hemisphere diverse.
-    let equatorial: f32 = 4.0 * region_width; // Equatorial.
-    let south_dive: f32 = 5.0 * region_width; // Southern hemisphere diverse.
-    let south_tund: f32 = 6.0 * region_width; // Southern hemisphere tundra.
-    let south_snow: f32 = 7.0 * region_width; // Southern hemisphere snowsheets.
+    let north_tund: f32 = 1.0 * region_width; // Northern hemisphere tundra.
+    let north_dive: f32 = 2.0 * region_width; // Northern hemisphere diverse.
+    let equatorial: f32 = 3.0 * region_width; // Equatorial.
+    let south_dive: f32 = 4.0 * region_width; // Southern hemisphere diverse.
+    let south_tund: f32 = 5.0 * region_width; // Southern hemisphere tundra.
 
     for (pos, mut wave_function) in &mut query {
         let latitude: f32 = pos.r;
         let dom_size: f32 = wave_function.domain.len() as f32;
 
         // Adjust weights for the northern icecaps region.
-        if latitude < ICECAP_LIMIT {
+        if latitude < map.icecap_limit {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/iceTile.glb#Scene0" {
                     pair.1 = 1.0;
@@ -63,7 +51,7 @@ pub fn adjust_for_latitude(dims: Res<MapDimensions>, mut query: Query<(&HexPos, 
             }
         }
         // Adjust weights for the northern snowsheets region.
-        else if latitude < north_snow {
+        else if latitude < map.icecap_limit + map.snow_limit {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/snowTile.glb#Scene0" {
                     pair.1 = 1.0;
@@ -74,17 +62,25 @@ pub fn adjust_for_latitude(dims: Res<MapDimensions>, mut query: Query<(&HexPos, 
         }
         // Adjust weights for the northern tundra region.
         else if latitude < north_tund {
-            // TODO: implement.
+            for pair in wave_function.domain.iter_mut() {
+                if pair.0 == "tiles/snowTile.glb#Scene0" {
+                    pair.1 += map.tundra_snow_bias;
+                } else if pair.0 == "tiles/tundraTile.glb#Scene0" {
+                    pair.1 += map.tundra_tundra_bias;
+                } else {
+                    pair.1 -= map.tundra_bias_sum / dom_size
+                }
+            }
         }
         // Adjust weights for the northern diverse region.
         else if latitude < north_dive {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/grasslandTile.glb#Scene0" {
-                    pair.1 += DIVERSE_GRASSLAND_BIAS;
+                    pair.1 += map.diverse_grassland_bias;
                 } else if pair.0 == "tiles/steppeTile.glb#Scene0" {
-                    pair.1 += DIVERSE_STEPPE_BIAS;
+                    pair.1 += map.diverse_steppe_bias;
                 } else {
-                    pair.1 -= DIVERSE_BIAS_SUM / dom_size
+                    pair.1 -= map.diverse_bias_sum / dom_size
                 }
             }
         }
@@ -92,11 +88,11 @@ pub fn adjust_for_latitude(dims: Res<MapDimensions>, mut query: Query<(&HexPos, 
         else if latitude < equatorial {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/desertTile.glb#Scene0" {
-                    pair.1 += EQUATORIAL_DESERT_BIAS;
+                    pair.1 += map.equator_desert_bias;
                 } else if pair.0 == "tiles/jungleTile.glb#Scene0" {
-                    pair.1 += EQUATORIAL_JUNGLE_BIAS;
+                    pair.1 += map.equator_jungle_bias;
                 } else {
-                    pair.1 -= EQUATORIAL_BIAS_SUM / dom_size
+                    pair.1 -= map.equator_bias_sum / dom_size
                 }
             }
         }
@@ -104,20 +100,28 @@ pub fn adjust_for_latitude(dims: Res<MapDimensions>, mut query: Query<(&HexPos, 
         else if latitude < south_dive {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/grasslandTile.glb#Scene0" {
-                    pair.1 += DIVERSE_GRASSLAND_BIAS;
+                    pair.1 += map.diverse_grassland_bias;
                 } else if pair.0 == "tiles/steppeTile.glb#Scene0" {
-                    pair.1 += DIVERSE_STEPPE_BIAS;
+                    pair.1 += map.diverse_steppe_bias;
                 } else {
-                    pair.1 -= DIVERSE_BIAS_SUM / dom_size
+                    pair.1 -= map.diverse_bias_sum / dom_size
                 }
             }
         }
         // Adjust weights for the southern tundra region.
-        else if latitude < south_tund {
-            // TODO: implement.
+        else if latitude < south_tund - (map.icecap_limit + map.snow_limit) {
+            for pair in wave_function.domain.iter_mut() {
+                if pair.0 == "tiles/snowTile.glb#Scene0" {
+                    pair.1 += map.tundra_snow_bias;
+                } else if pair.0 == "tiles/tundraTile.glb#Scene0" {
+                    pair.1 += map.tundra_tundra_bias;
+                } else {
+                    pair.1 -= map.tundra_bias_sum / dom_size
+                }
+            }
         }
         // Adjust weights for the southern snowsheets region.
-        else if latitude < south_snow - ICECAP_LIMIT {
+        else if latitude < south_tund - map.icecap_limit {
             for pair in wave_function.domain.iter_mut() {
                 if pair.0 == "tiles/snowTile.glb#Scene0" {
                     pair.1 = 1.0;

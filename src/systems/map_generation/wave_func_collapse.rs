@@ -22,11 +22,13 @@ use rand::prelude::*;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::components::map_generation::wave_func::WaveFunc;
+use crate::resources::tile_socket_maps::TileSocketMaps;
 
 pub fn wave_func_collapse(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     query: Query<(&HexPos, &Transform, &WaveFunc)>,
+    sockets: Res<TileSocketMaps>,
 ) {
     for (pos, transform, wave_func) in &query {
         // Select tile terrain.
@@ -47,5 +49,7 @@ pub fn wave_func_collapse(
 
         // Spawn the tile.
         commands.spawn(TileBundle::new(*pos, model));
+
+        // Adjust weights for incompatible surrounding tiles.
     }
 }
