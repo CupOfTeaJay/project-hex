@@ -16,5 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod combat;
 pub mod common;
 pub mod map_generation;

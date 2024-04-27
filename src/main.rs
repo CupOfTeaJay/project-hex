@@ -18,6 +18,7 @@
 
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_mod_picking::DefaultPickingPlugins;
 
 use such_is_life::plugins::camera_plugin::CameraPlugin;
 use such_is_life::plugins::map_plugin::MapPlugin;
@@ -25,8 +26,8 @@ use such_is_life::plugins::world_plugin::WorldPlugin;
 
 fn main() {
     App::new()
-        // Default plugins.
-        .add_plugins(DefaultPlugins)
+        // Default, community plugins.
+        .add_plugins((DefaultPlugins, DefaultPickingPlugins))
         // Custom plugins.
         .add_plugins((CameraPlugin, WorldPlugin, MapPlugin))
         // "Editor"

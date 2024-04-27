@@ -16,8 +16,30 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod adjust_for_latitude;
-pub mod despawn_scaffolding;
-pub mod make_tiles_pickable;
-pub mod spawn_scaffolding;
-pub mod wave_func_collapse;
+use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
+
+use crate::components::combat::health::Health;
+use crate::components::common::hex_pos::HexPos;
+use crate::components::common::is_movable::IsMovable;
+
+#[derive(Bundle)]
+struct UnitBundle {
+    pos: HexPos,
+    health: Health,
+    pickable: PickableBundle,
+    movable: IsMovable,
+    model: SceneBundle,
+}
+
+impl UnitBundle {
+    fn new(pos: HexPos, model: SceneBundle) -> Self {
+        UnitBundle {
+            pos: pos,
+            health: Health::new(100),
+            pickable: PickableBundle::default(),
+            movable: IsMovable::new(true),
+            model: model,
+        }
+    }
+}

@@ -19,13 +19,18 @@
 use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
-use crate::components::map_generation::scaffold::Scaffold;
+use crate::components::map_generation::scaffold_bundle::ScaffoldBundle;
 use crate::resources::map_parameters::MapParameters;
 
-pub fn deploy_scaffolding(map: Res<MapParameters>, mut commands: Commands) {
+/// Spawns a scaffold at every hex position on the map, as defined by the width and height
+/// members of the MapParameters resource.
+pub fn spawn_scaffolding(map: Res<MapParameters>, mut commands: Commands) {
+    // Vars to iteratively update.
     let mut curr_pos: HexPos = HexPos::new(0.0, 0.0, 0.0);
     let mut q_min: i32 = 0;
     let mut q_max: i32 = map.width;
+
+    // Spawn the scaffolding.
     for r in 0..map.height {
         curr_pos.r = r as f32;
         if r % 2 == 0 && r != 0 {
@@ -35,10 +40,7 @@ pub fn deploy_scaffolding(map: Res<MapParameters>, mut commands: Commands) {
         for q in q_min..q_max {
             curr_pos.q = q as f32;
             curr_pos.s = (-q - r) as f32;
-            commands.spawn((
-                Name::new(format!("Tile {},{}", q, r)),
-                Scaffold::new(curr_pos),
-            ));
+            commands.spawn(ScaffoldBundle::new(curr_pos));
         }
     }
 }

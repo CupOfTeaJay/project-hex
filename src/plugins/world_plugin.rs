@@ -24,6 +24,7 @@ pub struct WorldPlugin;
 
 impl Plugin for WorldPlugin {
     fn build(&self, app: &mut App) {
+        // Add startup scheduled systems to the app.
         app.add_systems(Startup, spawn_sun);
     }
 }

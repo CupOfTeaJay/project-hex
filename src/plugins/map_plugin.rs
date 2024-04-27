@@ -21,20 +21,34 @@ use bevy::prelude::*;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::tile_socket_maps::TileSocketMaps;
 use crate::systems::map_generation::adjust_for_latitude::adjust_for_latitude;
-use crate::systems::map_generation::deploy_scaffolding::deploy_scaffolding;
+use crate::systems::map_generation::despawn_scaffolding::despawn_scaffolding;
+use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
+use crate::systems::map_generation::spawn_scaffolding::spawn_scaffolding;
 use crate::systems::map_generation::wave_func_collapse::wave_func_collapse;
 
 pub struct MapPlugin;
 
+// TODO: why does make_tiles_pickable need to be in the update system???
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
+        // Map settings set by user.
         let map_settings =
             MapParameters::new(106, 66, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 3.0, 5.0);
+        // Insert resources into the app.
         app.insert_resource(map_settings)
-            .insert_resource(TileSocketMaps::new())
-            .add_systems(
-                Startup,
-                (deploy_scaffolding, adjust_for_latitude, wave_func_collapse).chain(),
-            );
+            .insert_resource(TileSocketMaps::new());
+        // Add startup scheduled systems to the app.
+        app.add_systems(
+            Startup,
+            (
+                spawn_scaffolding,
+                adjust_for_latitude,
+                wave_func_collapse,
+                despawn_scaffolding,
+            )
+                .chain(),
+        );
+        // Add update scheduled systems to the app.
+        app.add_systems(Update, make_tiles_pickable);
     }
 }

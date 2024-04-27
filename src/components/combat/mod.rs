@@ -16,4 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod combat_classes;
+mod health;
+mod unit_bundle;
+mod unit_classes;

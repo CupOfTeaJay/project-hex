@@ -20,20 +20,20 @@ use bevy::prelude::*;
 use std::f32::consts::FRAC_PI_2;
 
 use crate::components::common::hex_pos::HexPos;
-use crate::components::map_generation::wave_func::WaveFunc;
+use crate::components::map_generation::wave_function::WaveFunction;
 use crate::utils::coord_conversions::hex_pos_to_vec3;
 
 /// Tile "scaffolding" to be used for generating maps. Should be removed from
 /// the world upon completion of the algorithm.
 #[derive(Bundle)]
-pub struct Scaffold {
+pub struct ScaffoldBundle {
     pos: HexPos,
     transform: Transform,
-    wave_func: WaveFunc,
+    wave_func: WaveFunction,
 }
 
 // TODO: init scaffold with non-default quaternion instead.
-impl Scaffold {
+impl ScaffoldBundle {
     /// Creates tile scaffolding.
     pub fn new(pos: HexPos) -> Self {
         // Convert from cube coordinates to cartesian coordinates.
@@ -49,12 +49,12 @@ impl Scaffold {
         transform.rotate_y(FRAC_PI_2);
 
         // Return the scaffold.
-        Scaffold {
+        ScaffoldBundle {
             pos: pos,
             transform: transform,
-            wave_func: WaveFunc::new(),
+            wave_func: WaveFunction::new(),
         }
     }
 }
 
-// TODO: test Scaffold::new()
+// TODO: test ScaffoldBundle::new()

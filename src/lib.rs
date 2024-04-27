@@ -17,7 +17,7 @@
 */
 
 mod components;
-// mod events;
+mod events;
 mod resources;
 mod systems;
 mod utils;

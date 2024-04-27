@@ -16,8 +16,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod adjust_for_latitude;
-pub mod despawn_scaffolding;
-pub mod make_tiles_pickable;
-pub mod spawn_scaffolding;
-pub mod wave_func_collapse;
+use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
+
+/// Makes all of the tiles pickable per bevy_mod_picking.
+pub fn make_tiles_pickable(
+    mut commands: Commands,
+    query: Query<Entity, (With<Handle<Mesh>>, Without<Pickable>)>,
+) {
+    for entity in query.iter() {
+        commands.entity(entity).insert(PickableBundle::default());
+    }
+}

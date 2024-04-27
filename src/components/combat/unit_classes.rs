@@ -28,7 +28,7 @@ enum AirUnitClass {
 }
 
 #[derive(Component)]
-enum LandUnitClass {
+pub enum LandUnitClass {
     Artillery,     // Far-ranged units that provide indirect fire, level fortifications.
     Cavalry,       // Strong land class. Bad without support from other classes.
     Command,       // Generals, officers, command and control.

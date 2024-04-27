@@ -17,3 +17,4 @@
 */
 
 pub mod hex_pos;
+pub mod is_movable;

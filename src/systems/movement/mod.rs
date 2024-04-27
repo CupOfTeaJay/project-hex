@@ -16,8 +16,3 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod adjust_for_latitude;
-pub mod despawn_scaffolding;
-pub mod make_tiles_pickable;
-pub mod spawn_scaffolding;
-pub mod wave_func_collapse;

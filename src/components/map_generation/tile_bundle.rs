@@ -30,7 +30,10 @@ pub struct TileBundle {
 impl TileBundle {
     /// Creates a tile bundle.
     pub fn new(pos: HexPos, model: SceneBundle) -> Self {
-        TileBundle { pos, model }
+        TileBundle {
+            pos: pos,
+            model: model,
+        }
     }
 }
 

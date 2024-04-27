@@ -17,17 +17,28 @@
 */
 
 use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
 use rand::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::tile_bundle::TileBundle;
-use crate::components::map_generation::wave_func::WaveFunc;
+use crate::components::map_generation::wave_function::WaveFunction;
 use crate::resources::tile_socket_maps::TileSocketMaps;
+
+pub fn wave_func_collapse_copy(world: &mut World) {
+    // Select a random scaffold on the map.
+
+    // Collapse that scaffold's wave function.
+
+    // update every neighboring scaffold's wave-function due to the collapse.
+
+    // Despawn the selected scaffold.
+}
 
 pub fn wave_func_collapse(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
-    query: Query<(&HexPos, &Transform, &WaveFunc)>,
+    query: Query<(&HexPos, &Transform, &WaveFunction)>,
     sockets: Res<TileSocketMaps>,
 ) {
     for (pos, transform, wave_func) in &query {
@@ -48,7 +59,13 @@ pub fn wave_func_collapse(
         };
 
         // Spawn the tile.
-        commands.spawn(TileBundle::new(*pos, model));
+        commands.spawn((
+            Name::new(format!("Tile ({},{})", pos.q, pos.r)),
+            TileBundle::new(*pos, model),
+            On::<Pointer<Click>>::run(|event: Listener<Pointer<Click>>| {
+                info!("Clicked on entity {:?}", event.target);
+            }),
+        ));
 
         // Adjust weights for incompatible surrounding tiles.
     }

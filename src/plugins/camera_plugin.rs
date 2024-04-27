@@ -27,7 +27,9 @@ pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
+        // Add startup scheduled systems to the app.
         app.add_systems(Startup, spawn_camera);
+        // Add update scheduled systems to the app.
         app.add_systems(Update, (zoom_camera, translate_camera));
     }
 }

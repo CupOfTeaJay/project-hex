@@ -19,11 +19,14 @@
 use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
-use crate::components::map_generation::wave_func::WaveFunc;
+use crate::components::map_generation::wave_function::WaveFunction;
 use crate::resources::map_parameters::MapParameters;
 
 // TODO: make this as clean as possible.
-pub fn adjust_for_latitude(map: Res<MapParameters>, mut query: Query<(&HexPos, &mut WaveFunc)>) {
+pub fn adjust_for_latitude(
+    map: Res<MapParameters>,
+    mut query: Query<(&HexPos, &mut WaveFunction)>,
+) {
     // Constants.
     let num_regions: f32 = 5.0;
     let map_height: f32 = map.height as f32;

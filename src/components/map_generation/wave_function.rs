@@ -22,13 +22,13 @@ const DOMAIN_SIZE: usize = 9;
 const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
 #[derive(Component)]
-pub struct WaveFunc {
+pub struct WaveFunction {
     pub domain: [(String, f32); DOMAIN_SIZE],
 }
 
-impl WaveFunc {
+impl WaveFunction {
     pub fn new() -> Self {
-        WaveFunc {
+        WaveFunction {
             domain: init_domain(),
         }
     }
@@ -49,4 +49,4 @@ fn init_domain() -> [(String, f32); DOMAIN_SIZE] {
     ]
 }
 
-// TODO: test WaveFunc::new()
+// TODO: test WaveFunction::new()
