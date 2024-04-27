@@ -1,6 +1,6 @@
-# Such is Life
+# Project Hex
 
- - **Such is Life** is intented to be a 4x strategy game very similar to the *Sid Meier's Civilization*
+ - **Project Hex** is intented to be a 4x strategy game very similar to the *Sid Meier's Civilization*
    series.
  - The goal is to keep the game's source code completely open-source (currently under AGPL), whilst
    the assets remain proprietary.
