@@ -16,8 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod air_unit_class;
-mod health;
-mod land_unit_class;
-mod sea_unit_class;
-mod unit_bundle;
+use bevy::prelude::*;
+
+#[derive(Component)]
+enum AirUnitClass {
+    Attack,  // Default aircraft class. Jack of all trades, master of none.
+    Bomber,  // Aircraft class that specializes in air-to-ground combat.
+    Fighter, // Aircraft class that specialize in air-to-air combat.
+    Recon,   // Light aircraft. Best for reconniassance purposes.
+    Rotary,  // Helicopters and the like.
+}

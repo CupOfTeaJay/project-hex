@@ -20,4 +20,4 @@ pub mod adjust_for_latitude;
 pub mod despawn_scaffolding;
 pub mod make_tiles_pickable;
 pub mod spawn_scaffolding;
-pub mod wave_func_collapse;
+pub mod spawn_tile;

@@ -19,15 +19,6 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-enum AirUnitClass {
-    Attack,  // Default aircraft class. Jack of all trades, master of none.
-    Bomber,  // Aircraft class that specializes in air-to-ground combat.
-    Fighter, // Aircraft class that specialize in air-to-air combat.
-    Recon,   // Light aircraft. Best for reconniassance purposes.
-    Rotary,  // Helicopters and the like.
-}
-
-#[derive(Component)]
 pub enum LandUnitClass {
     Artillery,     // Far-ranged units that provide indirect fire, level fortifications.
     Cavalry,       // Strong land class. Bad without support from other classes.
@@ -38,14 +29,4 @@ pub enum LandUnitClass {
     Recon,         // Light land units. Best for reconniassance purposes.
     Support,       // Medics, engineers, etc.
     Suppressive,   // Ranged units that lower opponent's combat effectiveness.
-}
-
-#[derive(Component)]
-enum SeaUnitClass {
-    Capital,      // Flagships, command and control.
-    HeavyWarship, // Strongest naval class. For frontal assault and defense.
-    Recon,        // Light navalcraft. Best for reconnaissance purposes.
-    Submersive,   // Submarines, submersibles... Primary naval stealth class.
-    Support,      // Hospital ships, minelayers, etc.
-    Warship,      // Default naval class. Jack of all trades, master of none.
 }

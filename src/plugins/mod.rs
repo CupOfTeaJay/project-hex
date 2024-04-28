@@ -18,4 +18,4 @@
 
 pub mod camera_plugin;
 pub mod map_plugin;
-pub mod world_plugin;
+pub mod stage_setting_plugin;

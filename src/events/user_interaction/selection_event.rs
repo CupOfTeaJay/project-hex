@@ -16,9 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// use bevy::prelude::*;
+use bevy::prelude::*;
 
-// #[derive(Event)]
-// pub struct SelectionEvent {
-
-// }
+#[derive(Event)]
+pub struct SelectionEvent(Entity, f32);

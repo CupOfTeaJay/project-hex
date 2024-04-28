@@ -27,7 +27,6 @@ use crate::components::common::is_movable::IsMovable;
 struct UnitBundle {
     pos: HexPos,
     health: Health,
-    pickable: PickableBundle,
     movable: IsMovable,
     model: SceneBundle,
 }
@@ -37,7 +36,6 @@ impl UnitBundle {
         UnitBundle {
             pos: pos,
             health: Health::new(100),
-            pickable: PickableBundle::default(),
             movable: IsMovable::new(true),
             model: model,
         }

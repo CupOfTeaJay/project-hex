@@ -24,7 +24,7 @@ use crate::systems::map_generation::adjust_for_latitude::adjust_for_latitude;
 use crate::systems::map_generation::despawn_scaffolding::despawn_scaffolding;
 use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
 use crate::systems::map_generation::spawn_scaffolding::spawn_scaffolding;
-use crate::systems::map_generation::wave_func_collapse::wave_func_collapse;
+use crate::systems::map_generation::spawn_tile::spawn_tile;
 
 pub struct MapPlugin;
 
@@ -43,7 +43,7 @@ impl Plugin for MapPlugin {
             (
                 spawn_scaffolding,
                 adjust_for_latitude,
-                wave_func_collapse,
+                spawn_tile,
                 despawn_scaffolding,
             )
                 .chain(),

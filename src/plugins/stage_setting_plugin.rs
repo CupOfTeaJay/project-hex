@@ -20,9 +20,9 @@ use ::bevy::prelude::*;
 
 use crate::systems::stage_setting::spawn_sun::spawn_sun;
 
-pub struct WorldPlugin;
+pub struct StageSettingPlugin;
 
-impl Plugin for WorldPlugin {
+impl Plugin for StageSettingPlugin {
     fn build(&self, app: &mut App) {
         // Add startup scheduled systems to the app.
         app.add_systems(Startup, spawn_sun);

@@ -18,3 +18,4 @@
 
 pub mod hex_pos;
 pub mod is_movable;
+pub mod is_populated;

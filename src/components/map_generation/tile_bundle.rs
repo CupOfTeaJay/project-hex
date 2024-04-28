@@ -19,11 +19,13 @@
 use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
+use crate::components::common::is_populated::IsPopulated;
 
 /// Suite of components for tile entities.
 #[derive(Bundle)]
 pub struct TileBundle {
     pos: HexPos,
+    populated: IsPopulated,
     model: SceneBundle,
 }
 
@@ -32,6 +34,7 @@ impl TileBundle {
     pub fn new(pos: HexPos, model: SceneBundle) -> Self {
         TileBundle {
             pos: pos,
+            populated: IsPopulated::new(false),
             model: model,
         }
     }

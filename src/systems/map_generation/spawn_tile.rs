@@ -23,6 +23,7 @@ use rand::prelude::*;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::components::map_generation::wave_function::WaveFunction;
+use crate::events::user_interaction::selection_event::SelectionEvent;
 use crate::resources::tile_socket_maps::TileSocketMaps;
 
 pub fn wave_func_collapse_copy(world: &mut World) {
@@ -35,7 +36,9 @@ pub fn wave_func_collapse_copy(world: &mut World) {
     // Despawn the selected scaffold.
 }
 
-pub fn wave_func_collapse(
+// TODO: move event listener run() into function.
+// TODO: make scene top level entity. push tilebundle onto it.
+pub fn spawn_tile(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     query: Query<(&HexPos, &Transform, &WaveFunction)>,
@@ -60,11 +63,12 @@ pub fn wave_func_collapse(
 
         // Spawn the tile.
         commands.spawn((
+            // Tile name.
             Name::new(format!("Tile ({},{})", pos.q, pos.r)),
+            // Tilebundle.
             TileBundle::new(*pos, model),
-            On::<Pointer<Click>>::run(|event: Listener<Pointer<Click>>| {
-                info!("Clicked on entity {:?}", event.target);
-            }),
+            // Event listener for on click.
+            On::<Pointer<Click>>::send_event::<SelectionEvent>(),
         ));
 
         // Adjust weights for incompatible surrounding tiles.

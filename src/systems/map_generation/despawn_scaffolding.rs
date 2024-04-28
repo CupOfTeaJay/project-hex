@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::{ecs::entity, prelude::*};
+use bevy::prelude::*;
 
 use crate::components::map_generation::wave_function::WaveFunction;
 

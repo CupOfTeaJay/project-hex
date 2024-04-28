@@ -16,8 +16,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod air_unit_class;
-mod health;
-mod land_unit_class;
-mod sea_unit_class;
-mod unit_bundle;
+use bevy::prelude::*;
+
+#[derive(Component)]
+enum SeaUnitClass {
+    Capital,      // Flagships, command and control.
+    HeavyWarship, // Strongest naval class. For frontal assault and defense.
+    Recon,        // Light navalcraft. Best for reconnaissance purposes.
+    Submersive,   // Submarines, submersibles... Primary naval stealth class.
+    Support,      // Hospital ships, minelayers, etc.
+    Warship,      // Default naval class. Jack of all trades, master of none.
+}
