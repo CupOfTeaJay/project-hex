@@ -16,6 +16,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod algorithm;
-pub mod generate_map;
-pub mod make_tiles_pickable;
+use bevy::prelude::*;
+
+use crate::components::combat::land_unit_class::LandUnitClass;
+use crate::components::combat::unit_bundle::UnitBundle;
+use crate::components::common::hex_pos::HexPos;
+
+#[derive(Bundle)]
+pub struct LandUnitBundle {
+    unit_data: UnitBundle,
+    class: LandUnitClass,
+}
+
+impl LandUnitBundle {
+    pub fn new(pos: HexPos, model: SceneBundle, class: LandUnitClass) -> Self {
+        LandUnitBundle {
+            unit_data: UnitBundle::new(pos, model),
+            class: class,
+        }
+    }
+}

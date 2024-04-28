@@ -16,6 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod algorithm;
-pub mod generate_map;
-pub mod make_tiles_pickable;
+pub mod spawn_land_unit;

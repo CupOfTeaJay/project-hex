@@ -16,6 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod scaffold_bundle;
 pub mod tile_bundle;
 pub mod wave_function;

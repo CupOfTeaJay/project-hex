@@ -16,4 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod user_interaction;
+use bevy::prelude::*;
+
+use crate::systems::combat::spawn_land_unit::spawn_land_unit;
+
+/// Spawns player camera and moves camera in response to player input.
+pub struct CombatPlugin;
+
+impl Plugin for CombatPlugin {
+    fn build(&self, app: &mut App) {
+        // Add startup scheduled systems to the app.
+        app.add_systems(Startup, spawn_land_unit);
+    }
+}

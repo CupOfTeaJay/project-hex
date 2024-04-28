@@ -19,16 +19,16 @@
 // TODO: Check if this is right... someday.
 const SCALE: f32 = 1.0;
 
-/// Converts a cartesian coordinates to cube coordinates.
-fn vec3_to_hex_pos(x: f32, y: f32, z: f32) -> (f32, f32, f32) {
-    // Perform coordinate conversion.
-    let q: f32 = (1.0 / 3.0_f32.sqrt()) * x * SCALE;
-    let r: f32 = (2.0 / 3.0) * z;
-    let s: f32 = -(1.0 / 3.0_f32.sqrt()) * x * SCALE;
+// /// Converts a cartesian coordinates to cube coordinates.
+// fn vec3_to_hex_pos(x: f32, y: f32, z: f32) -> (f32, f32, f32) {
+//     // Perform coordinate conversion.
+//     let q: f32 = (1.0 / 3.0_f32.sqrt()) * x * SCALE;
+//     let r: f32 = (2.0 / 3.0) * z;
+//     let s: f32 = -(1.0 / 3.0_f32.sqrt()) * x * SCALE;
 
-    // Return new cube coordinates.
-    (q, r, s)
-}
+//     // Return new cube coordinates.
+//     (q, r, s)
+// }
 
 /// Converts cube coordinates to cartesian coordinates.
 pub fn hex_pos_to_vec3(q: f32, r: f32, s: f32) -> (f32, f32, f32) {

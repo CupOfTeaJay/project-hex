@@ -16,4 +16,17 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod selection_event;
+use bevy::prelude::*;
+use std::collections::HashMap;
+use std::vec::Vec;
+
+#[derive(Resource)]
+pub struct Map {
+    hash_table: HashMap<Entity, Vec<Entity>>,
+}
+
+impl Map {
+    pub fn new(hash_table: HashMap<Entity, Vec<Entity>>) -> Self {
+        Map { hash_table }
+    }
+}

@@ -18,10 +18,21 @@
 
 use bevy::prelude::*;
 
-use crate::components::map_generation::wave_function::WaveFunction;
+use crate::components::combat::sea_unit_class::SeaUnitClass;
+use crate::components::combat::unit_bundle::UnitBundle;
+use crate::components::common::hex_pos::HexPos;
 
-pub fn despawn_scaffolding(mut commands: Commands, query: Query<Entity, With<WaveFunction>>) {
-    for entity in query.iter() {
-        commands.entity(entity).despawn()
+#[derive(Bundle)]
+struct SeaUnitBundle {
+    class: SeaUnitClass,
+    unit_data: UnitBundle,
+}
+
+impl SeaUnitBundle {
+    fn new(pos: HexPos, class: SeaUnitClass, model: SceneBundle) -> Self {
+        SeaUnitBundle {
+            class: class,
+            unit_data: UnitBundle::new(pos, model),
+        }
     }
 }

@@ -17,20 +17,22 @@
 */
 
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
-use bevy_mod_picking::DefaultPickingPlugins;
 
-use such_is_life::plugins::camera_plugin::CameraPlugin;
-use such_is_life::plugins::map_plugin::MapPlugin;
-use such_is_life::plugins::stage_setting_plugin::StageSettingPlugin;
+use crate::components::combat::land_unit_bundle::LandUnitBundle;
+use crate::components::combat::land_unit_class::LandUnitClass;
+use crate::components::common::hex_pos::HexPos;
+use crate::utils::coord_conversions::hex_pos_to_vec3;
 
-fn main() {
-    App::new()
-        // Default, community plugins.
-        .add_plugins((DefaultPlugins, DefaultPickingPlugins))
-        // Custom plugins.
-        .add_plugins((CameraPlugin, StageSettingPlugin, MapPlugin))
-        // "Editor"
-        .add_plugins(WorldInspectorPlugin::new())
-        .run();
+pub fn spawn_land_unit(asset_server: Res<AssetServer>, mut commands: Commands) {
+    let pos = HexPos::new(0.0, 0.0, 0.0);
+    let (x, y, z) = hex_pos_to_vec3(pos.q, pos.r, pos.s);
+
+    // Initialize the model.
+    let model: SceneBundle = SceneBundle {
+        scene: asset_server.load("units/unit.glb#Scene0".to_string()),
+        transform: Transform::from_xyz(x, y, z),
+        ..Default::default()
+    };
+
+    commands.spawn((LandUnitBundle::new(pos, model, LandUnitClass::Infantry),));
 }

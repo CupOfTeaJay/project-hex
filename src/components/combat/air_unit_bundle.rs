@@ -18,5 +18,21 @@
 
 use bevy::prelude::*;
 
-#[derive(Event)]
-pub struct SelectionEvent(Entity, f32);
+use crate::components::combat::air_unit_class::AirUnitClass;
+use crate::components::combat::unit_bundle::UnitBundle;
+use crate::components::common::hex_pos::HexPos;
+
+#[derive(Bundle)]
+struct AirUnitBundle {
+    class: AirUnitClass,
+    unit_data: UnitBundle,
+}
+
+impl AirUnitBundle {
+    fn new(pos: HexPos, class: AirUnitClass, model: SceneBundle) -> Self {
+        AirUnitBundle {
+            class: class,
+            unit_data: UnitBundle::new(pos, model),
+        }
+    }
+}

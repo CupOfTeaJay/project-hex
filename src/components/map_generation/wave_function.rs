@@ -21,7 +21,6 @@ use bevy::prelude::*;
 const DOMAIN_SIZE: usize = 9;
 const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
-#[derive(Component)]
 pub struct WaveFunction {
     pub domain: [(String, f32); DOMAIN_SIZE],
 }
@@ -34,7 +33,6 @@ impl WaveFunction {
     }
 }
 
-#[inline]
 fn init_domain() -> [(String, f32); DOMAIN_SIZE] {
     [
         ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
