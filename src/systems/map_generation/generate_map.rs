@@ -18,11 +18,11 @@
 
 use bevy::prelude::*;
 // use bevy_mod_picking::prelude::*;
-use rand::prelude::*;
 use std::f32::consts::FRAC_PI_2;
 
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::resources::map_parameters::MapParameters;
+use crate::resources::tile_socket_maps::TileSocketMaps;
 use crate::systems::map_generation::algorithm::run_algorithm;
 use crate::utils::coord_conversions::hex_pos_to_vec3;
 
@@ -32,6 +32,7 @@ pub fn generate_map(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     map_par: Res<MapParameters>,
+    sockets: Res<TileSocketMaps>,
 ) {
     // Generate map scaffolding.
     let mut scaffolding = run_algorithm(map_par);
@@ -43,14 +44,7 @@ pub fn generate_map(
             let (x, y, z) = hex_pos_to_vec3(scaffold.pos.q, scaffold.pos.r, scaffold.pos.s);
 
             // Collapse the scaffold's wave function.
-            let mut rng: ThreadRng = thread_rng();
-            let choice: String = scaffold
-                .wave_func
-                .domain
-                .choose_weighted(&mut rng, |item| item.1)
-                .unwrap()
-                .0
-                .clone();
+            let choice: String = scaffold.wave_func.collapse();
 
             // Initialize the model.
             let mut model: SceneBundle = SceneBundle {

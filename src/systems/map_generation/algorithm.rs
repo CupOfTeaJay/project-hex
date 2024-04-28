@@ -17,6 +17,7 @@
 */
 
 use bevy::prelude::*;
+use rand::prelude::*;
 use std::vec::Vec;
 
 use crate::components::common::hex_pos::HexPos;
@@ -69,6 +70,16 @@ impl WaveFunction {
                 ("tiles/tundraTile.glb#Scene0".to_string(), UNIFORM_PROB),
             ],
         }
+    }
+
+    pub fn collapse(&self) -> String {
+        let mut rng: ThreadRng = thread_rng();
+        self
+            .domain
+            .choose_weighted(&mut rng, |item| item.1)
+            .unwrap()
+            .0
+            .clone()
     }
 }
 

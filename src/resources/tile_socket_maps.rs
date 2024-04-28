@@ -33,7 +33,6 @@ impl TileSocketMaps {
     }
 }
 
-#[inline]
 fn init_incompatible() -> HashMap<String, Vec<String>> {
     let mut incompatible = HashMap::new();
     incompatible.insert(
