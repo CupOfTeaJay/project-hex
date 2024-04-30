@@ -3467,6 +3467,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_mod_picking",
+ "indexmap",
  "rand",
 ]
 

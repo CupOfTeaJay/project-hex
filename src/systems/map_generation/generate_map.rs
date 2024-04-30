@@ -17,56 +17,53 @@
 */
 
 use bevy::prelude::*;
-// use bevy_mod_picking::prelude::*;
-use std::f32::consts::FRAC_PI_2;
+use rand::{thread_rng, Rng};
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::tile_socket_maps::TileSocketMaps;
-use crate::systems::map_generation::algorithm::run_algorithm;
-use crate::utils::coord_conversions::hex_pos_to_vec3;
+use crate::systems::map_generation::generate_map_data::generate_map_data;
 
-// TODO: move event listener run() into function.
-// TODO: make scene top level entity. push tilebundle onto it.
+// TODO: break down into smaller functions.
+/// Generates a map according to the following algorithm:
 pub fn generate_map(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     map_par: Res<MapParameters>,
     sockets: Res<TileSocketMaps>,
 ) {
-    // Generate map scaffolding.
-    let mut scaffolding = run_algorithm(map_par);
+    // Generate map data represented as hash tables. We need this to update scaffolding on the fly.
+    let (pos_neighbor_map, mut pos_scaffold_map) = generate_map_data(&map_par);
 
-    // Iterate through all of the scaffolding.
-    for vec in scaffolding.iter_mut() {
-        for scaffold in vec.iter_mut() {
-            // Convert from cube coordinates to cartesian coordinates:
-            let (x, y, z) = hex_pos_to_vec3(scaffold.pos.q, scaffold.pos.r, scaffold.pos.s);
+    // This algorithm shall run until all scaffolding have "collapsed" to some tile.
+    let mut remaining_scaffolds: usize = pos_scaffold_map.keys().len();
+    while remaining_scaffolds > 0 {
+        // First: pick a random scaffold from our collection.
+        let rand_index = thread_rng().gen_range(0..remaining_scaffolds);
+        let (pos, scaffold) = pos_scaffold_map.get_index(rand_index).unwrap();
 
-            // Collapse the scaffold's wave function.
-            let choice: String = scaffold.wave_func.collapse();
+        // Second: collapse the selected scaffold's wave function.
+        let choice: String = scaffold.wave_func.collapse();
 
-            // Initialize the model.
-            let mut model: SceneBundle = SceneBundle {
-                scene: asset_server.load(choice),
-                transform: Transform::from_xyz(x, y, z),
-                ..Default::default()
-            };
+        // Third: initialize the chosen model.
+        let model: SceneBundle = SceneBundle {
+            scene: asset_server.load(choice),
+            transform: scaffold.transform,
+            ..Default::default()
+        };
 
-            // Rotate the model by ninety degrees. Tiles are flat-side up by default.
-            model.transform.rotate_y(FRAC_PI_2);
+        // Third: spawn the chosen tile at it's respective location.
+        commands.spawn((
+            Name::new(format!("Tile ({},{})", scaffold.pos.q, scaffold.pos.r)),
+            TileBundle::new(scaffold.pos, model),
+            // On::<Pointer<Click>>::send_event::<SelectionEvent>(),
+        ));
 
-            // Spawn the tile.
-            commands.spawn((
-                // Tile name.
-                Name::new(format!("Tile ({},{})", scaffold.pos.q, scaffold.pos.r)),
-                // Tilebundle.
-                TileBundle::new(scaffold.pos, model),
-                // Event listener for on click.
-                // On::<Pointer<Click>>::send_event::<SelectionEvent>(),
-            ));
+        // Fourth: Adjust neighboring scaffolds.
 
-            // Adjust weights for incompatible surrounding tiles.
-        }
+        // Fifth: remove the scaffold from those still waiting to collapse.
+        pos_scaffold_map.swap_remove_index(rand_index);
+        remaining_scaffolds -= 1;
     }
 }

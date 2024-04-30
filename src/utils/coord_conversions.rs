@@ -31,7 +31,7 @@ const SCALE: f32 = 1.0;
 // }
 
 /// Converts cube coordinates to cartesian coordinates.
-pub fn hex_pos_to_vec3(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
+pub fn cube_to_cartesian(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
     // Perform coordinate conversion.
     let x: f32 = (3.0_f32.sqrt() / 2.0) * (q - s) * SCALE;
     let y: f32 = 0.0;

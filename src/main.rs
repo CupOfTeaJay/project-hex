@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
+use std::env;
 
 use such_is_life::plugins::camera_plugin::CameraPlugin;
 use such_is_life::plugins::map_plugin::MapPlugin;

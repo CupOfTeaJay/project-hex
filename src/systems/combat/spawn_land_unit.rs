@@ -21,11 +21,11 @@ use bevy::prelude::*;
 use crate::components::combat::land_unit_bundle::LandUnitBundle;
 use crate::components::combat::land_unit_class::LandUnitClass;
 use crate::components::common::hex_pos::HexPos;
-use crate::utils::coord_conversions::hex_pos_to_vec3;
+use crate::utils::coord_conversions::cube_to_cartesian;
 
 pub fn spawn_land_unit(asset_server: Res<AssetServer>, mut commands: Commands) {
     let pos = HexPos::new(0.0, 0.0, 0.0);
-    let (x, y, z) = hex_pos_to_vec3(pos.q, pos.r, pos.s);
+    let (x, y, z) = cube_to_cartesian(pos.q, pos.r, pos.s);
 
     // Initialize the model.
     let model: SceneBundle = SceneBundle {
