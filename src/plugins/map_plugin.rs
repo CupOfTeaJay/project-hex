@@ -28,8 +28,7 @@ pub struct MapPlugin;
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         // Map settings set by user.
-        let map_settings =
-            MapParameters::new(106, 66, 45, 45, 45, 45, 45, 45, 3, 5);
+        let map_settings = MapParameters::new(106, 66, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 3.0, 5.0);
         // Insert resources into the app.
         app.insert_resource(map_settings);
         // Add startup scheduled systems to the app.

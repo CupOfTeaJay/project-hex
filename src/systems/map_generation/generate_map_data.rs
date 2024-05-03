@@ -55,17 +55,17 @@ impl Scaffold {
 }
 
 pub struct WaveFunction {
-    pub domain: IndexMap<String, u32>,
+    pub domain: IndexMap<String, f32>,
 }
 
 impl WaveFunction {
     pub fn new() -> Self {
         // Update as necessary.
-        let num_possibilities: u32 = 9;
+        let num_possibilities: f32 = 9.0;
 
         // Build the map.
         let mut domain = IndexMap::new();
-        let uniform_prob: u32 = 100 / num_possibilities;
+        let uniform_prob: f32 = 100.0 / num_possibilities;
         domain.insert("tiles/coastalTile.glb#Scene0".to_string(), uniform_prob);
         domain.insert("tiles/desertTile.glb#Scene0".to_string(), uniform_prob);
         domain.insert("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob);
@@ -82,22 +82,17 @@ impl WaveFunction {
 
     pub fn collapse(&self) -> &String {
         // Calculate prefix sums.
-        let mut prefix_sums: Vec<u32> = Vec::new();
-        let mut curr_sum: u32 = 0;
+        let mut prefix_sums: Vec<f32> = Vec::new();
+        let mut curr_sum: f32 = 0.0;
         for weight in self.domain.values() {
             curr_sum += weight;
             prefix_sums.push(curr_sum);
         }
 
         // Generate a random number in the range [0, 1).
-        let random_number: u32 = rand::thread_rng().gen_range(0..curr_sum);
+        let random_number: f32 = rand::thread_rng().gen_range(0.0..curr_sum);
 
         // Binary search for this random number in our vector of prefix sums.
-        if let Ok(i) = prefix_sums.binary_search(&random_number) {
-            self.domain.get_index(i).unwrap().0
-        } else {
-            panic!("Failed to collapse wave function.")
-        }
     }
 }
 
