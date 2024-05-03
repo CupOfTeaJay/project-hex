@@ -17,4 +17,3 @@
 */
 
 pub mod map_parameters;
-pub mod tile_socket_maps;

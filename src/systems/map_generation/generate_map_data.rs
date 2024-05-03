@@ -16,18 +16,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::f32::consts::FRAC_PI_2;
 use bevy::prelude::*;
 use indexmap::IndexMap;
-use rand::prelude::*;
+use rand::Rng;
+use std::f32::consts::FRAC_PI_2;
 use std::vec::Vec;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::resources::map_parameters::MapParameters;
 use crate::utils::coord_conversions::cube_to_cartesian;
-
-const DOMAIN_SIZE: usize = 9;
-const UNIFORM_PROB: f32 = 1.0 / (DOMAIN_SIZE as f32);
 
 /// Tile "scaffolding" to be used for generating maps. Should be removed from
 /// the world upon completion of the algorithm.
@@ -58,33 +55,49 @@ impl Scaffold {
 }
 
 pub struct WaveFunction {
-    pub domain: [(String, f32); DOMAIN_SIZE],
+    pub domain: IndexMap<String, u32>,
 }
 
 impl WaveFunction {
     pub fn new() -> Self {
-        WaveFunction {
-            domain: [
-                ("tiles/coastalTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/desertTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/grasslandTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/iceTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/jungleTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/oceanTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/snowTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/steppeTile.glb#Scene0".to_string(), UNIFORM_PROB),
-                ("tiles/tundraTile.glb#Scene0".to_string(), UNIFORM_PROB),
-            ],
-        }
+        // Update as necessary.
+        let num_possibilities: u32 = 9;
+
+        // Build the map.
+        let mut domain = IndexMap::new();
+        let uniform_prob: u32 = 100 / num_possibilities;
+        domain.insert("tiles/coastalTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/desertTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/iceTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/jungleTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/oceanTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/snowTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/steppeTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert("tiles/tundraTile.glb#Scene0".to_string(), uniform_prob);
+
+        // Return self.
+        WaveFunction { domain }
     }
 
-    pub fn collapse(&self) -> String {
-        let mut rng: ThreadRng = thread_rng();
-        self.domain
-            .choose_weighted(&mut rng, |item| item.1)
-            .unwrap()
-            .0
-            .clone()
+    pub fn collapse(&self) -> &String {
+        // Calculate prefix sums.
+        let mut prefix_sums: Vec<u32> = Vec::new();
+        let mut curr_sum: u32 = 0;
+        for weight in self.domain.values() {
+            curr_sum += weight;
+            prefix_sums.push(curr_sum);
+        }
+
+        // Generate a random number in the range [0, 1).
+        let random_number: u32 = rand::thread_rng().gen_range(0..curr_sum);
+
+        // Binary search for this random number in our vector of prefix sums.
+        if let Ok(i) = prefix_sums.binary_search(&random_number) {
+            self.domain.get_index(i).unwrap().0
+        } else {
+            panic!("Failed to collapse wave function.")
+        }
     }
 }
 
@@ -95,7 +108,7 @@ pub fn generate_map_data(
     IndexMap<(i32, i32, i32), Scaffold>,
 ) {
     // Generate scaffolding.
-    let (mut pos_neighbor_map, mut pos_scaffold_map) =
+    let (pos_neighbor_map, mut pos_scaffold_map) =
         generate_scaffolding(&map_par.width, &map_par.height);
 
     // Bias scaffolding based on latitude.
@@ -125,107 +138,99 @@ fn adjust_for_latitude(
 
     for scaffold in pos_scaffold_map.values_mut() {
         let latitude: f32 = scaffold.pos.r;
-        let dom_size: f32 = scaffold.wave_func.domain.len() as f32;
 
         // Adjust weights for the northern icecaps region.
         if latitude < map_par.icecap_limit {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/iceTile.glb#Scene0" {
-                    pair.1 = 1.0;
-                } else {
-                    pair.1 = 0.0;
-                }
-            }
+            bias_icecaps(scaffold)
         }
         // Adjust weights for the northern snowsheets region.
         else if latitude < map_par.icecap_limit + map_par.snow_limit {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/snowTile.glb#Scene0" {
-                    pair.1 = 1.0;
-                } else {
-                    pair.1 = 0.0;
-                }
-            }
+            bias_snowsheets(scaffold)
         }
         // Adjust weights for the northern tundra region.
         else if latitude < north_tund {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/snowTile.glb#Scene0" {
-                    pair.1 += map_par.tundra_snow_bias;
-                } else if pair.0 == "tiles/tundraTile.glb#Scene0" {
-                    pair.1 += map_par.tundra_tundra_bias;
-                } else {
-                    pair.1 -= map_par.tundra_bias_sum / dom_size
-                }
-            }
+            bias_tundra(map_par, scaffold)
         }
         // Adjust weights for the northern diverse region.
         else if latitude < north_dive {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/grasslandTile.glb#Scene0" {
-                    pair.1 += map_par.diverse_grassland_bias;
-                } else if pair.0 == "tiles/steppeTile.glb#Scene0" {
-                    pair.1 += map_par.diverse_steppe_bias;
-                } else {
-                    pair.1 -= map_par.diverse_bias_sum / dom_size
-                }
-            }
+            bias_diverse(map_par, scaffold)
         }
         // Adjust weights for the equatorial region.
         else if latitude < equatorial {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/desertTile.glb#Scene0" {
-                    pair.1 += map_par.equator_desert_bias;
-                } else if pair.0 == "tiles/jungleTile.glb#Scene0" {
-                    pair.1 += map_par.equator_jungle_bias;
-                } else {
-                    pair.1 -= map_par.equator_bias_sum / dom_size
-                }
-            }
+            bias_equator(map_par, scaffold)
         }
         // Adjust weights for the southern diverse region.
         else if latitude < south_dive {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/grasslandTile.glb#Scene0" {
-                    pair.1 += map_par.diverse_grassland_bias;
-                } else if pair.0 == "tiles/steppeTile.glb#Scene0" {
-                    pair.1 += map_par.diverse_steppe_bias;
-                } else {
-                    pair.1 -= map_par.diverse_bias_sum / dom_size
-                }
-            }
+            bias_diverse(map_par, scaffold)
         }
         // Adjust weights for the southern tundra region.
         else if latitude < south_tund - (map_par.icecap_limit + map_par.snow_limit) {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/snowTile.glb#Scene0" {
-                    pair.1 += map_par.tundra_snow_bias;
-                } else if pair.0 == "tiles/tundraTile.glb#Scene0" {
-                    pair.1 += map_par.tundra_tundra_bias;
-                } else {
-                    pair.1 -= map_par.tundra_bias_sum / dom_size
-                }
-            }
+            bias_tundra(map_par, scaffold)
         }
         // Adjust weights for the southern snowsheets region.
         else if latitude < south_tund - map_par.icecap_limit {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/snowTile.glb#Scene0" {
-                    pair.1 = 1.0;
-                } else {
-                    pair.1 = 0.0;
-                }
-            }
+            bias_snowsheets(scaffold)
         }
         // Adjust weights for the southern icecaps region.
         else {
-            for pair in scaffold.wave_func.domain.iter_mut() {
-                if pair.0 == "tiles/iceTile.glb#Scene0" {
-                    pair.1 = 1.0;
-                } else {
-                    pair.1 = 0.0;
-                }
-            }
+            bias_icecaps(scaffold)
+        }
+    }
+}
+
+fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    let domain_size = scaffold.wave_func.domain.len();
+    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
+        if possibility == "tiles/grasslandTile.glb#Scene0" {
+            *weight += map_par.diverse_grassland_bias;
+        } else if possibility == "tiles/steppeTile.glb#Scene0" {
+            *weight += map_par.diverse_steppe_bias;
+        } else {
+            *weight -= map_par.diverse_bias_sum / domain_size as f32
+        }
+    }
+}
+
+fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    for pair in scaffold.wave_func.domain.iter_mut() {
+        if possibility == "tiles/desertTile.glb#Scene0" {
+            weight += map_par.equator_desert_bias;
+        } else if possibility == "tiles/jungleTile.glb#Scene0" {
+            weight += map_par.equator_jungle_bias;
+        } else {
+            weight -= map_par.equator_bias_sum / DOMAIN_SIZE as f32
+        }
+    }
+}
+
+fn bias_icecaps(scaffold: &mut Scaffold) {
+    for pair in scaffold.wave_func.domain.iter_mut() {
+        if possibility == "tiles/iceTile.glb#Scene0" {
+            weight = 1.0;
+        } else {
+            weight = 0.0;
+        }
+    }
+}
+
+fn bias_snowsheets(scaffold: &mut Scaffold) {
+    for pair in scaffold.wave_func.domain.iter_mut() {
+        if possibility == "tiles/snowTile.glb#Scene0" {
+            weight = 1.0;
+        } else {
+            weight = 0.0;
+        }
+    }
+}
+
+fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    for pair in scaffold.wave_func.domain.iter_mut() {
+        if possibility == "tiles/snowTile.glb#Scene0" {
+            weight += map_par.tundra_snow_bias;
+        } else if possibility == "tiles/tundraTile.glb#Scene0" {
+            weight += map_par.tundra_tundra_bias;
+        } else {
+            weight -= map_par.tundra_bias_sum / DOMAIN_SIZE as f32
         }
     }
 }

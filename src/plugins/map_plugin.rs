@@ -19,7 +19,6 @@
 use bevy::prelude::*;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::resources::tile_socket_maps::TileSocketMaps;
 use crate::systems::map_generation::generate_map::generate_map;
 use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
 
@@ -30,10 +29,9 @@ impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         // Map settings set by user.
         let map_settings =
-            MapParameters::new(106, 66, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 3.0, 5.0);
+            MapParameters::new(106, 66, 45, 45, 45, 45, 45, 45, 3, 5);
         // Insert resources into the app.
-        app.insert_resource(map_settings)
-            .insert_resource(TileSocketMaps::new());
+        app.insert_resource(map_settings);
         // Add startup scheduled systems to the app.
         app.add_systems(Startup, generate_map);
         // Add update scheduled systems to the app.
