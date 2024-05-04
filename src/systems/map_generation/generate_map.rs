@@ -24,11 +24,8 @@ use std::collections::HashMap;
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
-use crate::systems::map_generation::generate_map_data::DOMAIN_SIZE;
 
 use super::generate_map_data::Scaffold;
-
-//TODO: might not even need deleted_positions with "if let".
 
 fn adjust_neighbors(
     choice: &String,
@@ -36,30 +33,25 @@ fn adjust_neighbors(
     pos_neighbor_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
     pos_scaffold_map: &mut IndexMap<(i32, i32, i32), Scaffold>,
     tile_to_incompatible_map: &HashMap<String, Vec<String>>,
-    deleted_positions: &Vec<(i32, i32, i32)>,
 ) {
     // Get neighbors to this position and what they can no longer collapse to (incompatabilities).
-    let neighbors = pos_neighbor_map.get(pos).unwrap();
+    let neighbor_positions = pos_neighbor_map.get(pos).unwrap();
     let incompats = tile_to_incompatible_map.get(choice).unwrap();
 
     // Adjust each of the neighbors, one by one - but only if the position still exists.
-    for neighbor_pos in neighbors.iter() {
-        if let Some(neighbor) = pos_scaffold_map.get_mut(neighbor_pos) {
+    for pos in neighbor_positions.iter() {
+        if let Some(scaffold) = pos_scaffold_map.get_mut(pos) {
             // Loop through every incompatability.
             for incompatible in incompats.iter() {
-                // Find the incompatability, and divvy its weight.
+                // Remove the incompatability and divvy its weight.
                 let mut divvy: f32 = 0.0;
-                for (possibility, weight) in neighbor.wave_func.domain.iter_mut() {
-                    if possibility == incompatible {
-                        divvy += *weight / DOMAIN_SIZE as f32;
-                        *weight = 0.0;
-                    }
+                if let Some(weight) = scaffold.wave_func.domain.swap_remove(incompatible) {
+                    divvy += weight / scaffold.wave_func.domain.len() as f32;
                 }
-                // Iterate over the domain once more, sharing the divvy with remaining possibiliies.
-                for (possibility, weight) in neighbor.wave_func.domain.iter_mut() {
-                    if possibility != incompatible {
-                        *weight += divvy;
-                    }
+
+                // Iterate over the domain, sharing the divvy with remaining possibiliies.
+                for weight in scaffold.wave_func.domain.values_mut() {
+                    *weight += divvy;
                 }
             }
         }
@@ -79,19 +71,16 @@ pub fn generate_map(
     // Map that defines tile incompatabilities.
     let tile_to_incompatible_map = init_tile_to_incompatible_map();
 
-    // We need to keep track of scaffolds at positions that no longer need to collapse.
-    let mut deleted_positions: Vec<(i32, i32, i32)> = Vec::new();
-
     // This algorithm shall run until all scaffolding have "collapsed" to some tile.
     let mut remaining_scaffolds: usize = pos_scaffold_map.keys().len();
     while remaining_scaffolds > 0 {
         // First: pick a random scaffold from our collection.
         let rand_index = thread_rng().gen_range(0..remaining_scaffolds);
-        let (pos, scaffold) = pos_scaffold_map.get_index_mut(rand_index).unwrap();
+        let (pos, scaffold) = pos_scaffold_map.get_index(rand_index).unwrap();
         let pos_clone = pos.clone();
 
         // Second: collapse the selected scaffold's wave function.
-        let choice: String = scaffold.wave_func.collapse();
+        let choice: String = scaffold.wave_func.collapse().clone();
 
         // Third: initialize the chosen model.
         let model: SceneBundle = SceneBundle {
@@ -108,7 +97,6 @@ pub fn generate_map(
         ));
 
         // Fourth: remove the scaffold from those still waiting to collapse.
-        deleted_positions.push(pos_clone);
         pos_scaffold_map.swap_remove_index(rand_index);
         remaining_scaffolds -= 1;
 
@@ -119,7 +107,6 @@ pub fn generate_map(
             &pos_neighbor_map,
             &mut pos_scaffold_map,
             &tile_to_incompatible_map,
-            &deleted_positions,
         );
     }
 }

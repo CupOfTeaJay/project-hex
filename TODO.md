@@ -3,7 +3,6 @@
 - [ ] Test. Begin more TDD.
 
 # Components to update:
-- [ ] Would be a miracle if wave_func.domain could somehow be a hash map.
 - [ ] Can we use str for wave_func?
 
 # Components to add:
@@ -16,4 +15,3 @@
 # Systems to add:
 
 # Plugins to update:
-- [ ] Map -> Find out how to sample random tiles to start at during map gen, as opposed to doing it in slices.

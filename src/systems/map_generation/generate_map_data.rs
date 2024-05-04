@@ -65,7 +65,7 @@ impl WaveFunction {
 
         // Build the map.
         let mut domain = IndexMap::new();
-        let uniform_prob: f32 = 100.0 / num_possibilities;
+        let uniform_prob: f32 = 1.0 / num_possibilities;
         domain.insert("tiles/coastalTile.glb#Scene0".to_string(), uniform_prob);
         domain.insert("tiles/desertTile.glb#Scene0".to_string(), uniform_prob);
         domain.insert("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob);
@@ -81,18 +81,29 @@ impl WaveFunction {
     }
 
     pub fn collapse(&self) -> &String {
-        // Calculate prefix sums.
-        let mut prefix_sums: Vec<f32> = Vec::new();
+        // Pre-processing.
+        let mut possibilities: Vec<&String> = Vec::new();
+        let mut weights_pref_sums: Vec<f32> = Vec::new();
         let mut curr_sum: f32 = 0.0;
-        for weight in self.domain.values() {
+        println!("\n\n");
+        for (possibility, weight) in self.domain.iter() {
+            possibilities.push(possibility);
             curr_sum += weight;
-            prefix_sums.push(curr_sum);
+            weights_pref_sums.push(curr_sum.clone());
+            println!("{possibility}: {curr_sum}")
+        }
+        println!("\n\n");
+
+        let mut choice_index: usize = 0;
+        let rand_num: f32 = rand::thread_rng().gen_range(0.0..curr_sum);
+        for i in 0..weights_pref_sums.len() {
+            if rand_num < weights_pref_sums[i] {
+                choice_index = i;
+                break
+            }
         }
 
-        // Generate a random number in the range [0, 1).
-        let random_number: f32 = rand::thread_rng().gen_range(0.0..curr_sum);
-
-        // Binary search for this random number in our vector of prefix sums.
+        possibilities[choice_index]
     }
 }
 
@@ -174,58 +185,64 @@ fn adjust_for_latitude(
 }
 
 fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    let domain_size = scaffold.wave_func.domain.len();
+    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
         if possibility == "tiles/grasslandTile.glb#Scene0" {
             *weight += map_par.diverse_grassland_bias;
         } else if possibility == "tiles/steppeTile.glb#Scene0" {
             *weight += map_par.diverse_steppe_bias;
         } else {
-            *weight -= map_par.diverse_bias_sum / domain_size as f32
+            *weight -= map_par.diverse_bias_sum / domain_size
         }
     }
 }
 
 fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    for pair in scaffold.wave_func.domain.iter_mut() {
+    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
+    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
         if possibility == "tiles/desertTile.glb#Scene0" {
-            weight += map_par.equator_desert_bias;
+            *weight += map_par.equator_desert_bias;
         } else if possibility == "tiles/jungleTile.glb#Scene0" {
-            weight += map_par.equator_jungle_bias;
+            *weight += map_par.equator_jungle_bias;
         } else {
-            weight -= map_par.equator_bias_sum / DOMAIN_SIZE as f32
+            *weight -= map_par.equator_bias_sum / domain_size
         }
     }
 }
 
 fn bias_icecaps(scaffold: &mut Scaffold) {
-    for pair in scaffold.wave_func.domain.iter_mut() {
-        if possibility == "tiles/iceTile.glb#Scene0" {
-            weight = 1.0;
-        } else {
-            weight = 0.0;
+    let mut to_remove: Vec<String> = Vec::new();
+    for possibility in scaffold.wave_func.domain.keys() {
+        if possibility != "tiles/iceTile.glb#Scene0" {
+            to_remove.push(possibility.clone());
         }
+    }
+    for tile in to_remove.iter() {
+        scaffold.wave_func.domain.swap_remove(tile);
     }
 }
 
 fn bias_snowsheets(scaffold: &mut Scaffold) {
-    for pair in scaffold.wave_func.domain.iter_mut() {
-        if possibility == "tiles/snowTile.glb#Scene0" {
-            weight = 1.0;
-        } else {
-            weight = 0.0;
+    let mut to_remove: Vec<String> = Vec::new();
+    for possibility in scaffold.wave_func.domain.keys() {
+        if possibility != "tiles/snowTile.glb#Scene0" {
+            to_remove.push(possibility.clone());
         }
+    }
+    for tile in to_remove.iter() {
+        scaffold.wave_func.domain.swap_remove(tile);
     }
 }
 
 fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    for pair in scaffold.wave_func.domain.iter_mut() {
+    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
+    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
         if possibility == "tiles/snowTile.glb#Scene0" {
-            weight += map_par.tundra_snow_bias;
+            *weight += map_par.tundra_snow_bias;
         } else if possibility == "tiles/tundraTile.glb#Scene0" {
-            weight += map_par.tundra_tundra_bias;
+            *weight += map_par.tundra_tundra_bias;
         } else {
-            weight -= map_par.tundra_bias_sum / DOMAIN_SIZE as f32
+            *weight -= map_par.tundra_bias_sum / domain_size
         }
     }
 }
