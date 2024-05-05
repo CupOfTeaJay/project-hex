@@ -25,14 +25,10 @@ pub struct MapParameters {
     pub diverse_grassland_bias: f32,
     pub diverse_steppe_bias: f32,
     pub equator_desert_bias: f32,
-    pub equator_jungle_bias: f32,
     pub tundra_snow_bias: f32,
     pub tundra_tundra_bias: f32,
     pub icecap_limit: f32,
     pub snow_limit: f32,
-    pub diverse_bias_sum: f32,
-    pub equator_bias_sum: f32,
-    pub tundra_bias_sum: f32,
 }
 
 impl MapParameters {
@@ -42,29 +38,21 @@ impl MapParameters {
         diverse_grassland_bias: f32,
         diverse_steppe_bias: f32,
         equator_desert_bias: f32,
-        equator_jungle_bias: f32,
         tundra_snow_bias: f32,
         tundra_tundra_bias: f32,
         icecap_limit: f32,
         snow_limit: f32,
     ) -> Self {
-        let diverse_bias_sum = diverse_grassland_bias + diverse_steppe_bias;
-        let equator_bias_sum = equator_desert_bias + equator_jungle_bias;
-        let tundra_bias_sum = tundra_snow_bias + tundra_tundra_bias;
         MapParameters {
             width,
             height,
             diverse_grassland_bias,
             diverse_steppe_bias,
             equator_desert_bias,
-            equator_jungle_bias,
             tundra_snow_bias,
             tundra_tundra_bias,
             icecap_limit,
             snow_limit,
-            diverse_bias_sum,
-            equator_bias_sum,
-            tundra_bias_sum,
         }
     }
 }

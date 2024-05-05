@@ -17,4 +17,3 @@
 */
 
 pub mod tile_bundle;
-pub mod wave_function;

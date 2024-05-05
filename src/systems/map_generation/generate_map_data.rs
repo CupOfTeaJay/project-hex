@@ -24,6 +24,7 @@ use std::vec::Vec;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::resources::map_parameters::MapParameters;
+use crate::systems::map_generation::common::Terrain;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
 /// Tile "scaffolding" to be used for generating maps. Should be removed from
@@ -32,6 +33,7 @@ pub struct Scaffold {
     pub pos: HexPos,
     pub transform: Transform,
     pub wave_func: WaveFunction,
+    pub entropy: usize,
 }
 
 // TODO: init scaffold with non-default quaternion instead.
@@ -45,11 +47,26 @@ impl Scaffold {
         let mut transform = Transform::from_xyz(x, y, z);
         transform.rotate_y(FRAC_PI_2);
 
+        // Create a new wave function.
+        let wave_func = WaveFunction::new();
+        let entropy: usize = wave_func.domain.keys().len();
+
         // Return the scaffold.
         Scaffold {
             pos: pos,
             transform: transform,
-            wave_func: WaveFunction::new(),
+            wave_func: wave_func,
+            entropy: entropy,
+        }
+    }
+
+    pub fn purge_tile(&mut self, possibility: &String) -> Option<f32> {
+        // Remove this possibility from our wave function.
+        if let Some(weight) = self.wave_func.domain.swap_remove(possibility) {
+            self.entropy -= 1;
+            Some(weight)
+        } else {
+            None
         }
     }
 }
@@ -60,46 +77,48 @@ pub struct WaveFunction {
 
 impl WaveFunction {
     pub fn new() -> Self {
-        // Update as necessary.
-        let num_possibilities: f32 = 9.0;
+        // UPDATE AS NECESSARY.
+        let num_possibilities: f32 = 8.0;
 
         // Build the map.
         let mut domain = IndexMap::new();
         let uniform_prob: f32 = 1.0 / num_possibilities;
-        domain.insert("tiles/coastalTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/desertTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/grasslandTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/iceTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/jungleTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/oceanTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/snowTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/steppeTile.glb#Scene0".to_string(), uniform_prob);
-        domain.insert("tiles/tundraTile.glb#Scene0".to_string(), uniform_prob);
+        domain.insert(Terrain::Coastal.rep(), uniform_prob);
+        domain.insert(Terrain::Desert.rep(), uniform_prob);
+        domain.insert(Terrain::Grassland.rep(), uniform_prob);
+        domain.insert(Terrain::Ice.rep(), uniform_prob);
+        domain.insert(Terrain::Ocean.rep(), uniform_prob);
+        domain.insert(Terrain::Snow.rep(), uniform_prob);
+        domain.insert(Terrain::Steppe.rep(), uniform_prob);
+        domain.insert(Terrain::Tundra.rep(), uniform_prob);
 
         // Return self.
         WaveFunction { domain }
     }
 
     pub fn collapse(&self) -> &String {
+        // No possibilities left. Panic!
+        if self.domain.keys().len() == 0 {
+            panic!("\nError: wave function domain size is zero\n")
+        }
+
         // Pre-processing.
         let mut possibilities: Vec<&String> = Vec::new();
         let mut weights_pref_sums: Vec<f32> = Vec::new();
         let mut curr_sum: f32 = 0.0;
-        println!("\n\n");
         for (possibility, weight) in self.domain.iter() {
             possibilities.push(possibility);
             curr_sum += weight;
             weights_pref_sums.push(curr_sum.clone());
-            println!("{possibility}: {curr_sum}")
         }
-        println!("\n\n");
 
+        // Random sample.
         let mut choice_index: usize = 0;
         let rand_num: f32 = rand::thread_rng().gen_range(0.0..curr_sum);
         for i in 0..weights_pref_sums.len() {
             if rand_num < weights_pref_sums[i] {
                 choice_index = i;
-                break
+                break;
             }
         }
 
@@ -124,7 +143,6 @@ pub fn generate_map_data(
     (pos_neighbor_map, pos_scaffold_map)
 }
 
-// TODO: since this is decoupled from ECS, split into smaller functions. Maybe resource issue?
 /// Adjust weights for every scaffold, biasing tiles based on their latitude.
 fn adjust_for_latitude(
     map_par: &Res<MapParameters>,
@@ -185,27 +203,39 @@ fn adjust_for_latitude(
 }
 
 fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    // The following tiles should not exist in this region.
+    scaffold.purge_tile(&Terrain::Ice.rep());
+    scaffold.purge_tile(&Terrain::Snow.rep());
+    scaffold.purge_tile(&Terrain::Tundra.rep());
+
+    // Adjust weights of remaining tile possibilities.
     let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
+    let divvy: f32 = (map_par.diverse_grassland_bias + map_par.diverse_steppe_bias) / domain_size;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == "tiles/grasslandTile.glb#Scene0" {
+        if possibility == &Terrain::Grassland.rep() {
             *weight += map_par.diverse_grassland_bias;
-        } else if possibility == "tiles/steppeTile.glb#Scene0" {
+        } else if possibility == &Terrain::Steppe.rep() {
             *weight += map_par.diverse_steppe_bias;
         } else {
-            *weight -= map_par.diverse_bias_sum / domain_size
+            *weight -= divvy;
         }
     }
 }
 
 fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    // The following tiles should not exist in this region.
+    scaffold.purge_tile(&Terrain::Ice.rep());
+    scaffold.purge_tile(&Terrain::Snow.rep());
+    scaffold.purge_tile(&Terrain::Tundra.rep());
+
+    // Adjust weights of remaining tile possibilities.
     let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
+    let divvy: f32 = (map_par.equator_desert_bias) / domain_size;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == "tiles/desertTile.glb#Scene0" {
+        if possibility == &Terrain::Desert.rep() {
             *weight += map_par.equator_desert_bias;
-        } else if possibility == "tiles/jungleTile.glb#Scene0" {
-            *weight += map_par.equator_jungle_bias;
         } else {
-            *weight -= map_par.equator_bias_sum / domain_size
+            *weight -= divvy;
         }
     }
 }
@@ -213,36 +243,37 @@ fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
 fn bias_icecaps(scaffold: &mut Scaffold) {
     let mut to_remove: Vec<String> = Vec::new();
     for possibility in scaffold.wave_func.domain.keys() {
-        if possibility != "tiles/iceTile.glb#Scene0" {
+        if possibility != &Terrain::Ice.rep() {
             to_remove.push(possibility.clone());
         }
     }
     for tile in to_remove.iter() {
-        scaffold.wave_func.domain.swap_remove(tile);
+        scaffold.purge_tile(tile);
     }
 }
 
 fn bias_snowsheets(scaffold: &mut Scaffold) {
     let mut to_remove: Vec<String> = Vec::new();
     for possibility in scaffold.wave_func.domain.keys() {
-        if possibility != "tiles/snowTile.glb#Scene0" {
+        if possibility != &Terrain::Snow.rep() {
             to_remove.push(possibility.clone());
         }
     }
     for tile in to_remove.iter() {
-        scaffold.wave_func.domain.swap_remove(tile);
+        scaffold.purge_tile(tile);
     }
 }
 
 fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
+    let divvy: f32 = (map_par.tundra_snow_bias + map_par.tundra_tundra_bias) / domain_size;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == "tiles/snowTile.glb#Scene0" {
+        if possibility == &Terrain::Snow.rep() {
             *weight += map_par.tundra_snow_bias;
-        } else if possibility == "tiles/tundraTile.glb#Scene0" {
+        } else if possibility == &Terrain::Tundra.rep() {
             *weight += map_par.tundra_tundra_bias;
         } else {
-            *weight -= map_par.tundra_bias_sum / domain_size
+            *weight -= divvy;
         }
     }
 }

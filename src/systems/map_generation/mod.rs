@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod common;
 pub mod generate_map;
 mod generate_map_data;
 pub mod make_tiles_pickable;

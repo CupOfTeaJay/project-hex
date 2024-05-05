@@ -23,11 +23,11 @@ use std::collections::HashMap;
 
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::resources::map_parameters::MapParameters;
+use crate::systems::map_generation::common::Terrain;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
+use crate::systems::map_generation::generate_map_data::Scaffold;
 
-use super::generate_map_data::Scaffold;
-
-fn adjust_neighbors(
+fn prevent_incompatibilities(
     choice: &String,
     pos: &(i32, i32, i32),
     pos_neighbor_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
@@ -45,7 +45,7 @@ fn adjust_neighbors(
             for incompatible in incompats.iter() {
                 // Remove the incompatability and divvy its weight.
                 let mut divvy: f32 = 0.0;
-                if let Some(weight) = scaffold.wave_func.domain.swap_remove(incompatible) {
+                if let Some(weight) = scaffold.purge_tile(incompatible) {
                     divvy += weight / scaffold.wave_func.domain.len() as f32;
                 }
 
@@ -55,6 +55,38 @@ fn adjust_neighbors(
                 }
             }
         }
+    }
+}
+
+fn bias_neighbors() {
+
+}
+
+fn determine_min_entropy_index(pos_scaffold_map: &IndexMap<(i32, i32, i32), Scaffold>) -> usize {
+    // Get an arbitrary entry from the map so we can initialize min_ent and min_key with valid values.
+    if let Some(arbitrary) = pos_scaffold_map.get_index(0) {
+        // Vars to update.
+        let mut min_key: &(i32, i32, i32) = arbitrary.0;
+        let mut min_ent: usize = arbitrary.1.entropy;
+        let mut curr_ent: usize;
+
+        // Find scaffold with the lowest entropy.
+        for pos in pos_scaffold_map.keys() {
+            curr_ent = pos_scaffold_map[pos].entropy;
+            if min_ent > curr_ent {
+                min_ent = curr_ent;
+                min_key = pos;
+            }
+        }
+
+        // Return index of scaffold with the lowest entropy.
+        if let Some(success) = pos_scaffold_map.get_index_of(min_key) {
+            success
+        } else {
+            panic!("\nError: failed to find index of scaffold with lowest entropy\n")
+        }
+    } else {
+        panic!("\nError: failed to execute determine_min_entropy_index\n")
     }
 }
 
@@ -72,36 +104,45 @@ pub fn generate_map(
     let tile_to_incompatible_map = init_tile_to_incompatible_map();
 
     // This algorithm shall run until all scaffolding have "collapsed" to some tile.
-    let mut remaining_scaffolds: usize = pos_scaffold_map.keys().len();
+    let init_scaffold_amt: usize = pos_scaffold_map.keys().len();
+    let mut remaining_scaffolds: usize = init_scaffold_amt;
     while remaining_scaffolds > 0 {
-        // First: pick a random scaffold from our collection.
-        let rand_index = thread_rng().gen_range(0..remaining_scaffolds);
-        let (pos, scaffold) = pos_scaffold_map.get_index(rand_index).unwrap();
+        // If this is the first iteration, pick a random scaffold from our collection.
+        // Otherwise select the scaffold with the lowest entropy.
+        let index: usize;
+        if remaining_scaffolds == init_scaffold_amt {
+            index = thread_rng().gen_range(0..remaining_scaffolds);
+        } else {
+            index = determine_min_entropy_index(&pos_scaffold_map);
+        }
+
+        // Get the scaffold relative to our chosen index.
+        let (pos, scaffold) = pos_scaffold_map.get_index(index).unwrap();
         let pos_clone = pos.clone();
 
-        // Second: collapse the selected scaffold's wave function.
+        // Collapse this scaffold's wave function.
         let choice: String = scaffold.wave_func.collapse().clone();
 
-        // Third: initialize the chosen model.
+        // Initialize the chosen tile's model.
         let model: SceneBundle = SceneBundle {
             scene: asset_server.load(choice.clone()),
             transform: scaffold.transform,
             ..Default::default()
         };
 
-        // Third: spawn the chosen tile at it's respective location.
+        // Spawn the chosen tile's model at its scaffold's position.
         commands.spawn((
             Name::new(format!("Tile ({},{})", scaffold.pos.q, scaffold.pos.r)),
             TileBundle::new(scaffold.pos, model),
             // On::<Pointer<Click>>::send_event::<SelectionEvent>(),
         ));
 
-        // Fourth: remove the scaffold from those still waiting to collapse.
-        pos_scaffold_map.swap_remove_index(rand_index);
+        // Remove this scaffold from those still waiting to collapse.
+        pos_scaffold_map.swap_remove_index(index);
         remaining_scaffolds -= 1;
 
-        // Fifth: Adjust neighboring scaffolds.
-        adjust_neighbors(
+        // Update the wave functions of neighboring scaffolds to prevent incompatabilities.
+        prevent_incompatibilities(
             &choice,
             &pos_clone,
             &pos_neighbor_map,
@@ -112,46 +153,90 @@ pub fn generate_map(
 }
 
 fn init_tile_to_incompatible_map() -> HashMap<String, Vec<String>> {
-    // Map to update.
+    // Map to return.
     let mut incompatible = HashMap::new();
 
-    incompatible.insert("tiles/coastalTile.glb#Scene0".to_string(), vec![]);
-
-    // Tiles incompatible with desert terrain.
+    // COASTAL.
     incompatible.insert(
-        "tiles/desertTile.glb#Scene0".to_string(),
+        Terrain::Coastal.rep(),
         vec![
-            "tiles/iceTile.glb#Scene0".to_string(),
-            "tiles/jungleTile.glb#Scene0".to_string(),
-            "tiles/snowTile.glb#Scene0".to_string(),
-            "tiles/tundraTile.glb#Scene0".to_string(),
+            // Any tile can be along a coast.
         ],
     );
 
-    incompatible.insert("tiles/grasslandTile.glb#Scene0".to_string(), vec![]);
-
+    // DESERT.
     incompatible.insert(
-        "tiles/iceTile.glb#Scene0".to_string(),
-        vec!["tiles/desertTile.glb#Scene0".to_string()],
+        Terrain::Desert.rep(),
+        vec![
+            Terrain::Ice.rep(),
+            Terrain::Ocean.rep(),
+            Terrain::Snow.rep(),
+            Terrain::Tundra.rep(),
+        ],
     );
 
+    // GRASSLAND.
     incompatible.insert(
-        "tiles/jungleTile.glb#Scene0".to_string(),
-        vec!["tiles/desertTile.glb#Scene0".to_string()],
+        Terrain::Grassland.rep(),
+        vec![
+            Terrain::Ice.rep(),
+            Terrain::Ocean.rep(),
+            Terrain::Snow.rep(),
+        ],
     );
 
-    incompatible.insert("tiles/oceanTile.glb#Scene0".to_string(), vec![]);
-
+    // ICE.
     incompatible.insert(
-        "tiles/snowTile.glb#Scene0".to_string(),
-        vec!["tiles/desertTile.glb#Scene0".to_string()],
+        Terrain::Ice.rep(),
+        vec![
+            Terrain::Desert.rep(),
+            Terrain::Grassland.rep(),
+            Terrain::Steppe.rep(),
+            Terrain::Tundra.rep(),
+        ],
     );
 
-    incompatible.insert("tiles/steppeTile.glb#Scene0".to_string(), vec![]);
-
+    // OCEAN.
     incompatible.insert(
-        "tiles/tundraTile.glb#Scene0".to_string(),
-        vec!["tiles/desertTile.glb#Scene0".to_string()],
+        Terrain::Ocean.rep(),
+        vec![
+            Terrain::Desert.rep(),
+            Terrain::Grassland.rep(),
+            Terrain::Snow.rep(),
+            Terrain::Steppe.rep(),
+            Terrain::Tundra.rep(),
+        ],
+    );
+
+    // SNOW.
+    incompatible.insert(
+        Terrain::Snow.rep(),
+        vec![
+            Terrain::Desert.rep(),
+            Terrain::Grassland.rep(),
+            Terrain::Ocean.rep(),
+            Terrain::Steppe.rep(),
+        ],
+    );
+
+    // STEPPE.
+    incompatible.insert(
+        Terrain::Steppe.rep(),
+        vec![
+            Terrain::Ice.rep(),
+            Terrain::Ocean.rep(),
+            Terrain::Snow.rep(),
+        ],
+    );
+
+    // TUNDRA.
+    incompatible.insert(
+        Terrain::Tundra.rep(),
+        vec![
+            Terrain::Desert.rep(),
+            Terrain::Ice.rep(),
+            Terrain::Ocean.rep(),
+        ],
     );
 
     // Return the map.
