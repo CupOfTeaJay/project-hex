@@ -38,7 +38,7 @@ pub struct Scaffold {
 
 // TODO: init scaffold with non-default quaternion instead.
 impl Scaffold {
-    /// Creates tile scaffolding.
+    /// Creates new tile scaffolding.
     pub fn new(pos: HexPos) -> Self {
         // Convert from cube coordinates to cartesian coordinates.
         let (x, y, z) = cube_to_cartesian(pos.q, pos.r, pos.s);
@@ -60,9 +60,35 @@ impl Scaffold {
         }
     }
 
-    pub fn purge_tile(&mut self, possibility: &String) -> Option<f32> {
+    pub fn bias_tile(&mut self, possibility_to_bias: &Terrain, bias: &f32) {
+        if self.wave_func.domain.contains_key(possibility_to_bias) {
+            let domain_size: usize = self.wave_func.domain.keys().len();
+            if domain_size > 1 {
+                let taxable: f32 = domain_size as f32 - 1.0;
+                let tax: f32 = bias / taxable;
+                for (possibility, weight) in self.wave_func.domain.iter_mut() {
+                    if possibility == possibility_to_bias {
+                        *weight += bias;
+                    } else {
+                        *weight -= tax;
+                    }
+                }
+            }
+        }
+    }
+
+    fn weight_divvy(&mut self, weight_to_divvy: &f32) {
+        let domain_size: f32 = self.wave_func.domain.keys().len() as f32;
+        let divvy: f32 = weight_to_divvy / domain_size;
+        for weight in self.wave_func.domain.values_mut() {
+            *weight += divvy;
+        }
+    }
+
+    pub fn purge_tile(&mut self, possibility: &Terrain) -> Option<f32> {
         // Remove this possibility from our wave function.
         if let Some(weight) = self.wave_func.domain.swap_remove(possibility) {
+            self.weight_divvy(&weight);
             self.entropy -= 1;
             Some(weight)
         } else {
@@ -72,7 +98,7 @@ impl Scaffold {
 }
 
 pub struct WaveFunction {
-    pub domain: IndexMap<String, f32>,
+    pub domain: IndexMap<Terrain, f32>,
 }
 
 impl WaveFunction {
@@ -83,27 +109,27 @@ impl WaveFunction {
         // Build the map.
         let mut domain = IndexMap::new();
         let uniform_prob: f32 = 1.0 / num_possibilities;
-        domain.insert(Terrain::Coastal.rep(), uniform_prob);
-        domain.insert(Terrain::Desert.rep(), uniform_prob);
-        domain.insert(Terrain::Grassland.rep(), uniform_prob);
-        domain.insert(Terrain::Ice.rep(), uniform_prob);
-        domain.insert(Terrain::Ocean.rep(), uniform_prob);
-        domain.insert(Terrain::Snow.rep(), uniform_prob);
-        domain.insert(Terrain::Steppe.rep(), uniform_prob);
-        domain.insert(Terrain::Tundra.rep(), uniform_prob);
+        domain.insert(Terrain::Coastal, uniform_prob);
+        domain.insert(Terrain::Desert, uniform_prob);
+        domain.insert(Terrain::Grassland, uniform_prob);
+        domain.insert(Terrain::Ice, uniform_prob);
+        domain.insert(Terrain::Ocean, uniform_prob);
+        domain.insert(Terrain::Snow, uniform_prob);
+        domain.insert(Terrain::Steppe, uniform_prob);
+        domain.insert(Terrain::Tundra, uniform_prob);
 
         // Return self.
         WaveFunction { domain }
     }
 
-    pub fn collapse(&self) -> &String {
+    pub fn collapse(&self) -> &Terrain {
         // No possibilities left. Panic!
         if self.domain.keys().len() == 0 {
             panic!("\nError: wave function domain size is zero\n")
         }
 
         // Pre-processing.
-        let mut possibilities: Vec<&String> = Vec::new();
+        let mut possibilities: Vec<&Terrain> = Vec::new();
         let mut weights_pref_sums: Vec<f32> = Vec::new();
         let mut curr_sum: f32 = 0.0;
         for (possibility, weight) in self.domain.iter() {
@@ -204,35 +230,26 @@ fn adjust_for_latitude(
 
 fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     // The following tiles should not exist in this region.
-    scaffold.purge_tile(&Terrain::Ice.rep());
-    scaffold.purge_tile(&Terrain::Snow.rep());
-    scaffold.purge_tile(&Terrain::Tundra.rep());
+    scaffold.purge_tile(&Terrain::Ice);
+    scaffold.purge_tile(&Terrain::Snow);
+    scaffold.purge_tile(&Terrain::Tundra);
 
     // Adjust weights of remaining tile possibilities.
-    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
-    let divvy: f32 = (map_par.diverse_grassland_bias + map_par.diverse_steppe_bias) / domain_size;
-    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == &Terrain::Grassland.rep() {
-            *weight += map_par.diverse_grassland_bias;
-        } else if possibility == &Terrain::Steppe.rep() {
-            *weight += map_par.diverse_steppe_bias;
-        } else {
-            *weight -= divvy;
-        }
-    }
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.diverse_grassland_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.diverse_steppe_bias);
 }
 
 fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     // The following tiles should not exist in this region.
-    scaffold.purge_tile(&Terrain::Ice.rep());
-    scaffold.purge_tile(&Terrain::Snow.rep());
-    scaffold.purge_tile(&Terrain::Tundra.rep());
+    scaffold.purge_tile(&Terrain::Ice);
+    scaffold.purge_tile(&Terrain::Snow);
+    scaffold.purge_tile(&Terrain::Tundra);
 
     // Adjust weights of remaining tile possibilities.
     let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
     let divvy: f32 = (map_par.equator_desert_bias) / domain_size;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == &Terrain::Desert.rep() {
+        if possibility == &Terrain::Desert {
             *weight += map_par.equator_desert_bias;
         } else {
             *weight -= divvy;
@@ -241,9 +258,9 @@ fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
 }
 
 fn bias_icecaps(scaffold: &mut Scaffold) {
-    let mut to_remove: Vec<String> = Vec::new();
+    let mut to_remove: Vec<Terrain> = Vec::new();
     for possibility in scaffold.wave_func.domain.keys() {
-        if possibility != &Terrain::Ice.rep() {
+        if possibility != &Terrain::Ice {
             to_remove.push(possibility.clone());
         }
     }
@@ -253,9 +270,9 @@ fn bias_icecaps(scaffold: &mut Scaffold) {
 }
 
 fn bias_snowsheets(scaffold: &mut Scaffold) {
-    let mut to_remove: Vec<String> = Vec::new();
+    let mut to_remove: Vec<Terrain> = Vec::new();
     for possibility in scaffold.wave_func.domain.keys() {
-        if possibility != &Terrain::Snow.rep() {
+        if possibility != &Terrain::Snow {
             to_remove.push(possibility.clone());
         }
     }
@@ -268,9 +285,9 @@ fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
     let divvy: f32 = (map_par.tundra_snow_bias + map_par.tundra_tundra_bias) / domain_size;
     for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == &Terrain::Snow.rep() {
+        if possibility == &Terrain::Snow {
             *weight += map_par.tundra_snow_bias;
-        } else if possibility == &Terrain::Tundra.rep() {
+        } else if possibility == &Terrain::Tundra {
             *weight += map_par.tundra_tundra_bias;
         } else {
             *weight -= divvy;

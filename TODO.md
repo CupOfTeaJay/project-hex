@@ -1,9 +1,8 @@
 # General:
 - [ ] Document as much as possible.
-- [ ] Test. Begin more TDD.
-
-# Components to update:
-- [ ] Can we use str for wave_func?
+- [ ] Test everything.
+- [ ] Add panic branch for anything that returns Option.
+- [ ] Prefer pattern matching over if / else if / else if... as much as possible.
 
 # Components to add:
 
@@ -15,3 +14,12 @@
 # Systems to add:
 
 # Plugins to update:
+
+# Map Generation
+- [ ] Scaffold::bias_tile, Make well defined!
+- [ ] Make algorithms as modular as possible. This allows for mixing algorithms easily.
+    - [ ] Fun API for generating hexagonal maps.
+- [ ] Neighbors for tiles on the left and right sides of the map should "wrap".
+- [ ] Can we use string slices instead of String for domain keys?
+    - Maybe just use the enums!
+- [ ] Cleanup map generation algo upon satisfactory completion.

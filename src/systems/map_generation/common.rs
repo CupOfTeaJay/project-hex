@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#[derive(Clone, Eq, Hash, PartialEq)]
 pub enum Terrain {
     Coastal,
     Desert,

@@ -28,19 +28,19 @@ use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::systems::map_generation::generate_map_data::Scaffold;
 
 fn prevent_incompatibilities(
-    choice: &String,
+    choice: &Terrain,
     pos: &(i32, i32, i32),
     pos_neighbor_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
     pos_scaffold_map: &mut IndexMap<(i32, i32, i32), Scaffold>,
-    tile_to_incompatible_map: &HashMap<String, Vec<String>>,
+    tile_to_incompatible_map: &HashMap<Terrain, Vec<Terrain>>,
 ) {
     // Get neighbors to this position and what they can no longer collapse to (incompatabilities).
     let neighbor_positions = pos_neighbor_map.get(pos).unwrap();
     let incompats = tile_to_incompatible_map.get(choice).unwrap();
 
     // Adjust each of the neighbors, one by one - but only if the position still exists.
-    for pos in neighbor_positions.iter() {
-        if let Some(scaffold) = pos_scaffold_map.get_mut(pos) {
+    for neighbor_pos in neighbor_positions.iter() {
+        if let Some(scaffold) = pos_scaffold_map.get_mut(neighbor_pos) {
             // Loop through every incompatability.
             for incompatible in incompats.iter() {
                 // Remove the incompatability and divvy its weight.
@@ -58,8 +58,90 @@ fn prevent_incompatibilities(
     }
 }
 
-fn bias_neighbors() {
+fn bias_coastal_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_coastal_coastal_bias);
+    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_coastal_desert_bias);
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_coastal_grassland_bias);
+    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_coastal_ice_bias);
+    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_coastal_ocean_bias);
+    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_coastal_snow_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_coastal_steppe_bias);
+    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_coastal_tundra_bias);
+}
 
+fn bias_desert_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_desert_coastal_bias);
+    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_desert_desert_bias);
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_desert_grassland_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_desert_steppe_bias);
+}
+
+fn bias_grassland_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_grassland_coastal_bias);
+    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_grassland_desert_bias);
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_grassland_grassland_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_grassland_steppe_bias);
+    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_grassland_tundra_bias);
+}
+
+fn bias_ice_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_ice_coastal_bias);
+    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_ice_ice_bias);
+    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_ice_ocean_bias);
+    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_ice_snow_bias);
+}
+
+fn bias_ocean_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_ocean_coastal_bias);
+    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_ocean_ice_bias);
+    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_ocean_ocean_bias);
+}
+
+fn bias_snow_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_snow_coastal_bias);
+    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_snow_ice_bias);
+    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_snow_snow_bias);
+    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_snow_tundra_bias);
+}
+
+fn bias_steppe_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_steppe_coastal_bias);
+    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_steppe_desert_bias);
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_steppe_grassland_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_steppe_steppe_bias);
+    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_steppe_tundra_bias);
+}
+
+fn bias_tundra_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_tundra_coastal_bias);
+    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_tundra_grassland_bias);
+    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_tundra_snow_bias);
+    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_tundra_steppe_bias);
+    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_tundra_tundra_bias);
+}
+
+fn bias_neighbors(
+    choice: &Terrain,
+    map_par: &Res<MapParameters>,
+    pos: &(i32, i32, i32),
+    pos_neighbor_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
+    pos_scaffold_map: &mut IndexMap<(i32, i32, i32), Scaffold>,
+) {
+    // Pass neighbor to appropriate function.
+    for neighbor_pos in &pos_neighbor_map[pos] {
+        if let Some(scaffold) = pos_scaffold_map.get_mut(neighbor_pos) {
+            match choice {
+                Terrain::Coastal => bias_coastal_neighbors(map_par, scaffold),
+                Terrain::Desert => bias_desert_neighbors(map_par, scaffold),
+                Terrain::Grassland => bias_grassland_neighbors(map_par, scaffold),
+                Terrain::Ice => bias_ice_neighbors(map_par, scaffold),
+                Terrain::Ocean => bias_ocean_neighbors(map_par, scaffold),
+                Terrain::Snow => bias_snow_neighbors(map_par, scaffold),
+                Terrain::Steppe => bias_steppe_neighbors(map_par, scaffold),
+                Terrain::Tundra => bias_tundra_neighbors(map_par, scaffold),
+            }
+        }
+    }
 }
 
 fn determine_min_entropy_index(pos_scaffold_map: &IndexMap<(i32, i32, i32), Scaffold>) -> usize {
@@ -121,11 +203,11 @@ pub fn generate_map(
         let pos_clone = pos.clone();
 
         // Collapse this scaffold's wave function.
-        let choice: String = scaffold.wave_func.collapse().clone();
+        let choice: Terrain = scaffold.wave_func.collapse().clone();
 
         // Initialize the chosen tile's model.
         let model: SceneBundle = SceneBundle {
-            scene: asset_server.load(choice.clone()),
+            scene: asset_server.load(choice.clone().rep()),
             transform: scaffold.transform,
             ..Default::default()
         };
@@ -149,16 +231,25 @@ pub fn generate_map(
             &mut pos_scaffold_map,
             &tile_to_incompatible_map,
         );
+
+        // Bias the wave functions of neighboring scaffolds based upon the spawned tile.
+        bias_neighbors(
+            &choice,
+            &map_par,
+            &pos_clone,
+            &pos_neighbor_map,
+            &mut pos_scaffold_map,
+        )
     }
 }
 
-fn init_tile_to_incompatible_map() -> HashMap<String, Vec<String>> {
+fn init_tile_to_incompatible_map() -> HashMap<Terrain, Vec<Terrain>> {
     // Map to return.
-    let mut incompatible = HashMap::new();
+    let mut incompatible: HashMap<Terrain, Vec<Terrain>> = HashMap::new();
 
     // COASTAL.
     incompatible.insert(
-        Terrain::Coastal.rep(),
+        Terrain::Coastal,
         vec![
             // Any tile can be along a coast.
         ],
@@ -166,77 +257,60 @@ fn init_tile_to_incompatible_map() -> HashMap<String, Vec<String>> {
 
     // DESERT.
     incompatible.insert(
-        Terrain::Desert.rep(),
-        vec![
-            Terrain::Ice.rep(),
-            Terrain::Ocean.rep(),
-            Terrain::Snow.rep(),
-            Terrain::Tundra.rep(),
-        ],
+        Terrain::Desert,
+        vec![Terrain::Ice, Terrain::Ocean, Terrain::Snow, Terrain::Tundra],
     );
 
     // GRASSLAND.
     incompatible.insert(
-        Terrain::Grassland.rep(),
-        vec![
-            Terrain::Ice.rep(),
-            Terrain::Ocean.rep(),
-            Terrain::Snow.rep(),
-        ],
+        Terrain::Grassland,
+        vec![Terrain::Ice, Terrain::Ocean, Terrain::Snow],
     );
 
     // ICE.
     incompatible.insert(
-        Terrain::Ice.rep(),
+        Terrain::Ice,
         vec![
-            Terrain::Desert.rep(),
-            Terrain::Grassland.rep(),
-            Terrain::Steppe.rep(),
-            Terrain::Tundra.rep(),
+            Terrain::Desert,
+            Terrain::Grassland,
+            Terrain::Steppe,
+            Terrain::Tundra,
         ],
     );
 
     // OCEAN.
     incompatible.insert(
-        Terrain::Ocean.rep(),
+        Terrain::Ocean,
         vec![
-            Terrain::Desert.rep(),
-            Terrain::Grassland.rep(),
-            Terrain::Snow.rep(),
-            Terrain::Steppe.rep(),
-            Terrain::Tundra.rep(),
+            Terrain::Desert,
+            Terrain::Grassland,
+            Terrain::Snow,
+            Terrain::Steppe,
+            Terrain::Tundra,
         ],
     );
 
     // SNOW.
     incompatible.insert(
-        Terrain::Snow.rep(),
+        Terrain::Snow,
         vec![
-            Terrain::Desert.rep(),
-            Terrain::Grassland.rep(),
-            Terrain::Ocean.rep(),
-            Terrain::Steppe.rep(),
+            Terrain::Desert,
+            Terrain::Grassland,
+            Terrain::Ocean,
+            Terrain::Steppe,
         ],
     );
 
     // STEPPE.
     incompatible.insert(
-        Terrain::Steppe.rep(),
-        vec![
-            Terrain::Ice.rep(),
-            Terrain::Ocean.rep(),
-            Terrain::Snow.rep(),
-        ],
+        Terrain::Steppe,
+        vec![Terrain::Ice, Terrain::Ocean, Terrain::Snow],
     );
 
     // TUNDRA.
     incompatible.insert(
-        Terrain::Tundra.rep(),
-        vec![
-            Terrain::Desert.rep(),
-            Terrain::Ice.rep(),
-            Terrain::Ocean.rep(),
-        ],
+        Terrain::Tundra,
+        vec![Terrain::Desert, Terrain::Ice, Terrain::Ocean],
     );
 
     // Return the map.

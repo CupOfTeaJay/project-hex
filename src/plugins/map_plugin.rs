@@ -24,11 +24,15 @@ use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
 
 pub struct MapPlugin;
 
-// TODO: why does make_tiles_pickable need to be in the update system???
+// TODO: somehow move make_tiles_pickable out of the Update schedule.
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         // Map settings set by user.
-        let map_settings = MapParameters::new(106, 66, 0.20, 0.20, 0.20, 0.20, 0.20, 3.0, 5.0);
+        let map_settings = MapParameters::new(
+            106, 66, 0.20, 0.20, 0.20, 0.20, 0.20, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 5.0,
+        );
         // Insert resources into the app.
         app.insert_resource(map_settings);
         // Add startup scheduled systems to the app.
