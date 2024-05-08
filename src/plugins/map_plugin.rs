@@ -18,7 +18,11 @@
 
 use bevy::prelude::*;
 
+use crate::resources::map_parameters::DimensionParameters;
+use crate::resources::map_parameters::LatitudeParameters;
+use crate::resources::map_parameters::LimitParameters;
 use crate::resources::map_parameters::MapParameters;
+use crate::resources::map_parameters::SpawnParameters;
 use crate::systems::map_generation::generate_map::generate_map;
 use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
 
@@ -27,16 +31,30 @@ pub struct MapPlugin;
 // TODO: somehow move make_tiles_pickable out of the Update schedule.
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        // Map settings set by user.
-        let map_settings = MapParameters::new(
-            106, 66, 0.20, 0.20, 0.20, 0.20, 0.20, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        // Initialize map sub-parameters.
+        let map_latitude_parameters = LatitudeParameters::new(0.20, 0.20, 0.20, 0.20, 0.20);
+        let map_limit_parameters = LimitParameters::new(4.0, 3.0);
+        let map_spawn_parameters = SpawnParameters::new(
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 5.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
         );
+        let map_dimensions = DimensionParameters::new(106, 66);
+
+        // Initialize map parameters.
+        let map_parameters = MapParameters::new(
+            map_dimensions,
+            map_latitude_parameters,
+            map_spawn_parameters,
+            map_limit_parameters,
+        );
+
         // Insert resources into the app.
-        app.insert_resource(map_settings);
+        app.insert_resource(map_parameters);
+
         // Add startup scheduled systems to the app.
         app.add_systems(Startup, generate_map);
+
         // Add update scheduled systems to the app.
         app.add_systems(Update, make_tiles_pickable);
     }

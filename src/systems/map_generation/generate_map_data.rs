@@ -60,18 +60,33 @@ impl Scaffold {
         }
     }
 
-    pub fn bias_tile(&mut self, possibility_to_bias: &Terrain, bias: &f32) {
-        if self.wave_func.domain.contains_key(possibility_to_bias) {
-            let domain_size: usize = self.wave_func.domain.keys().len();
-            if domain_size > 1 {
-                let taxable: f32 = domain_size as f32 - 1.0;
-                let tax: f32 = bias / taxable;
-                for (possibility, weight) in self.wave_func.domain.iter_mut() {
-                    if possibility == possibility_to_bias {
-                        *weight += bias;
-                    } else {
-                        *weight -= tax;
-                    }
+    // TODO: I think there's a much better way to do this.
+    pub fn bias_tiles(&mut self, possibilities_to_bias: &Vec<(&Terrain, &f32)>) {
+        // Init vars.
+        let domain_size: usize = self.wave_func.domain.len();
+        let mut sum_biases: f32 = 0.0;
+        let mut tax: f32 = 0.0;
+        let taxable: usize;
+
+        // Terrains found and biased within the domain.
+        let mut biased_terrains: Vec<&Terrain> = Vec::new();
+
+        // Bias what possibilities we can.
+        for (possibility, bias) in possibilities_to_bias.iter() {
+            if let Some(weight) = self.wave_func.domain.get_mut(*possibility) {
+                *weight += *bias;
+                sum_biases += *bias;
+                biased_terrains.push(possibility);
+            }
+        }
+
+        // Tax possibilities that were not biased.
+        taxable = domain_size - biased_terrains.len();
+        if taxable > 0 {
+            tax = sum_biases / (taxable as f32);
+            for (possibility, weight) in self.wave_func.domain.iter_mut() {
+                if !biased_terrains.contains(&possibility) {
+                    *weight -= tax;
                 }
             }
         }
@@ -160,7 +175,7 @@ pub fn generate_map_data(
 ) {
     // Generate scaffolding.
     let (pos_neighbor_map, mut pos_scaffold_map) =
-        generate_scaffolding(&map_par.width, &map_par.height);
+        generate_scaffolding(&map_par.dimensions.width, &map_par.dimensions.height);
 
     // Bias scaffolding based on latitude.
     adjust_for_latitude(map_par, &mut pos_scaffold_map);
@@ -176,7 +191,7 @@ fn adjust_for_latitude(
 ) {
     // Constants.
     let num_regions: f32 = 5.0;
-    let map_height: f32 = map_par.height as f32;
+    let map_height: f32 = map_par.dimensions.height as f32;
     let region_width: f32 = map_height / num_regions;
 
     // Region labels.
@@ -190,11 +205,13 @@ fn adjust_for_latitude(
         let latitude: f32 = scaffold.pos.r;
 
         // Adjust weights for the northern icecaps region.
-        if latitude < map_par.icecap_limit {
+        if latitude < map_par.limit_params.icecap_limit {
             bias_icecaps(scaffold)
         }
         // Adjust weights for the northern snowsheets region.
-        else if latitude < map_par.icecap_limit + map_par.snow_limit {
+        else if latitude
+            < map_par.limit_params.icecap_limit + map_par.limit_params.snowsheet_limit
+        {
             bias_snowsheets(scaffold)
         }
         // Adjust weights for the northern tundra region.
@@ -214,11 +231,14 @@ fn adjust_for_latitude(
             bias_diverse(map_par, scaffold)
         }
         // Adjust weights for the southern tundra region.
-        else if latitude < south_tund - (map_par.icecap_limit + map_par.snow_limit) {
+        else if latitude
+            < south_tund
+                - (map_par.limit_params.icecap_limit + map_par.limit_params.snowsheet_limit)
+        {
             bias_tundra(map_par, scaffold)
         }
         // Adjust weights for the southern snowsheets region.
-        else if latitude < south_tund - map_par.icecap_limit {
+        else if latitude < south_tund - map_par.limit_params.icecap_limit {
             bias_snowsheets(scaffold)
         }
         // Adjust weights for the southern icecaps region.
@@ -234,9 +254,20 @@ fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     scaffold.purge_tile(&Terrain::Snow);
     scaffold.purge_tile(&Terrain::Tundra);
 
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (
+            &Terrain::Grassland,
+            &map_par.latitude_params.diverse_grassland_bias,
+        ),
+        (
+            &Terrain::Steppe,
+            &map_par.latitude_params.diverse_steppe_bias,
+        ),
+    ];
+
     // Adjust weights of remaining tile possibilities.
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.diverse_grassland_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.diverse_steppe_bias);
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
@@ -245,16 +276,14 @@ fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     scaffold.purge_tile(&Terrain::Snow);
     scaffold.purge_tile(&Terrain::Tundra);
 
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![(
+        &Terrain::Desert,
+        &map_par.latitude_params.equator_desert_bias,
+    )];
+
     // Adjust weights of remaining tile possibilities.
-    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
-    let divvy: f32 = (map_par.equator_desert_bias) / domain_size;
-    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == &Terrain::Desert {
-            *weight += map_par.equator_desert_bias;
-        } else {
-            *weight -= divvy;
-        }
-    }
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_icecaps(scaffold: &mut Scaffold) {
@@ -282,17 +311,17 @@ fn bias_snowsheets(scaffold: &mut Scaffold) {
 }
 
 fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    let domain_size: f32 = scaffold.wave_func.domain.len() as f32;
-    let divvy: f32 = (map_par.tundra_snow_bias + map_par.tundra_tundra_bias) / domain_size;
-    for (possibility, weight) in scaffold.wave_func.domain.iter_mut() {
-        if possibility == &Terrain::Snow {
-            *weight += map_par.tundra_snow_bias;
-        } else if possibility == &Terrain::Tundra {
-            *weight += map_par.tundra_tundra_bias;
-        } else {
-            *weight -= divvy;
-        }
-    }
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Snow, &map_par.latitude_params.tundra_snow_bias),
+        (
+            &Terrain::Tundra,
+            &map_par.latitude_params.tundra_tundra_bias,
+        ),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 /// Given some position, determines its neighboring positions.

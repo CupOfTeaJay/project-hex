@@ -59,65 +59,143 @@ fn prevent_incompatibilities(
 }
 
 fn bias_coastal_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_coastal_coastal_bias);
-    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_coastal_desert_bias);
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_coastal_grassland_bias);
-    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_coastal_ice_bias);
-    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_coastal_ocean_bias);
-    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_coastal_snow_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_coastal_steppe_bias);
-    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_coastal_tundra_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (
+            &Terrain::Coastal,
+            &map_par.spawn_params.coastal_coastal_bias,
+        ),
+        (&Terrain::Desert, &map_par.spawn_params.coastal_desert_bias),
+        (
+            &Terrain::Grassland,
+            &map_par.spawn_params.coastal_grassland_bias,
+        ),
+        (&Terrain::Ice, &map_par.spawn_params.coastal_ice_bias),
+        (&Terrain::Ocean, &map_par.spawn_params.coastal_ocean_bias),
+        (&Terrain::Snow, &map_par.spawn_params.coastal_snow_bias),
+        (&Terrain::Steppe, &map_par.spawn_params.coastal_steppe_bias),
+        (&Terrain::Tundra, &map_par.spawn_params.coastal_tundra_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_desert_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_desert_coastal_bias);
-    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_desert_desert_bias);
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_desert_grassland_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_desert_steppe_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.desert_coastal_bias),
+        (&Terrain::Desert, &map_par.spawn_params.desert_desert_bias),
+        (
+            &Terrain::Grassland,
+            &map_par.spawn_params.desert_grassland_bias,
+        ),
+        (&Terrain::Steppe, &map_par.spawn_params.desert_steppe_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_grassland_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_grassland_coastal_bias);
-    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_grassland_desert_bias);
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_grassland_grassland_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_grassland_steppe_bias);
-    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_grassland_tundra_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (
+            &Terrain::Coastal,
+            &map_par.spawn_params.grassland_coastal_bias,
+        ),
+        (
+            &Terrain::Desert,
+            &map_par.spawn_params.grassland_desert_bias,
+        ),
+        (
+            &Terrain::Grassland,
+            &map_par.spawn_params.grassland_grassland_bias,
+        ),
+        (
+            &Terrain::Steppe,
+            &map_par.spawn_params.grassland_steppe_bias,
+        ),
+        (
+            &Terrain::Tundra,
+            &map_par.spawn_params.grassland_tundra_bias,
+        ),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_ice_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_ice_coastal_bias);
-    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_ice_ice_bias);
-    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_ice_ocean_bias);
-    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_ice_snow_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.ice_coastal_bias),
+        (&Terrain::Ice, &map_par.spawn_params.ice_ice_bias),
+        (&Terrain::Ocean, &map_par.spawn_params.ice_ocean_bias),
+        (&Terrain::Snow, &map_par.spawn_params.ice_snow_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_ocean_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_ocean_coastal_bias);
-    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_ocean_ice_bias);
-    scaffold.bias_tile(&Terrain::Ocean, &map_par.spawn_ocean_ocean_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.ocean_coastal_bias),
+        (&Terrain::Ice, &map_par.spawn_params.ocean_ice_bias),
+        (&Terrain::Ocean, &map_par.spawn_params.ocean_ocean_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_snow_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_snow_coastal_bias);
-    scaffold.bias_tile(&Terrain::Ice, &map_par.spawn_snow_ice_bias);
-    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_snow_snow_bias);
-    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_snow_tundra_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.snow_coastal_bias),
+        (&Terrain::Ice, &map_par.spawn_params.snow_ice_bias),
+        (&Terrain::Snow, &map_par.spawn_params.snow_snow_bias),
+        (&Terrain::Tundra, &map_par.spawn_params.snow_tundra_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_steppe_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_steppe_coastal_bias);
-    scaffold.bias_tile(&Terrain::Desert, &map_par.spawn_steppe_desert_bias);
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_steppe_grassland_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_steppe_steppe_bias);
-    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_steppe_tundra_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.steppe_coastal_bias),
+        (&Terrain::Desert, &map_par.spawn_params.steppe_desert_bias),
+        (
+            &Terrain::Grassland,
+            &map_par.spawn_params.steppe_grassland_bias,
+        ),
+        (&Terrain::Steppe, &map_par.spawn_params.steppe_steppe_bias),
+        (&Terrain::Tundra, &map_par.spawn_params.steppe_tundra_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_tundra_neighbors(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
-    scaffold.bias_tile(&Terrain::Coastal, &map_par.spawn_tundra_coastal_bias);
-    scaffold.bias_tile(&Terrain::Grassland, &map_par.spawn_tundra_grassland_bias);
-    scaffold.bias_tile(&Terrain::Snow, &map_par.spawn_tundra_snow_bias);
-    scaffold.bias_tile(&Terrain::Steppe, &map_par.spawn_tundra_steppe_bias);
-    scaffold.bias_tile(&Terrain::Tundra, &map_par.spawn_tundra_tundra_bias);
+    // Tiles to bias.
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (&Terrain::Coastal, &map_par.spawn_params.tundra_coastal_bias),
+        (
+            &Terrain::Grassland,
+            &map_par.spawn_params.tundra_grassland_bias,
+        ),
+        (&Terrain::Snow, &map_par.spawn_params.tundra_snow_bias),
+        (&Terrain::Steppe, &map_par.spawn_params.tundra_steppe_bias),
+        (&Terrain::Tundra, &map_par.spawn_params.tundra_tundra_bias),
+    ];
+
+    // Adjust weights of remaining tile possibilities.
+    scaffold.bias_tiles(&tiles_to_bias);
 }
 
 fn bias_neighbors(

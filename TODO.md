@@ -23,3 +23,4 @@
 - [ ] Can we use string slices instead of String for domain keys?
     - Maybe just use the enums!
 - [ ] Cleanup map generation algo upon satisfactory completion.
+- [ ] Maybe one day make latitude a gradient instead of 5 distinct regions.
