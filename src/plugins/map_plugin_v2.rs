@@ -18,18 +18,16 @@
 
 use bevy::prelude::*;
 
-use crate::resources::map_parameters::DimensionParameters;
-use crate::resources::map_parameters::LatitudeParameters;
-use crate::resources::map_parameters::LimitParameters;
-use crate::resources::map_parameters::MapParameters;
-use crate::resources::map_parameters::SpawnParameters;
-use crate::systems::map_generation::generate_map::generate_map;
+use crate::resources::map_parameters::{
+    DimensionParameters, LatitudeParameters, LimitParameters, MapParameters, SpawnParameters,
+};
 use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
+use crate::systems::map_generation_v2::generate_map::generate_map;
 
-pub struct MapPlugin;
+pub struct MapPluginV2;
 
 // TODO: somehow move make_tiles_pickable out of the Update schedule.
-impl Plugin for MapPlugin {
+impl Plugin for MapPluginV2 {
     fn build(&self, app: &mut App) {
         // Initialize map sub-parameters.
         let map_latitude_parameters = LatitudeParameters::new(
@@ -53,7 +51,6 @@ impl Plugin for MapPlugin {
 
         // Insert resources into the app.
         app.insert_resource(map_parameters);
-
         // Add startup scheduled systems to the app.
         app.add_systems(Startup, generate_map);
 

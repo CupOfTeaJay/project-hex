@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod camera_plugin;
-pub mod map_plugin;
-pub mod map_plugin_v2;
-pub mod stage_setting_plugin;
+mod common;
+pub mod generate_map;
+mod generate_noise;
+mod init_barebones;

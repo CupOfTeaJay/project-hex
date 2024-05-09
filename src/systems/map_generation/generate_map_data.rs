@@ -60,34 +60,10 @@ impl Scaffold {
         }
     }
 
-    // TODO: I think there's a much better way to do this.
     pub fn bias_tiles(&mut self, possibilities_to_bias: &Vec<(&Terrain, &f32)>) {
-        // Init vars.
-        let domain_size: usize = self.wave_func.domain.len();
-        let mut sum_biases: f32 = 0.0;
-        let mut tax: f32 = 0.0;
-        let taxable: usize;
-
-        // Terrains found and biased within the domain.
-        let mut biased_terrains: Vec<&Terrain> = Vec::new();
-
-        // Bias what possibilities we can.
         for (possibility, bias) in possibilities_to_bias.iter() {
             if let Some(weight) = self.wave_func.domain.get_mut(*possibility) {
                 *weight += *bias;
-                sum_biases += *bias;
-                biased_terrains.push(possibility);
-            }
-        }
-
-        // Tax possibilities that were not biased.
-        taxable = domain_size - biased_terrains.len();
-        if taxable > 0 {
-            tax = sum_biases / (taxable as f32);
-            for (possibility, weight) in self.wave_func.domain.iter_mut() {
-                if !biased_terrains.contains(&possibility) {
-                    *weight -= tax;
-                }
             }
         }
     }
@@ -139,6 +115,7 @@ impl WaveFunction {
 
     pub fn collapse(&self) -> &Terrain {
         // No possibilities left. Panic!
+        // TODO: Identify case(s) where this happens, or just restart map gen instead of panicking.
         if self.domain.keys().len() == 0 {
             panic!("\nError: wave function domain size is zero\n")
         }
@@ -378,41 +355,41 @@ fn determine_neighbors(width: &i32, pos: (i32, i32, i32)) -> Vec<(i32, i32, i32)
     // Neighbors for tiles on the LEFT edge of the map.
     if r == -2 * q {
         ret_vec = vec![
-            (q + 1, r - 1, s),           // Northeastern neighbor.
-            (q + 1, r, s - 1),           // Eastern neighbor.
-            (q, r + 1, s - 1),           // Southeastern neighbor.
-            (q + (width - 1), r + 1, s), // Southwestern neighbor.
-            (q + (width - 1), r, s + 1), // Western neighbor.
-            (q + (width), r - 1, s + 1), // Northwestern neighbor.
+            (q + 1, r - 1, s),                        // Northeastern neighbor.
+            (q + 1, r, s - 1),                        // Eastern neighbor.
+            (q, r + 1, s - 1),                        // Southeastern neighbor.
+            (q + (width - 1), r + 1, -q - r - width), // Southwestern neighbor.
+            (q + (width - 1), r, -q - r - width + 1), // Western neighbor.
+            (q + width, r - 1, -q - r - width + 1),   // Northwestern neighbor.
         ]
     } else if r == -2 * q + 1 {
         ret_vec = vec![
-            (q + 1, r - 1, s),           // Northeastern neighbor.
-            (q + 1, r, s - 1),           // Eastern neighbor.
-            (q, r + 1, s - 1),           // Southeastern neighbor.
-            (q - 1, r + 1, s),           // Southwestern neighbor.
-            (q + (width - 1), r, s + 1), // Western neighbor.
-            (q, r - 1, s + 1),           // Northwestern neighbor.
+            (q + 1, r - 1, s),                        // Northeastern neighbor.
+            (q + 1, r, s - 1),                        // Eastern neighbor.
+            (q, r + 1, s - 1),                        // Southeastern neighbor.
+            (q - 1, r + 1, s),                        // Southwestern neighbor.
+            (q + (width - 1), r, -q - r - width + 1), // Western neighbor.
+            (q, r - 1, s + 1),                        // Northwestern neighbor.
         ];
     }
     // Neighbors for tiles on the RIGHT edge of the map.
     else if r == 2 * (width - q - 1) {
         ret_vec = vec![
-            (q + 1, r - 1, s),           // Northeastern neighbor.
-            (q - (width - 1), r, s - 1), // Eastern neighbor.
-            (q, r + 1, s - 1),           // Southeastern neighbor.
-            (q - 1, r + 1, s),           // Southwestern neighbor.
-            (q - 1, r, s + 1),           // Western neighbor.
-            (q, r - 1, s + 1),           // Northwestern neighbor.
+            (q + 1, r - 1, s),                        // Northeastern neighbor.
+            (q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
+            (q, r + 1, s - 1),                        // Southeastern neighbor.
+            (q - 1, r + 1, s),                        // Southwestern neighbor.
+            (q - 1, r, s + 1),                        // Western neighbor.
+            (q, r - 1, s + 1),                        // Northwestern neighbor.
         ];
     } else if r == 2 * (width - q) - 1 {
         ret_vec = vec![
-            (q - (width - 1), r - 1, s),     // Northeastern neighbor.
-            (q - (width - 1), r, s - 1),     // Eastern neighbor.
-            (q - (width - 2), r + 1, s - 1), // Southeastern neighbor.
-            (q - 1, r + 1, s),               // Southwestern neighbor.
-            (q - 1, r, s + 1),               // Western neighbor.
-            (q, r - 1, s + 1),               // Northwestern neighbor.
+            (q - (width - 1), r - 1, -q - r + width), // Northeastern neighbor.
+            (q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
+            (q - width, r + 1, -q - r + width - 1),   // Southeastern neighbor.
+            (q - 1, r + 1, s),                        // Southwestern neighbor.
+            (q - 1, r, s + 1),                        // Western neighbor.
+            (q, r - 1, s + 1),                        // Northwestern neighbor.
         ];
 
     // Neighbors for tiles that are NOT on the edges, and do NOT need to wrap.
