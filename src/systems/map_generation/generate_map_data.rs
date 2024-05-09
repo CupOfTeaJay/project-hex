@@ -257,9 +257,18 @@ fn bias_diverse(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     // Tiles to bias.
     let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
         (
+            &Terrain::Coastal,
+            &map_par.latitude_params.diverse_coastal_bias,
+        ),
+        (
+            &Terrain::Desert,
+            &map_par.latitude_params.diverse_desert_bias,
+        ),
+        (
             &Terrain::Grassland,
             &map_par.latitude_params.diverse_grassland_bias,
         ),
+        (&Terrain::Ocean, &map_par.latitude_params.diverse_ocean_bias),
         (
             &Terrain::Steppe,
             &map_par.latitude_params.diverse_steppe_bias,
@@ -277,10 +286,25 @@ fn bias_equator(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
     scaffold.purge_tile(&Terrain::Tundra);
 
     // Tiles to bias.
-    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![(
-        &Terrain::Desert,
-        &map_par.latitude_params.equator_desert_bias,
-    )];
+    let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (
+            &Terrain::Coastal,
+            &map_par.latitude_params.equator_coastal_bias,
+        ),
+        (
+            &Terrain::Desert,
+            &map_par.latitude_params.equator_desert_bias,
+        ),
+        (
+            &Terrain::Grassland,
+            &map_par.latitude_params.equator_grassland_bias,
+        ),
+        (&Terrain::Ocean, &map_par.latitude_params.equator_ocean_bias),
+        (
+            &Terrain::Steppe,
+            &map_par.latitude_params.equator_steppe_bias,
+        ),
+    ];
 
     // Adjust weights of remaining tile possibilities.
     scaffold.bias_tiles(&tiles_to_bias);
@@ -311,9 +335,26 @@ fn bias_snowsheets(scaffold: &mut Scaffold) {
 }
 
 fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
+    // The following tiles should not exist in this region.
+    scaffold.purge_tile(&Terrain::Desert);
+    scaffold.purge_tile(&Terrain::Ice);
+
     // Tiles to bias.
     let tiles_to_bias: Vec<(&Terrain, &f32)> = vec![
+        (
+            &Terrain::Coastal,
+            &map_par.latitude_params.tundra_coastal_bias,
+        ),
+        (
+            &Terrain::Grassland,
+            &map_par.latitude_params.tundra_grassland_bias,
+        ),
+        (&Terrain::Ocean, &map_par.latitude_params.tundra_ocean_bias),
         (&Terrain::Snow, &map_par.latitude_params.tundra_snow_bias),
+        (
+            &Terrain::Steppe,
+            &map_par.latitude_params.tundra_steppe_bias,
+        ),
         (
             &Terrain::Tundra,
             &map_par.latitude_params.tundra_tundra_bias,
@@ -325,15 +366,69 @@ fn bias_tundra(map_par: &Res<MapParameters>, scaffold: &mut Scaffold) {
 }
 
 /// Given some position, determines its neighboring positions.
-fn determine_neighbors(pos: (i32, i32, i32)) -> Vec<(i32, i32, i32)> {
-    vec![
-        (pos.0 + 1, pos.1 - 1, pos.2), // Northeastern neighbor.
-        (pos.0 + 1, pos.1, pos.2 - 1), // Eastern neighbor.
-        (pos.0, pos.1 + 1, pos.2 - 1), // Southeastern neighbor.
-        (pos.0 - 1, pos.1 + 1, pos.2), // Southwestern neighbor.
-        (pos.0 - 1, pos.1, pos.2 + 1), // Western neighbor.
-        (pos.0, pos.1 - 1, pos.2 + 1), // Northwestern neighbor.
-    ]
+fn determine_neighbors(width: &i32, pos: (i32, i32, i32)) -> Vec<(i32, i32, i32)> {
+    // Vars for readability.
+    let q = pos.0;
+    let r = pos.1;
+    let s = pos.2;
+
+    // Vector to return.
+    let ret_vec: Vec<(i32, i32, i32)>;
+
+    // Neighbors for tiles on the LEFT edge of the map.
+    if r == -2 * q {
+        ret_vec = vec![
+            (q + 1, r - 1, s),           // Northeastern neighbor.
+            (q + 1, r, s - 1),           // Eastern neighbor.
+            (q, r + 1, s - 1),           // Southeastern neighbor.
+            (q + (width - 1), r + 1, s), // Southwestern neighbor.
+            (q + (width - 1), r, s + 1), // Western neighbor.
+            (q + (width), r - 1, s + 1), // Northwestern neighbor.
+        ]
+    } else if r == -2 * q + 1 {
+        ret_vec = vec![
+            (q + 1, r - 1, s),           // Northeastern neighbor.
+            (q + 1, r, s - 1),           // Eastern neighbor.
+            (q, r + 1, s - 1),           // Southeastern neighbor.
+            (q - 1, r + 1, s),           // Southwestern neighbor.
+            (q + (width - 1), r, s + 1), // Western neighbor.
+            (q, r - 1, s + 1),           // Northwestern neighbor.
+        ];
+    }
+    // Neighbors for tiles on the RIGHT edge of the map.
+    else if r == 2 * (width - q - 1) {
+        ret_vec = vec![
+            (q + 1, r - 1, s),           // Northeastern neighbor.
+            (q - (width - 1), r, s - 1), // Eastern neighbor.
+            (q, r + 1, s - 1),           // Southeastern neighbor.
+            (q - 1, r + 1, s),           // Southwestern neighbor.
+            (q - 1, r, s + 1),           // Western neighbor.
+            (q, r - 1, s + 1),           // Northwestern neighbor.
+        ];
+    } else if r == 2 * (width - q) - 1 {
+        ret_vec = vec![
+            (q - (width - 1), r - 1, s),     // Northeastern neighbor.
+            (q - (width - 1), r, s - 1),     // Eastern neighbor.
+            (q - (width - 2), r + 1, s - 1), // Southeastern neighbor.
+            (q - 1, r + 1, s),               // Southwestern neighbor.
+            (q - 1, r, s + 1),               // Western neighbor.
+            (q, r - 1, s + 1),               // Northwestern neighbor.
+        ];
+
+    // Neighbors for tiles that are NOT on the edges, and do NOT need to wrap.
+    } else {
+        ret_vec = vec![
+            (q + 1, r - 1, s), // Northeastern neighbor.
+            (q + 1, r, s - 1), // Eastern neighbor.
+            (q, r + 1, s - 1), // Southeastern neighbor.
+            (q - 1, r + 1, s), // Southwestern neighbor.
+            (q - 1, r, s + 1), // Western neighbor.
+            (q, r - 1, s + 1), // Northwestern neighbor.
+        ];
+    }
+
+    // Return neighbors.
+    ret_vec
 }
 
 /// Generates two hash tables - one maps position to scaffolding, the other position to neighboring
@@ -372,7 +467,7 @@ fn generate_scaffolding(
                 (curr_pos.q as i32, curr_pos.r as i32, curr_pos.s as i32);
 
             // Insert data into pos_neighbor_map.
-            pos_neighbor_map.insert(int_rep, determine_neighbors(int_rep));
+            pos_neighbor_map.insert(int_rep, determine_neighbors(width, int_rep));
 
             // Insert data into pos_scaffold_map.
             pos_scaffold_map.insert(int_rep, Scaffold::new(curr_pos));

@@ -21,7 +21,7 @@ use bevy::prelude::*;
 pub fn spawn_camera(mut commands: Commands) {
     // Initialize a 3D camera.
     let camera = Camera3dBundle {
-        transform: Transform::from_xyz(0.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+        transform: Transform::from_xyz(0.0, 4.0, 2.0).looking_at(Vec3::ZERO, Vec3::Y),
         projection: PerspectiveProjection {
             fov: 45.0_f32.to_radians(),
             ..default()

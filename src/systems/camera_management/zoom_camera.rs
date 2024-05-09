@@ -19,32 +19,33 @@
 use bevy::input::mouse::*;
 use bevy::prelude::*;
 
-const CAMERA_ZOOM_SPEED: f32 = 2.0;
+const CAMERA_ZOOM_SPEED_FACTOR: f32 = 0.92;
 
 pub fn zoom_camera(
-    mut query: Query<&mut Projection, With<Camera>>,
+    mut query: Query<&mut Transform, With<Camera>>,
     mut scroll_evr: EventReader<MouseWheel>,
 ) {
     for scroll in scroll_evr.read() {
-        // Get the perspective projection at the time of the scroll event.
-        // TODO: Can this be done without pattern matching? We're not using the orthographic projection.
-        let Projection::Perspective(persp) = query.single_mut().into_inner() else {
-            return;
-        };
+        let transform = query.single_mut().into_inner();
+
         // Zoom in or out by adjusting the field of view.
         match scroll.unit {
             MouseScrollUnit::Line => {
                 if scroll.y > 0.0 {
-                    persp.fov -= CAMERA_ZOOM_SPEED.to_radians();
+                    transform.translation.y *= CAMERA_ZOOM_SPEED_FACTOR;
+                    transform.translation.z *= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
                 } else {
-                    persp.fov += CAMERA_ZOOM_SPEED.to_radians();
+                    transform.translation.y /= CAMERA_ZOOM_SPEED_FACTOR;
+                    transform.translation.z /= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
                 }
             }
             MouseScrollUnit::Pixel => {
                 if scroll.y > 0.0 {
-                    persp.fov -= CAMERA_ZOOM_SPEED.to_radians();
+                    transform.translation.y *= CAMERA_ZOOM_SPEED_FACTOR;
+                    transform.translation.z *= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
                 } else {
-                    persp.fov += CAMERA_ZOOM_SPEED.to_radians();
+                    transform.translation.y /= CAMERA_ZOOM_SPEED_FACTOR;
+                    transform.translation.z /= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
                 }
             }
         }

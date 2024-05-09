@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::hashbrown::Equivalent};
 
 /// Parameters that define the map's size.
 pub struct DimensionParameters {
@@ -33,49 +33,101 @@ impl DimensionParameters {
 /// Parameters that bias terrain spawns at certain latitudes.
 pub struct LatitudeParameters {
     // Biases for tiles at DIVERSE latitudes.
+    pub diverse_coastal_bias: f32,
+    pub diverse_desert_bias: f32,
     pub diverse_grassland_bias: f32,
+    pub diverse_ocean_bias: f32,
     pub diverse_steppe_bias: f32,
     // Biases for tiles at the EQUATOR.
+    pub equator_coastal_bias: f32,
     pub equator_desert_bias: f32,
+    pub equator_grassland_bias: f32,
+    pub equator_ocean_bias: f32,
+    pub equator_steppe_bias: f32,
     // Biases for tiles at TUNDRA latitudes.
+    pub tundra_coastal_bias: f32,
+    pub tundra_grassland_bias: f32,
+    pub tundra_ocean_bias: f32,
     pub tundra_snow_bias: f32,
+    pub tundra_steppe_bias: f32,
     pub tundra_tundra_bias: f32,
 }
 
 impl LatitudeParameters {
     pub fn new(
+        // Biases for tiles at DIVERSE latitudes.
+        diverse_coastal_bias: f32,
+        diverse_desert_bias: f32,
         diverse_grassland_bias: f32,
+        diverse_ocean_bias: f32,
         diverse_steppe_bias: f32,
+        // Biases for tiles at the EQUATOR.
+        equator_coastal_bias: f32,
         equator_desert_bias: f32,
+        equator_grassland_bias: f32,
+        equator_ocean_bias: f32,
+        equator_steppe_bias: f32,
+        // Biases for tiles at TUNDRA latitudes.
+        tundra_coastal_bias: f32,
+        tundra_grassland_bias: f32,
+        tundra_ocean_bias: f32,
         tundra_snow_bias: f32,
+        tundra_steppe_bias: f32,
         tundra_tundra_bias: f32,
     ) -> Self {
         // Diverse latitude parameters to validate.
-        let sum_diverse_biases: f32 = diverse_grassland_bias + diverse_steppe_bias;
+        let sum_diverse_biases: f32 = diverse_coastal_bias
+            + diverse_desert_bias
+            + diverse_grassland_bias
+            + diverse_ocean_bias
+            + diverse_steppe_bias;
 
         // Equator latitude parameters to validate.
-        let sum_equator_biases: f32 = equator_desert_bias;
+        let sum_equator_biases: f32 = equator_coastal_bias
+            + equator_desert_bias
+            + equator_grassland_bias
+            + equator_ocean_bias
+            + equator_steppe_bias;
 
         // Tundra latitude parameters to validate.
-        let sum_tundra_biases: f32 = tundra_snow_bias + tundra_tundra_bias;
+        let sum_tundra_biases: f32 = tundra_coastal_bias
+            + tundra_grassland_bias
+            + tundra_ocean_bias
+            + tundra_snow_bias
+            + tundra_steppe_bias
+            + tundra_tundra_bias;
 
         // Ensure parameters adhere to constraints.
         if sum_diverse_biases >= 1.0 {
             panic!("\nLatitudeParameters Error: sum of DIVERSE biases is greater than one!\n")
         }
-        if sum_diverse_biases >= 1.0 {
+        if sum_equator_biases >= 1.0 {
             panic!("\nLatitudeParameters Error: sum of EQUATOR biases is greater than one!\n")
         }
-        if sum_diverse_biases >= 1.0 {
+        if sum_tundra_biases >= 1.0 {
             panic!("\nLatitudeParameters Error: sum of TUNDRA biases is greater than one!\n")
         }
 
         // Return new LatitudeParameters.
         LatitudeParameters {
+            // Biases for tiles at DIVERSE latitudes.
+            diverse_coastal_bias,
+            diverse_desert_bias,
             diverse_grassland_bias,
+            diverse_ocean_bias,
             diverse_steppe_bias,
+            // Biases for tiles at the EQUATOR.
+            equator_coastal_bias,
             equator_desert_bias,
+            equator_grassland_bias,
+            equator_ocean_bias,
+            equator_steppe_bias,
+            // Biases for tiles at TUNDRA latitudes.
+            tundra_coastal_bias,
+            tundra_grassland_bias,
+            tundra_ocean_bias,
             tundra_snow_bias,
+            tundra_steppe_bias,
             tundra_tundra_bias,
         }
     }

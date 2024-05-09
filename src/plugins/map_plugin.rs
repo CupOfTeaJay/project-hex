@@ -32,11 +32,13 @@ pub struct MapPlugin;
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         // Initialize map sub-parameters.
-        let map_latitude_parameters = LatitudeParameters::new(0.20, 0.20, 0.20, 0.20, 0.20);
+        let map_latitude_parameters = LatitudeParameters::new(
+            0.1, 0.0, 0.2, 0.0, 0.2, 0.1, 0.4, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.2, 0.0, 0.2,
+        );
         let map_limit_parameters = LimitParameters::new(4.0, 3.0);
         let map_spawn_parameters = SpawnParameters::new(
-            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0,
         );
         let map_dimensions = DimensionParameters::new(106, 66);
