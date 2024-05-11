@@ -16,6 +16,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::f32::consts::{FRAC_2_PI, FRAC_PI_2};
+
 use bevy::prelude::*;
 use indexmap::IndexMap;
 use rand::rngs::StdRng;
@@ -28,31 +30,49 @@ use crate::systems::map_generation_v2::generate_noise::generate_noise;
 use crate::systems::map_generation_v2::init_barebones::init_barebones;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
-const THRESHOLD: f64 = 0.1;
+use super::common::Elevation;
 
 pub fn generate_map(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     map_par: Res<MapParameters>,
 ) {
-    // Generate a random number according to the map seed.
-    let rand_from_seed: u32 = thread_rng().gen();
-
-    // At a minimum, we need a hash table that relates any given position to its neighbors.
+    // STEP 1:
+    //     At a very minimum, we need to generate a hash table that maps a position to all of its
+    //     neighbors. The neighbor relation is needed for certain algorithms, such as Wave Function
+    //     Collapse.
     let pos_neighbors_map: IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>> =
         init_barebones(&map_par);
 
-    let pos_noise_map: IndexMap<(i32, i32, i32), f64> =
-        generate_noise(&pos_neighbors_map, &rand_from_seed);
+    // STEP 2:
+    //     Now we need to establish a psuedo-random heightmap to determine which positions will
+    //     become ocean, coastal, or land tiles. This is done using an amalgam of noise generators.
+    let pos_elevation_map: IndexMap<(i32, i32, i32), Elevation> =
+        generate_noise(&map_par, &pos_neighbors_map);
 
     let (mut x, mut y, mut z): (f32, f32, f32);
-    for (pos, noise) in pos_noise_map.iter() {
+    for (pos, elevation) in pos_elevation_map.iter() {
+        // Setup.
         (x, y, z) = cube_to_cartesian(pos.0 as f32, pos.1 as f32, pos.2 as f32);
-        if *noise > THRESHOLD {
+        let mut transform = Transform::from_xyz(x, y, z);
+        transform.rotate_y(FRAC_PI_2);
+        if *elevation == Elevation::Land {
             // Grassland
             let model: SceneBundle = SceneBundle {
                 scene: asset_server.load("tiles/grasslandTile.glb#Scene0".to_string()),
-                transform: Transform::from_xyz(x, y, z),
+                transform: transform,
+                ..Default::default()
+            };
+            commands.spawn((
+                Name::new(format!("Tile ({},{})", pos.0, pos.1)),
+                TileBundle::new(HexPos::new(pos.0 as f32, pos.1 as f32, pos.2 as f32), model),
+                // On::<Pointer<Click>>::send_event::<SelectionEvent>(),
+            ));
+        } else if *elevation == Elevation::Coastal {
+            // Ocean
+            let model: SceneBundle = SceneBundle {
+                scene: asset_server.load("tiles/coastalTile.glb#Scene0".to_string()),
+                transform: transform,
                 ..Default::default()
             };
             commands.spawn((
@@ -64,7 +84,7 @@ pub fn generate_map(
             // Ocean
             let model: SceneBundle = SceneBundle {
                 scene: asset_server.load("tiles/oceanTile.glb#Scene0".to_string()),
-                transform: Transform::from_xyz(x, y, z),
+                transform: transform,
                 ..Default::default()
             };
             commands.spawn((

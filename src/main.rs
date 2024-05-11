@@ -21,7 +21,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 
 use such_is_life::plugins::camera_plugin::CameraPlugin;
-use such_is_life::plugins::map_plugin::MapPlugin;
+// use such_is_life::plugins::map_plugin::MapPlugin;
 use such_is_life::plugins::map_plugin_v2::MapPluginV2;
 use such_is_life::plugins::stage_setting_plugin::StageSettingPlugin;
 

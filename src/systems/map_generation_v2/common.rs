@@ -16,6 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+/// Classifiers for what positions during map generation will collapse to a
+/// coastal, ocean, or some land tile.
+#[derive(Clone, Eq, Hash, PartialEq)]
+pub enum Elevation {
+    Coastal,
+    Land,
+    Ocean,
+}
+
+/// TODO:
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub enum Terrain {
     Coastal,

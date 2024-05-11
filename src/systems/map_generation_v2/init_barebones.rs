@@ -33,10 +33,10 @@ pub fn init_barebones(
     // Vars to iteratively update.
     let mut curr_pos: HexPos = HexPos::new(0.0, 0.0, 0.0);
     let mut q_min: i32 = 0;
-    let mut q_max: i32 = map_par.dimensions.width;
+    let mut q_max: i32 = map_par.width as i32;
 
     // For every possible position, as defined by the map width and height.
-    for r in 0..map_par.dimensions.height {
+    for r in 0..map_par.height {
         curr_pos.r = r as f32;
         if r % 2 == 0 && r != 0 {
             q_min -= 1;
@@ -44,7 +44,7 @@ pub fn init_barebones(
         }
         for q in q_min..q_max {
             curr_pos.q = q as f32;
-            curr_pos.s = (-q - r) as f32;
+            curr_pos.s = (-q - r as i32) as f32;
 
             // Unsigned integer representation of curr_pos.
             let int_rep: (i32, i32, i32) =
@@ -65,7 +65,7 @@ fn determine_neighbors(
     map_par: &Res<MapParameters>,
 ) -> Vec<(i32, i32, i32)> {
     // Vars for readability.
-    let width = map_par.dimensions.width;
+    let width = map_par.width as i32;
     let q = curr_pos.0;
     let r = curr_pos.1;
     let s = curr_pos.2;

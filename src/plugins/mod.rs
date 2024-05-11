@@ -17,6 +17,6 @@
 */
 
 pub mod camera_plugin;
-pub mod map_plugin;
+// pub mod map_plugin;
 pub mod map_plugin_v2;
 pub mod stage_setting_plugin;
