@@ -22,7 +22,7 @@ use indexmap::IndexMap;
 use std::f32::consts::FRAC_PI_2;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation_v2::common::Elevation;
+use crate::systems::map_generation_v2::common::Terrain;
 use crate::systems::map_generation_v2::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
@@ -32,41 +32,21 @@ pub fn spawn_map(
     map_par: Res<MapParameters>,
 ) {
     // Setup.
-    let pos_elevation_map: IndexMap<(i32, i32, i32), Elevation> = generate_map_data(&map_par);
+    let pos_terr_map: IndexMap<(i32, i32, i32), Terrain> = generate_map_data(&map_par);
     let mut transform: Transform = Transform::from_xyz(0.0, 0.0, 0.0);
     transform.rotate_y(FRAC_PI_2);
 
     // Spawn.
     let (mut x, mut y, mut z): (f32, f32, f32);
-    for (pos, elevation) in pos_elevation_map.iter() {
+    for (pos, terrain) in pos_terr_map.iter() {
         (x, y, z) = cube_to_cartesian(pos.0 as f32, pos.1 as f32, pos.2 as f32);
         transform.translation.x = x;
         transform.translation.y = y;
         transform.translation.z = z;
-        if elevation == &Elevation::Ocean {
-            commands.spawn(SceneBundle {
-                scene: asset_server.load("tiles/oceanTile.glb#Scene0".to_string()),
-                transform: transform,
-                ..Default::default()
-            });
-        } else if elevation == &Elevation::Coastal {
-            commands.spawn(SceneBundle {
-                scene: asset_server.load("tiles/coastalTile.glb#Scene0".to_string()),
-                transform: transform,
-                ..Default::default()
-            });
-        } else if elevation == &Elevation::Land {
-            commands.spawn(SceneBundle {
-                scene: asset_server.load("tiles/grasslandTile.glb#Scene0".to_string()),
-                transform: transform,
-                ..Default::default()
-            });
-        } else {
-            commands.spawn(SceneBundle {
-                scene: asset_server.load("tiles/mountainTile.glb#Scene0".to_string()),
-                transform: transform,
-                ..Default::default()
-            });
-        }
+        commands.spawn(SceneBundle {
+            scene: asset_server.load(terrain.rep()),
+            transform: transform,
+            ..Default::default()
+        });
     }
 }

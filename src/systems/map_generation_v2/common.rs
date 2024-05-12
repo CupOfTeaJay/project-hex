@@ -16,9 +16,12 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use indexmap::IndexMap;
+use rand::{rngs::StdRng, Rng, SeedableRng};
+
 /// Classifiers for what positions during map generation will collapse to a
 /// coastal, ocean, or some land tile.
-#[derive(Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq, Copy)]
 pub enum Elevation {
     Coastal,
     Land,
@@ -26,13 +29,14 @@ pub enum Elevation {
     Ocean,
 }
 
-/// TODO:
-#[derive(Clone, Eq, Hash, PartialEq)]
+/// TODO: document.
+#[derive(Clone, Eq, Hash, PartialEq, Copy)]
 pub enum Terrain {
     Coastal,
     Desert,
     Grassland,
     Ice,
+    Mountain,
     Ocean,
     Snow,
     Steppe,
@@ -46,10 +50,100 @@ impl Terrain {
             Terrain::Desert => "tiles/desertTile.glb#Scene0".to_string(),
             Terrain::Grassland => "tiles/grasslandTile.glb#Scene0".to_string(),
             Terrain::Ice => "tiles/iceTile.glb#Scene0".to_string(),
+            Terrain::Mountain => "tiles/mountainTile.glb#Scene0".to_string(),
             Terrain::Ocean => "tiles/oceanTile.glb#Scene0".to_string(),
             Terrain::Snow => "tiles/snowTile.glb#Scene0".to_string(),
             Terrain::Steppe => "tiles/steppeTile.glb#Scene0".to_string(),
             Terrain::Tundra => "tiles/tundraTile.glb#Scene0".to_string(),
+        }
+    }
+}
+
+pub struct WaveFunction {
+    pub domain: IndexMap<Terrain, f32>,
+    pub entropy: usize,
+}
+
+impl WaveFunction {
+    /// Creates a new Wave Function.
+    pub fn new() -> Self {
+        // Insert all possible terrains into the map.
+        let mut domain = IndexMap::new();
+        domain.insert(Terrain::Coastal, 0.0);
+        domain.insert(Terrain::Desert, 0.0);
+        domain.insert(Terrain::Grassland, 0.0);
+        domain.insert(Terrain::Ice, 0.0);
+        domain.insert(Terrain::Mountain, 0.0);
+        domain.insert(Terrain::Ocean, 0.0);
+        domain.insert(Terrain::Snow, 0.0);
+        domain.insert(Terrain::Steppe, 0.0);
+        domain.insert(Terrain::Tundra, 0.0);
+
+        // Quickly iterate over what was inserted to apply a uniform probability distribution.
+        let entropy: usize = domain.len();
+        let uniform: f32 = 1.0 / (domain.len() as f32);
+        for probability in domain.values_mut() {
+            *probability = uniform;
+        }
+
+        // Return a newly created wave function.
+        WaveFunction { domain, entropy }
+    }
+
+    /// Selects a possible terrain from the wave function's domain.
+    pub fn collapse(&self, seed: u32) -> &Terrain {
+        // No possibilities left. Panic!
+        // TODO: Identify case(s) where this happens, or just restart map gen instead of panicking.
+        if self.domain.keys().len() == 0 {
+            // Sometimes the noise heightmap will assign an Ocean elevation next to Land. If this is
+            // the case, then this wave function's domain will be zero. So just turn it into a
+            // coastal tile.
+            return &Terrain::Coastal;
+        }
+
+        // Pre-process the domain by calculating a prefix sum of its weights.
+        let mut possibilities: Vec<&Terrain> = Vec::new();
+        let mut weights_pref_sums: Vec<f32> = Vec::new();
+        let mut curr_sum: f32 = 0.0;
+        for (possibility, weight) in self.domain.iter() {
+            possibilities.push(possibility);
+            curr_sum += weight;
+            weights_pref_sums.push(curr_sum.clone());
+        }
+
+        // Select a random, weighted possibility from the wave function's domain.
+        let mut choice_index: usize = 0;
+        println!("{curr_sum}");
+        let rand_num: f32 = StdRng::seed_from_u64(seed as u64).gen_range(0.0..curr_sum);
+        for i in 0..weights_pref_sums.len() {
+            if rand_num < weights_pref_sums[i] {
+                choice_index = i;
+                break;
+            }
+        }
+
+        possibilities[choice_index]
+    }
+
+    /// Removes a select terrain from the wave function's domain, divvy-ing its weight with all
+    /// remaining possibilities. Returns the weight of the purged terrain if successful.
+    pub fn purge(&mut self, possibility: &Terrain) -> Option<f32> {
+        if let Some(weight) = self.domain.swap_remove(possibility) {
+            self.divvy_weight(&weight); // If terrain successfully removed, divvy its weight.
+            self.entropy -= 1; // Remember to reduce the wave function's entropy!
+            Some(weight) // Return the weight that was "popped".
+        } else {
+            None
+        }
+    }
+
+    /// Given some weight, divvy it into equal shares and adjust remaining terrain weights
+    /// accordingly.
+    fn divvy_weight(&mut self, weight_to_divvy: &f32) {
+        let domain_size: f32 = self.domain.keys().len() as f32;
+        let divvy: f32 = weight_to_divvy / domain_size;
+        for weight in self.domain.values_mut() {
+            *weight += divvy;
         }
     }
 }

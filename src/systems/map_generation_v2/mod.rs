@@ -16,8 +16,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+mod bias_terrwave_by_latitude;
 mod common;
-pub mod generate_map_data;
+mod generate_map_data;
 mod init_pos_elevation_map;
 mod init_pos_neighbors_map;
+mod init_pos_terr_map;
+mod init_pos_terrwave_map;
 pub mod spawn_map;
