@@ -17,6 +17,7 @@
 */
 
 mod common;
-pub mod generate_map;
-mod generate_noise;
-mod init_barebones;
+pub mod generate_map_data;
+mod init_pos_elevation_map;
+mod init_pos_neighbors_map;
+pub mod spawn_map;

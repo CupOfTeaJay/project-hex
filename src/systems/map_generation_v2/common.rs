@@ -22,6 +22,7 @@
 pub enum Elevation {
     Coastal,
     Land,
+    Mountain,
     Ocean,
 }
 

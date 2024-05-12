@@ -23,22 +23,62 @@ pub struct MapParameters {
     pub width: u32,
     pub height: u32,
     pub seed: u32,
-    pub noise_parameters: Vec<NoiseRequest>,
+    pub elevation_parameters: ElevationParameters,
 }
 
 impl MapParameters {
-    pub fn new(width: u32, height: u32, seed: u32, noise_parameters: Vec<NoiseRequest>) -> Self {
+    pub fn new(
+        width: u32,
+        height: u32,
+        seed: u32,
+        elevation_parameters: ElevationParameters,
+    ) -> Self {
         MapParameters {
             width,
             height,
             seed,
-            noise_parameters,
+            elevation_parameters,
+        }
+    }
+}
+
+pub struct ElevationParameters {
+    pub noise_requests: Vec<NoiseRequest>,
+    pub ocean_threshold: f64,
+    pub coastal_threshold: f64,
+    pub land_threshold: f64,
+}
+
+impl ElevationParameters {
+    pub fn new(
+        noise_requests: Vec<NoiseRequest>,
+        ocean_threshold: f64,
+        coastal_threshold: f64,
+        land_threshold: f64,
+    ) -> Self {
+        // Constraints.
+        if ocean_threshold <= 0.0 {
+            panic!("\nElevationParameters Error: ocean threshold must be greater than 0.0!\n")
+        } else if ocean_threshold > coastal_threshold {
+            panic!("\nElevationParameters Error: ocean threshold exceeds coastal threshold!\n")
+        } else if coastal_threshold > land_threshold {
+            panic!("\nElevationParameters Error: coastal threshold exceeds land threshold!\n")
+        } else if land_threshold >= 1.0 {
+            panic!("\nElevationParameters Error: land threshold must be greater than 1.0!\n")
+        }
+
+        // Return new elevation parameters.
+        ElevationParameters {
+            noise_requests,
+            ocean_threshold,
+            coastal_threshold,
+            land_threshold,
         }
     }
 }
 
 pub struct NoiseRequest {
-    pub request: (NoiseType, u32, f64, f64, f64),
+    pub params: (NoiseType, u32, f64, f64, f64),
 }
 
 impl NoiseRequest {
@@ -50,7 +90,7 @@ impl NoiseRequest {
         lacunarity: f64,
     ) -> Self {
         NoiseRequest {
-            request: (noise_type, octaves, scale, persistence, lacunarity),
+            params: (noise_type, octaves, scale, persistence, lacunarity),
         }
     }
 }
@@ -58,4 +98,5 @@ impl NoiseRequest {
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub enum NoiseType {
     Simplex,
+    Worley,
 }
