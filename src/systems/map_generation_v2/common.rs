@@ -33,6 +33,7 @@ pub enum Elevation {
 #[derive(Clone, Eq, Hash, PartialEq, Copy)]
 pub enum Terrain {
     Coastal,
+    Debug,
     Desert,
     Grassland,
     Ice,
@@ -47,6 +48,7 @@ impl Terrain {
     pub fn rep(&self) -> String {
         match self {
             Terrain::Coastal => "tiles/coastalTile.glb#Scene0".to_string(),
+            Terrain::Debug => "tiles/debugTile.glb#Scene0".to_string(),
             Terrain::Desert => "tiles/desertTile.glb#Scene0".to_string(),
             Terrain::Grassland => "tiles/grasslandTile.glb#Scene0".to_string(),
             Terrain::Ice => "tiles/iceTile.glb#Scene0".to_string(),
@@ -71,6 +73,7 @@ impl WaveFunction {
         let mut domain = IndexMap::new();
         domain.insert(Terrain::Coastal, 0.0);
         domain.insert(Terrain::Desert, 0.0);
+        domain.insert(Terrain::Debug, 0.0);
         domain.insert(Terrain::Grassland, 0.0);
         domain.insert(Terrain::Ice, 0.0);
         domain.insert(Terrain::Mountain, 0.0);
@@ -81,7 +84,7 @@ impl WaveFunction {
 
         // Quickly iterate over what was inserted to apply a uniform probability distribution.
         let entropy: usize = domain.len();
-        let uniform: f32 = 1.0 / (domain.len() as f32);
+        let uniform: f32 = 100.0 / (domain.len() as f32);
         for probability in domain.values_mut() {
             *probability = uniform;
         }
@@ -92,12 +95,9 @@ impl WaveFunction {
 
     /// Selects a possible terrain from the wave function's domain.
     pub fn collapse(&self, seed: u32) -> &Terrain {
-        // No possibilities left. Panic!
-        // TODO: Identify case(s) where this happens, or just restart map gen instead of panicking.
+        // Sometimes the heightmap will assign an ocean elevation adjacent to a land elevation. In
+        // this case, just put a coastal tile in its place.
         if self.domain.keys().len() == 0 {
-            // Sometimes the noise heightmap will assign an Ocean elevation next to Land. If this is
-            // the case, then this wave function's domain will be zero. So just turn it into a
-            // coastal tile.
             return &Terrain::Coastal;
         }
 
@@ -111,9 +111,10 @@ impl WaveFunction {
             weights_pref_sums.push(curr_sum.clone());
         }
 
+        println!("{curr_sum}");
+
         // Select a random, weighted possibility from the wave function's domain.
         let mut choice_index: usize = 0;
-        println!("{curr_sum}");
         let rand_num: f32 = StdRng::seed_from_u64(seed as u64).gen_range(0.0..curr_sum);
         for i in 0..weights_pref_sums.len() {
             if rand_num < weights_pref_sums[i] {

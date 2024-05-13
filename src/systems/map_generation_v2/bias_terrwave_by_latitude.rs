@@ -47,35 +47,15 @@ pub fn bias_terrwave_by_latitude(
         for (possibility, weight) in wave_func.domain.iter_mut() {
             match possibility {
                 &Terrain::Coastal => (), // Coasts are fixed.
-                &Terrain::Desert => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.desert_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.desert_negbias)
-                }
-                &Terrain::Grassland => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.grassland_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.grassland_negbias)
-                }
-                &Terrain::Ice => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.ice_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.ice_negbias)
-                }
+                &Terrain::Debug => (),
+                &Terrain::Desert => *weight *= gauss * map_par.latitude_parameters.temperature,
+                &Terrain::Grassland => (),
+                &Terrain::Ice => *weight /= gauss * map_par.latitude_parameters.temperature,
                 &Terrain::Mountain => (), // Mountains are fixed.
-                &Terrain::Ocean => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.ocean_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.ocean_negbias)
-                }
-                &Terrain::Snow => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.snow_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.snow_negbias)
-                }
-                &Terrain::Steppe => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.steppe_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.steppe_negbias)
-                }
-                &Terrain::Tundra => {
-                    *weight += (*weight * gauss * map_par.latitude_parameters.tundra_posbias)
-                        - (*weight * gauss * map_par.latitude_parameters.tundra_negbias)
-                }
+                &Terrain::Ocean => (),
+                &Terrain::Snow => *weight /= gauss * map_par.latitude_parameters.temperature,
+                &Terrain::Steppe => (),
+                &Terrain::Tundra => *weight /= gauss * map_par.latitude_parameters.temperature,
             }
         }
     }

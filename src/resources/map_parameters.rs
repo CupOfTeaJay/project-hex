@@ -83,57 +83,12 @@ impl ElevationParameters {
 /// TODO: document.
 pub struct LatitudeParameters {
     pub sigma: f32,
-    pub desert_posbias: f32,
-    pub desert_negbias: f32,
-    pub grassland_negbias: f32,
-    pub grassland_posbias: f32,
-    pub ice_negbias: f32,
-    pub ice_posbias: f32,
-    pub ocean_negbias: f32,
-    pub ocean_posbias: f32,
-    pub snow_negbias: f32,
-    pub snow_posbias: f32,
-    pub steppe_negbias: f32,
-    pub steppe_posbias: f32,
-    pub tundra_negbias: f32,
-    pub tundra_posbias: f32,
+    pub temperature: f32,
 }
 
 impl LatitudeParameters {
-    pub fn new(
-        sigma: f32,
-        desert_posbias: f32,
-        desert_negbias: f32,
-        grassland_negbias: f32,
-        grassland_posbias: f32,
-        ice_negbias: f32,
-        ice_posbias: f32,
-        ocean_negbias: f32,
-        ocean_posbias: f32,
-        snow_negbias: f32,
-        snow_posbias: f32,
-        steppe_negbias: f32,
-        steppe_posbias: f32,
-        tundra_negbias: f32,
-        tundra_posbias: f32,
-    ) -> Self {
-        LatitudeParameters {
-            sigma,
-            desert_posbias,
-            desert_negbias,
-            grassland_negbias,
-            grassland_posbias,
-            ice_negbias,
-            ice_posbias,
-            ocean_negbias,
-            ocean_posbias,
-            snow_negbias,
-            snow_posbias,
-            steppe_negbias,
-            steppe_posbias,
-            tundra_negbias,
-            tundra_posbias,
-        }
+    pub fn new(sigma: f32, temperature: f32) -> Self {
+        LatitudeParameters { sigma, temperature }
     }
 }
 

@@ -31,18 +31,16 @@ impl Plugin for MapPluginV2 {
     fn build(&self, app: &mut App) {
         let elevation_parameters = ElevationParameters::new(
             vec![
-                NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
-                // NoiseRequest::new(NoiseType::Worley, 1, 0.01, 0.0, 1.0),
+                // NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
+                NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 1.0),
             ],
             0.35,
             0.50,
-            0.90,
+            0.85,
         );
-        let latitude_parameters = LatitudeParameters::new(
-            2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        );
+        let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
         let map_parameters =
-            MapParameters::new(106, 66, 32013, elevation_parameters, latitude_parameters);
+            MapParameters::new(106, 66, 6969420, elevation_parameters, latitude_parameters);
 
         // Insert resources into the app.
         app.insert_resource(map_parameters);

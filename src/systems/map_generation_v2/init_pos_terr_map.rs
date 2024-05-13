@@ -125,6 +125,14 @@ fn init_terr_incompat_map() -> IndexMap<Terrain, Vec<Terrain>> {
         ],
     );
 
+    // DEBUG.
+    incompatible.insert(
+        Terrain::Debug,
+        vec![
+            // Debug should have no incompatabilities.
+        ],
+    );
+
     // DESERT.
     incompatible.insert(
         Terrain::Desert,

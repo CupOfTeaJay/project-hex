@@ -42,6 +42,7 @@ pub fn init_pos_terrwave_map(
         if pos.1 == 0 || pos.1 == (map_par.height as i32) - 1 {
             // The northermost and southernmost latitudes should only be ice tiles.
             pos_wave_map[pos].purge(&Terrain::Coastal);
+            pos_wave_map[pos].purge(&Terrain::Debug);
             pos_wave_map[pos].purge(&Terrain::Desert);
             pos_wave_map[pos].purge(&Terrain::Grassland);
             pos_wave_map[pos].purge(&Terrain::Mountain);
@@ -52,6 +53,7 @@ pub fn init_pos_terrwave_map(
         } else if elevation == &Elevation::Ocean {
             // Purge everything except for the OCEAN terrain.
             pos_wave_map[pos].purge(&Terrain::Coastal);
+            pos_wave_map[pos].purge(&Terrain::Debug);
             pos_wave_map[pos].purge(&Terrain::Desert);
             pos_wave_map[pos].purge(&Terrain::Grassland);
             pos_wave_map[pos].purge(&Terrain::Ice);
@@ -61,6 +63,7 @@ pub fn init_pos_terrwave_map(
             pos_wave_map[pos].purge(&Terrain::Tundra);
         } else if elevation == &Elevation::Coastal {
             // Purge everything except for the COASTAL terrain.
+            pos_wave_map[pos].purge(&Terrain::Debug);
             pos_wave_map[pos].purge(&Terrain::Desert);
             pos_wave_map[pos].purge(&Terrain::Grassland);
             pos_wave_map[pos].purge(&Terrain::Ice);
@@ -71,13 +74,15 @@ pub fn init_pos_terrwave_map(
             pos_wave_map[pos].purge(&Terrain::Tundra);
         } else if elevation == &Elevation::Land {
             // Purge the OCEAN, ICE, MOUNTAIN, and COASTAL terrains.
+            pos_wave_map[pos].purge(&Terrain::Coastal);
+            pos_wave_map[pos].purge(&Terrain::Debug);
             pos_wave_map[pos].purge(&Terrain::Ocean);
             pos_wave_map[pos].purge(&Terrain::Ice);
             pos_wave_map[pos].purge(&Terrain::Mountain);
-            pos_wave_map[pos].purge(&Terrain::Coastal);
         } else {
             // Purge everything except for the MOUNTAIN terrain.
             pos_wave_map[pos].purge(&Terrain::Coastal);
+            pos_wave_map[pos].purge(&Terrain::Debug);
             pos_wave_map[pos].purge(&Terrain::Desert);
             pos_wave_map[pos].purge(&Terrain::Grassland);
             pos_wave_map[pos].purge(&Terrain::Ice);
