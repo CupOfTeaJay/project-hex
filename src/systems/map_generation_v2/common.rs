@@ -111,8 +111,6 @@ impl WaveFunction {
             weights_pref_sums.push(curr_sum.clone());
         }
 
-        println!("{curr_sum}");
-
         // Select a random, weighted possibility from the wave function's domain.
         let mut choice_index: usize = 0;
         let rand_num: f32 = StdRng::seed_from_u64(seed as u64).gen_range(0.0..curr_sum);

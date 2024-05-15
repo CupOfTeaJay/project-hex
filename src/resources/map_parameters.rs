@@ -25,6 +25,7 @@ pub struct MapParameters {
     pub seed: u32,
     pub elevation_parameters: ElevationParameters,
     pub latitude_parameters: LatitudeParameters,
+    pub convolution_parameters: ConvolutionParameters,
 }
 
 impl MapParameters {
@@ -34,6 +35,7 @@ impl MapParameters {
         seed: u32,
         elevation_parameters: ElevationParameters,
         latitude_parameters: LatitudeParameters,
+        convolution_parameters: ConvolutionParameters,
     ) -> Self {
         MapParameters {
             width,
@@ -41,6 +43,19 @@ impl MapParameters {
             seed,
             elevation_parameters,
             latitude_parameters,
+            convolution_parameters,
+        }
+    }
+}
+
+pub struct ConvolutionParameters {
+    pub terrain_convolutions: u32,
+}
+
+impl ConvolutionParameters {
+    pub fn new(terrain_convolutions: u32) -> Self {
+        ConvolutionParameters {
+            terrain_convolutions,
         }
     }
 }

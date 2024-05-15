@@ -19,6 +19,7 @@
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub enum Terrain {
     Coastal,
+    Debug,
     Desert,
     Grassland,
     Ice,
@@ -32,6 +33,7 @@ impl Terrain {
     pub fn rep(&self) -> String {
         match self {
             Terrain::Coastal => "tiles/coastalTile.glb#Scene0".to_string(),
+            Terrain::Debug => "tiles/debugTile.glb#Scene0".to_string(),
             Terrain::Desert => "tiles/desertTile.glb#Scene0".to_string(),
             Terrain::Grassland => "tiles/grasslandTile.glb#Scene0".to_string(),
             Terrain::Ice => "tiles/iceTile.glb#Scene0".to_string(),

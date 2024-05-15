@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+mod apply_terr_convolution;
 mod bias_terrwave_by_latitude;
 mod common;
 mod generate_map_data;

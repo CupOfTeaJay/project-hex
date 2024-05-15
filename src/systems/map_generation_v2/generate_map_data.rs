@@ -20,6 +20,7 @@ use bevy::prelude::*;
 use indexmap::IndexMap;
 
 use crate::resources::map_parameters::MapParameters;
+use crate::systems::map_generation_v2::apply_terr_convolution::apply_terr_convolution;
 use crate::systems::map_generation_v2::bias_terrwave_by_latitude::bias_terrwave_by_latitude;
 use crate::systems::map_generation_v2::common::Elevation;
 use crate::systems::map_generation_v2::common::Terrain;
@@ -59,8 +60,13 @@ pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<(i32, i32, i3
 
     // STEP 5:
     //     With the position to terrain wave-function map finalized, perfom WFC on that collection.
-    let pos_terr_map: IndexMap<(i32, i32, i32), Terrain> =
+    let mut pos_terr_map: IndexMap<(i32, i32, i32), Terrain> =
         init_pos_terr_map(&map_par, &pos_neighbors_map, &mut pos_terrwave_map);
+
+    // STEP 6:
+    for _ in 0..map_par.convolution_parameters.terrain_convolutions {
+        apply_terr_convolution(&pos_neighbors_map, &mut pos_terr_map);
+    }
 
     // Stop here for now.
     pos_terr_map

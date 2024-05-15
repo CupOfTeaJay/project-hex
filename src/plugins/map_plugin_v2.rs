@@ -18,6 +18,7 @@
 
 use bevy::prelude::*;
 
+use crate::resources::map_parameters::ConvolutionParameters;
 use crate::resources::map_parameters::ElevationParameters;
 use crate::resources::map_parameters::LatitudeParameters;
 use crate::resources::map_parameters::MapParameters;
@@ -31,16 +32,23 @@ impl Plugin for MapPluginV2 {
     fn build(&self, app: &mut App) {
         let elevation_parameters = ElevationParameters::new(
             vec![
-                // NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
-                NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 1.0),
+                NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
+                // NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 1.0),
             ],
             0.35,
             0.50,
             0.85,
         );
         let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
-        let map_parameters =
-            MapParameters::new(106, 66, 6969420, elevation_parameters, latitude_parameters);
+        let convolution_parameters = ConvolutionParameters::new(10);
+        let map_parameters = MapParameters::new(
+            106,
+            66,
+            6969420,
+            elevation_parameters,
+            latitude_parameters,
+            convolution_parameters,
+        );
 
         // Insert resources into the app.
         app.insert_resource(map_parameters);
