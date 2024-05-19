@@ -24,7 +24,7 @@ use noise::{NoiseFn, Simplex, Worley};
 
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::map_parameters::NoiseType;
-use crate::systems::map_generation_v2::common::Elevation;
+use crate::systems::map_generation::common::Elevation;
 
 /// Generates a hash table that maps cube coordinates to an Ocean, Coastal, Land, or Mountain
 /// elevation.

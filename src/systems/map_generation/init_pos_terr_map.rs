@@ -23,8 +23,8 @@ use rand::Rng;
 use rand::SeedableRng;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation_v2::common::Terrain;
-use crate::systems::map_generation_v2::common::WaveFunction;
+use crate::systems::map_generation::common::Terrain;
+use crate::systems::map_generation::common::WaveFunction;
 
 /// Initializes terrain selections for every cube coordinate on the map, as determined by a
 /// wave-function collapse algorithm.

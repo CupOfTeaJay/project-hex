@@ -20,9 +20,9 @@ use bevy::prelude::*;
 use indexmap::IndexMap;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation_v2::common::Elevation;
-use crate::systems::map_generation_v2::common::Terrain;
-use crate::systems::map_generation_v2::common::WaveFunction;
+use crate::systems::map_generation::common::Elevation;
+use crate::systems::map_generation::common::Terrain;
+use crate::systems::map_generation::common::WaveFunction;
 
 /// Initializes terrain wave functions for every cube coordinate on the map.
 pub fn init_pos_terrwave_map(

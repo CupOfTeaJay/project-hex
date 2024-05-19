@@ -17,6 +17,5 @@
 */
 
 pub mod camera_management;
-// pub mod map_generation;
-pub mod map_generation_v2;
+pub mod map_generation;
 pub mod stage_setting;

@@ -18,46 +18,44 @@
 
 use bevy::prelude::*;
 
-use crate::resources::map_parameters::DimensionParameters;
+use crate::resources::map_parameters::ConvolutionParameters;
+use crate::resources::map_parameters::ElevationParameters;
 use crate::resources::map_parameters::LatitudeParameters;
-use crate::resources::map_parameters::LimitParameters;
 use crate::resources::map_parameters::MapParameters;
-use crate::resources::map_parameters::SpawnParameters;
-use crate::systems::map_generation::generate_map::generate_map;
-use crate::systems::map_generation::make_tiles_pickable::make_tiles_pickable;
+use crate::resources::map_parameters::NoiseRequest;
+use crate::resources::map_parameters::NoiseType;
+use crate::resources::map_parameters::TerrainSpawnParameters;
+use crate::systems::map_generation::spawn_map::spawn_map;
 
 pub struct MapPlugin;
 
-// TODO: somehow move make_tiles_pickable out of the Update schedule.
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        // Initialize map sub-parameters.
-        let map_latitude_parameters = LatitudeParameters::new(
-            0.0, 0.0, 0.2, 0.2, 0.2, 0.0, 0.4, 0.0, 0.5, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.2,
+        let elevation_parameters = ElevationParameters::new(
+            vec![
+                // NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
+                NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 0.5),
+            ],
+            0.35,
+            0.50,
+            0.85,
         );
-        let map_limit_parameters = LimitParameters::new(4.0, 3.0);
-        let map_spawn_parameters = SpawnParameters::new(
-            0.5, -0.1, -0.1, -0.1, 0.5, -0.1, -0.1, -0.1, 0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.8, 0.0,
-            0.0, 0.0, 0.0, 0.0, 0.0, -0.2, 0.0, 0.50, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.0,
-            0.0, 0.0, 0.0, 0.0, 0.8,
-        );
-        let map_dimensions = DimensionParameters::new(106, 66);
-
-        // Initialize map parameters.
+        let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
+        let terrain_spawn_parameters = TerrainSpawnParameters::new(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+        let convolution_parameters = ConvolutionParameters::new(10);
         let map_parameters = MapParameters::new(
-            map_dimensions,
-            map_latitude_parameters,
-            map_spawn_parameters,
-            map_limit_parameters,
+            106,
+            66,
+            6969420,
+            elevation_parameters,
+            latitude_parameters,
+            terrain_spawn_parameters,
+            convolution_parameters,
         );
 
         // Insert resources into the app.
         app.insert_resource(map_parameters);
-
         // Add startup scheduled systems to the app.
-        app.add_systems(Startup, generate_map);
-
-        // Add update scheduled systems to the app.
-        app.add_systems(Update, make_tiles_pickable);
+        app.add_systems(Startup, spawn_map);
     }
 }

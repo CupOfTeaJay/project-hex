@@ -22,7 +22,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 
 use such_is_life::plugins::camera_plugin::CameraPlugin;
 // use such_is_life::plugins::map_plugin::MapPlugin;
-use such_is_life::plugins::map_plugin_v2::MapPluginV2;
+use such_is_life::plugins::map_plugin::MapPlugin;
 use such_is_life::plugins::stage_setting_plugin::StageSettingPlugin;
 
 fn main() {
@@ -30,7 +30,7 @@ fn main() {
         // Default, community plugins.
         .add_plugins((DefaultPlugins, DefaultPickingPlugins))
         // Custom plugins.
-        .add_plugins((CameraPlugin, StageSettingPlugin, MapPluginV2))
+        .add_plugins((CameraPlugin, StageSettingPlugin, MapPlugin))
         // "Editor"
         .add_plugins(WorldInspectorPlugin::new())
         .run();

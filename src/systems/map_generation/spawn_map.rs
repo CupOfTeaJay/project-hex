@@ -22,8 +22,8 @@ use indexmap::IndexMap;
 use std::f32::consts::FRAC_PI_2;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation_v2::common::Terrain;
-use crate::systems::map_generation_v2::generate_map_data::generate_map_data;
+use crate::systems::map_generation::common::Terrain;
+use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
 pub fn spawn_map(

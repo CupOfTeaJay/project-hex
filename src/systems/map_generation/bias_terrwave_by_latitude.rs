@@ -22,8 +22,8 @@ use std::f32::consts::E;
 use std::f32::consts::PI;
 
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation_v2::common::Terrain;
-use crate::systems::map_generation_v2::common::WaveFunction;
+use crate::systems::map_generation::common::Terrain;
+use crate::systems::map_generation::common::WaveFunction;
 
 /// Biases terrain wave functions according to their cube coordinate's "latitude".
 pub fn bias_terrwave_by_latitude(
