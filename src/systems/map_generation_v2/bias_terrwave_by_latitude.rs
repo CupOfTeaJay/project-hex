@@ -47,14 +47,14 @@ pub fn bias_terrwave_by_latitude(
         for (possibility, weight) in wave_func.domain.iter_mut() {
             match possibility {
                 &Terrain::Coastal => (), // Coasts are fixed.
-                &Terrain::Debug => (),
+                &Terrain::Debug => (), // Debug terrain.
                 &Terrain::Desert => *weight *= gauss * map_par.latitude_parameters.temperature,
-                &Terrain::Grassland => (),
+                &Terrain::Grassland => (), // Grassland can appear anywhere.
                 &Terrain::Ice => *weight /= gauss * map_par.latitude_parameters.temperature,
                 &Terrain::Mountain => (), // Mountains are fixed.
-                &Terrain::Ocean => (),
+                &Terrain::Ocean => (), // Oceans are fixed.
                 &Terrain::Snow => *weight /= gauss * map_par.latitude_parameters.temperature,
-                &Terrain::Steppe => (),
+                &Terrain::Steppe => (), // Steppes can appear anywhere.
                 &Terrain::Tundra => *weight /= gauss * map_par.latitude_parameters.temperature,
             }
         }

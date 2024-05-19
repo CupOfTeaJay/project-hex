@@ -1,8 +1,7 @@
 # Map Generation:
+- [ ] Restrict terrains by latitude. Perhaps adjust gaussian in such a way, i.e. don't hard code by regions.
 - [ ] Apply "gradient-trick" to noise layers.
 - [ ] Implement icecaps / glaciers.
-- [ ] Implement WFC post noise-generation.
-- [ ] Bias terrain types based on latitude (gradient).
 
 # Data Driven Design:
 - [ ] Define JSON format for map and a parser that can generate a map off of this, so people can use external map scripts.

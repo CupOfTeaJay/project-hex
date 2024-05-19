@@ -73,8 +73,9 @@ pub fn init_pos_terr_map(
         pos_terr_map.insert(pos_clone, choice);
 
         // Adjust neighboring wave functions based on this selection.
-        adjust_for_incompat(
+        adjust_neighbors(
             &choice,
+            &map_par,
             &pos_clone,
             pos_neighbors_map,
             pos_terrwave_map,
@@ -91,8 +92,9 @@ pub fn init_pos_terr_map(
 }
 
 /// Adjusts neighboring wave functions based on the collapse of a select wave function.
-fn adjust_for_incompat(
+fn adjust_neighbors(
     choice: &Terrain,
+    map_par: &Res<MapParameters>,
     pos: &(i32, i32, i32),
     pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
     pos_terrwave_map: &mut IndexMap<(i32, i32, i32), WaveFunction>,
@@ -105,8 +107,27 @@ fn adjust_for_incompat(
     // Adjust each of the neighbors, one by one - but only if the position still exists.
     for neighbor in neighbors.iter() {
         if let Some(wave_func) = pos_terrwave_map.get_mut(neighbor) {
+            // Remove incompatabilities.
             for incompat in incompats.iter() {
                 wave_func.purge(incompat);
+            }
+
+            // Bias remaining possibilities based on collapse.
+            if let Some(weight) = wave_func.domain.get_mut(choice) {
+                match choice {
+                    &Terrain::Coastal => (),
+                    &Terrain::Debug => (),
+                    &Terrain::Desert => *weight *= map_par.terrain_spawn_parameters.desert_bias,
+                    &Terrain::Grassland => {
+                        *weight *= map_par.terrain_spawn_parameters.grassland_bias
+                    }
+                    &Terrain::Ice => *weight *= map_par.terrain_spawn_parameters.ice_bias,
+                    &Terrain::Mountain => (),
+                    &Terrain::Ocean => (),
+                    &Terrain::Snow => *weight *= map_par.terrain_spawn_parameters.snow_bias,
+                    &Terrain::Steppe => *weight *= map_par.terrain_spawn_parameters.steppe_bias,
+                    &Terrain::Tundra => *weight *= map_par.terrain_spawn_parameters.tundra_bias,
+                }
             }
         }
     }

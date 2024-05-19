@@ -25,6 +25,7 @@ pub struct MapParameters {
     pub seed: u32,
     pub elevation_parameters: ElevationParameters,
     pub latitude_parameters: LatitudeParameters,
+    pub terrain_spawn_parameters: TerrainSpawnParameters,
     pub convolution_parameters: ConvolutionParameters,
 }
 
@@ -35,6 +36,7 @@ impl MapParameters {
         seed: u32,
         elevation_parameters: ElevationParameters,
         latitude_parameters: LatitudeParameters,
+        terrain_spawn_parameters: TerrainSpawnParameters,
         convolution_parameters: ConvolutionParameters,
     ) -> Self {
         MapParameters {
@@ -43,6 +45,7 @@ impl MapParameters {
             seed,
             elevation_parameters,
             latitude_parameters,
+            terrain_spawn_parameters,
             convolution_parameters,
         }
     }
@@ -121,6 +124,35 @@ impl NoiseRequest {
     ) -> Self {
         NoiseRequest {
             params: (noise_type, octaves, scale, persistence, lacunarity),
+        }
+    }
+}
+
+pub struct TerrainSpawnParameters {
+    pub desert_bias: f32,
+    pub grassland_bias: f32,
+    pub ice_bias: f32,
+    pub snow_bias: f32,
+    pub steppe_bias: f32,
+    pub tundra_bias: f32,
+}
+
+impl TerrainSpawnParameters {
+    pub fn new(
+        desert_bias: f32,
+        grassland_bias: f32,
+        ice_bias: f32,
+        snow_bias: f32,
+        steppe_bias: f32,
+        tundra_bias: f32,
+    ) -> Self {
+        TerrainSpawnParameters {
+            desert_bias,
+            grassland_bias,
+            ice_bias,
+            snow_bias,
+            steppe_bias,
+            tundra_bias,
         }
     }
 }

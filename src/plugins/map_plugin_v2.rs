@@ -24,6 +24,7 @@ use crate::resources::map_parameters::LatitudeParameters;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::map_parameters::NoiseRequest;
 use crate::resources::map_parameters::NoiseType;
+use crate::resources::map_parameters::TerrainSpawnParameters;
 use crate::systems::map_generation_v2::spawn_map::spawn_map;
 
 pub struct MapPluginV2;
@@ -32,14 +33,15 @@ impl Plugin for MapPluginV2 {
     fn build(&self, app: &mut App) {
         let elevation_parameters = ElevationParameters::new(
             vec![
-                NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
-                // NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 1.0),
+                // NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
+                NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 0.5),
             ],
             0.35,
             0.50,
             0.85,
         );
         let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
+        let terrain_spawn_parameters = TerrainSpawnParameters::new(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
         let convolution_parameters = ConvolutionParameters::new(10);
         let map_parameters = MapParameters::new(
             106,
@@ -47,6 +49,7 @@ impl Plugin for MapPluginV2 {
             6969420,
             elevation_parameters,
             latitude_parameters,
+            terrain_spawn_parameters,
             convolution_parameters,
         );
 

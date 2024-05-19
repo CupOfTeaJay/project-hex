@@ -59,7 +59,8 @@ pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<(i32, i32, i3
     bias_terrwave_by_latitude(&map_par, &mut pos_terrwave_map);
 
     // STEP 5:
-    //     With the position to terrain wave-function map finalized, perfom WFC on that collection.
+    //     With the position to terrain wave-function map finalized, initialize a possition to
+    //     terrain map using the wave-function collapse algorithm.
     let mut pos_terr_map: IndexMap<(i32, i32, i32), Terrain> =
         init_pos_terr_map(&map_par, &pos_neighbors_map, &mut pos_terrwave_map);
 
