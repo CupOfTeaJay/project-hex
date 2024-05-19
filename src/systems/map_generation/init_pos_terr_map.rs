@@ -22,8 +22,8 @@ use rand::rngs::StdRng;
 use rand::Rng;
 use rand::SeedableRng;
 
+use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation::common::Terrain;
 use crate::systems::map_generation::common::WaveFunction;
 
 /// Initializes terrain selections for every cube coordinate on the map, as determined by a

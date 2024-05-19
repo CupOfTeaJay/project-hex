@@ -19,11 +19,11 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
+use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::apply_terr_convolution::apply_terr_convolution;
 use crate::systems::map_generation::bias_terrwave_by_latitude::bias_terrwave_by_latitude;
 use crate::systems::map_generation::common::Elevation;
-use crate::systems::map_generation::common::Terrain;
 use crate::systems::map_generation::common::WaveFunction;
 use crate::systems::map_generation::init_pos_elevation_map::init_pos_elevation_map;
 use crate::systems::map_generation::init_pos_neighbors_map::init_pos_neighbors_map;

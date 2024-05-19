@@ -25,6 +25,7 @@ use crate::resources::map_parameters::MapParameters;
 use crate::resources::map_parameters::NoiseRequest;
 use crate::resources::map_parameters::NoiseType;
 use crate::resources::map_parameters::TerrainSpawnParameters;
+use crate::states::game_state::GameState;
 use crate::systems::map_generation::spawn_map::spawn_map;
 
 pub struct MapPlugin;
@@ -41,8 +42,8 @@ impl Plugin for MapPlugin {
             0.85,
         );
         let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
-        let terrain_spawn_parameters = TerrainSpawnParameters::new(1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-        let convolution_parameters = ConvolutionParameters::new(10);
+        let terrain_spawn_parameters = TerrainSpawnParameters::new(2.0, 2.0, 2.0, 2.0, 2.0, 2.0);
+        let convolution_parameters = ConvolutionParameters::new(11);
         let map_parameters = MapParameters::new(
             106,
             66,
@@ -56,6 +57,6 @@ impl Plugin for MapPlugin {
         // Insert resources into the app.
         app.insert_resource(map_parameters);
         // Add startup scheduled systems to the app.
-        app.add_systems(Startup, spawn_map);
+        app.add_systems(Startup, spawn_map.run_if(in_state(GameState::MapGen)));
     }
 }

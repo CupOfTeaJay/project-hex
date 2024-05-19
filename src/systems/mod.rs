@@ -17,5 +17,6 @@
 */
 
 pub mod camera_management;
+pub mod game_start;
 pub mod map_generation;
 pub mod stage_setting;

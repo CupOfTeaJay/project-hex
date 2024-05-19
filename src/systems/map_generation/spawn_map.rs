@@ -16,19 +16,22 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::gltf::Gltf;
 use bevy::prelude::*;
 use indexmap::IndexMap;
 use std::f32::consts::FRAC_PI_2;
 
+use crate::components::common::hex_pos::HexPos;
+use crate::components::map_generation::terrain::Terrain;
+use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation::common::Terrain;
+use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
 pub fn spawn_map(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
+    mut next_game_state: ResMut<NextState<GameState>>,
     map_par: Res<MapParameters>,
 ) {
     // Setup.
@@ -43,10 +46,21 @@ pub fn spawn_map(
         transform.translation.x = x;
         transform.translation.y = y;
         transform.translation.z = z;
-        commands.spawn(SceneBundle {
+
+        // Scene.
+        let model = SceneBundle {
             scene: asset_server.load(terrain.rep()),
             transform: transform,
             ..Default::default()
-        });
+        };
+
+        // HexPos.
+        let hex_pos = HexPos::new(pos.0, pos.1, pos.2);
+
+        // Spawn.
+        commands.spawn(TileBundle::new(hex_pos, *terrain, model));
+
+        // State transition.
+        next_game_state.set(GameState::PlayerTurn);
     }
 }

@@ -16,10 +16,12 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod resources;
-mod systems;
-mod utils;
+use bevy::prelude::*;
 
-pub mod plugins;
-pub mod states;
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum GameState {
+    NotInGame,
+    MapGen,
+    PlayerTurn,
+    OpponentTurn,
+}

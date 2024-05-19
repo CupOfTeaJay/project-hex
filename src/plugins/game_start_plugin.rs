@@ -16,10 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod resources;
-mod systems;
-mod utils;
+use ::bevy::prelude::*;
 
-pub mod plugins;
-pub mod states;
+use crate::systems::map_generation::spawn_map::spawn_map;
+use crate::{states::game_state::GameState, systems::game_start::init_player::init_player};
+
+pub struct GameStartPlugin;
+
+impl Plugin for GameStartPlugin {
+    fn build(&self, app: &mut App) {
+        // Add startup scheduled systems to the app.
+        app.add_systems(Startup, init_player.after(spawn_map));
+    }
+}

@@ -21,16 +21,21 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 
 use such_is_life::plugins::camera_plugin::CameraPlugin;
-// use such_is_life::plugins::map_plugin::MapPlugin;
+use such_is_life::plugins::game_start_plugin::GameStartPlugin;
 use such_is_life::plugins::map_plugin::MapPlugin;
 use such_is_life::plugins::stage_setting_plugin::StageSettingPlugin;
+use such_is_life::states::app_state::AppState;
+use such_is_life::states::game_state::GameState;
 
 fn main() {
     App::new()
+        // Initialize states.
+        .insert_state(AppState::InGame)
+        .insert_state(GameState::MapGen)
         // Default, community plugins.
         .add_plugins((DefaultPlugins, DefaultPickingPlugins))
         // Custom plugins.
-        .add_plugins((CameraPlugin, StageSettingPlugin, MapPlugin))
+        .add_plugins((CameraPlugin, GameStartPlugin, StageSettingPlugin, MapPlugin))
         // "Editor"
         .add_plugins(WorldInspectorPlugin::new())
         .run();

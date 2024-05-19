@@ -21,8 +21,8 @@ use indexmap::IndexMap;
 use std::f32::consts::E;
 use std::f32::consts::PI;
 
+use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
-use crate::systems::map_generation::common::Terrain;
 use crate::systems::map_generation::common::WaveFunction;
 
 /// Biases terrain wave functions according to their cube coordinate's "latitude".
@@ -47,14 +47,14 @@ pub fn bias_terrwave_by_latitude(
         for (possibility, weight) in wave_func.domain.iter_mut() {
             match possibility {
                 &Terrain::Coastal => (), // Coasts are fixed.
-                &Terrain::Debug => (), // Debug terrain.
+                &Terrain::Debug => (),   // Debug terrain.
                 &Terrain::Desert => *weight *= gauss * map_par.latitude_parameters.temperature,
-                &Terrain::Grassland => (), // Grassland can appear anywhere.
+                &Terrain::Grassland => *weight *= gauss * map_par.latitude_parameters.temperature,
                 &Terrain::Ice => *weight /= gauss * map_par.latitude_parameters.temperature,
                 &Terrain::Mountain => (), // Mountains are fixed.
-                &Terrain::Ocean => (), // Oceans are fixed.
+                &Terrain::Ocean => (),    // Oceans are fixed.
                 &Terrain::Snow => *weight /= gauss * map_par.latitude_parameters.temperature,
-                &Terrain::Steppe => (), // Steppes can appear anywhere.
+                &Terrain::Steppe => *weight *= gauss * map_par.latitude_parameters.temperature,
                 &Terrain::Tundra => *weight /= gauss * map_par.latitude_parameters.temperature,
             }
         }

@@ -18,7 +18,7 @@
 
 use indexmap::IndexMap;
 
-use crate::systems::map_generation::common::Terrain;
+use crate::components::map_generation::terrain::Terrain;
 
 /// Applies a convoloution to map terrain. The number of passes is specified in the map parameters.
 pub fn apply_terr_convolution(

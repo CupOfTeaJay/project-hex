@@ -20,20 +20,23 @@ use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::common::is_populated::IsPopulated;
+use crate::components::map_generation::terrain::Terrain;
 
 /// Suite of components for tile entities.
 #[derive(Bundle)]
 pub struct TileBundle {
     pos: HexPos,
+    terrain: Terrain,
     populated: IsPopulated,
     model: SceneBundle,
 }
 
 impl TileBundle {
     /// Creates a tile bundle.
-    pub fn new(pos: HexPos, model: SceneBundle) -> Self {
+    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
         TileBundle {
             pos: pos,
+            terrain: terrain,
             populated: IsPopulated::new(false),
             model: model,
         }

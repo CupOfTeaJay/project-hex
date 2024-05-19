@@ -16,10 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-mod resources;
-mod systems;
-mod utils;
-
-pub mod plugins;
-pub mod states;
+pub mod app_state;
+pub mod game_state;
