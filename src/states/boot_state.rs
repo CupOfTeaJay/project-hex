@@ -19,9 +19,7 @@
 use bevy::prelude::*;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-pub enum AppState {
-    InBoot,
-    MainMenu,
-    LoadGame,
-    InGame,
+pub enum BootState {
+    LoadingAssets,
+    NotInBoot,
 }

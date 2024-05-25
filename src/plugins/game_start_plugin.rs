@@ -18,14 +18,14 @@
 
 use ::bevy::prelude::*;
 
-use crate::systems::map_generation::spawn_map::spawn_map;
-use crate::{states::game_state::GameState, systems::game_start::init_player::init_player};
+use crate::states::game_state::GameState;
+use crate::systems::game_start::init_player::init_player;
 
 pub struct GameStartPlugin;
 
 impl Plugin for GameStartPlugin {
     fn build(&self, app: &mut App) {
         // Add startup scheduled systems to the app.
-        app.add_systems(Startup, init_player.after(spawn_map));
+        app.add_systems(Update, init_player.run_if(in_state(GameState::PlayerInit)));
     }
 }

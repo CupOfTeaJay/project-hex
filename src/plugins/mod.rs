@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod boot_plugin;
 pub mod camera_plugin;
 pub mod game_start_plugin;
 pub mod map_plugin;

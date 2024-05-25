@@ -32,20 +32,3 @@ pub enum Terrain {
     Steppe,
     Tundra,
 }
-
-impl Terrain {
-    pub fn rep(&self) -> String {
-        match self {
-            Terrain::Coastal => "tiles/coastalTile.glb#Scene0".to_string(),
-            Terrain::Debug => "tiles/debugTile.glb#Scene0".to_string(),
-            Terrain::Desert => "tiles/desertTile.glb#Scene0".to_string(),
-            Terrain::Grassland => "tiles/grasslandTile.glb#Scene0".to_string(),
-            Terrain::Ice => "tiles/iceTile.glb#Scene0".to_string(),
-            Terrain::Mountain => "tiles/mountainTile.glb#Scene0".to_string(),
-            Terrain::Ocean => "tiles/oceanTile.glb#Scene0".to_string(),
-            Terrain::Snow => "tiles/snowTile.glb#Scene0".to_string(),
-            Terrain::Steppe => "tiles/steppeTile.glb#Scene0".to_string(),
-            Terrain::Tundra => "tiles/tundraTile.glb#Scene0".to_string(),
-        }
-    }
-}

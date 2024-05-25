@@ -22,6 +22,7 @@ use bevy::prelude::*;
 pub enum GameState {
     NotInGame,
     MapGen,
+    PlayerInit,
     PlayerTurn,
     OpponentTurn,
 }

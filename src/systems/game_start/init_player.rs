@@ -24,12 +24,14 @@ use rand::{thread_rng, Rng};
 
 use crate::{
     components::{common::hex_pos::HexPos, map_generation::terrain::Terrain},
+    states::game_state::GameState,
     utils::coord_conversions::cube_to_cartesian,
 };
 
 pub fn init_player(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
+    mut next_game_state: ResMut<NextState<GameState>>,
     query: Query<(&HexPos, &Terrain)>,
 ) {
     let mut trans_terr_map: IndexMap<&HexPos, &Terrain> = IndexMap::new();
@@ -65,7 +67,8 @@ pub fn init_player(
         random_hex_pos.r as f32,
         random_hex_pos.s as f32,
     );
-    let my_transform = Transform::from_xyz(x, y, z);
+    let mut my_transform = Transform::from_xyz(x, y, z);
+    my_transform.scale = Vec3::new(0.5, 0.5, 0.5);
     let unit_model = SceneBundle {
         scene: asset_server.load("units/unit.glb#Scene0"),
         transform: my_transform,
@@ -73,4 +76,5 @@ pub fn init_player(
     };
 
     commands.spawn(unit_model);
+    next_game_state.set(GameState::PlayerTurn);
 }

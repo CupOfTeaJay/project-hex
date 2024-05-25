@@ -23,13 +23,14 @@ use std::f32::consts::FRAC_PI_2;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::components::map_generation::tile_bundle::TileBundle;
+use crate::resources::asset_handles::AssetHandles;
 use crate::resources::map_parameters::MapParameters;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
 
 pub fn spawn_map(
-    asset_server: Res<AssetServer>,
+    asset_handles: Res<AssetHandles>,
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
     map_par: Res<MapParameters>,
@@ -47,9 +48,23 @@ pub fn spawn_map(
         transform.translation.y = y;
         transform.translation.z = z;
 
+        let scene_handle: Handle<Scene>;
+        match terrain {
+            &Terrain::Coastal => scene_handle = asset_handles.scenes.terrain_coastal.clone(),
+            &Terrain::Debug => scene_handle = asset_handles.scenes.terrain_debug.clone(),
+            &Terrain::Desert => scene_handle = asset_handles.scenes.terrain_desert.clone(),
+            &Terrain::Grassland => scene_handle = asset_handles.scenes.terrain_grassland.clone(),
+            &Terrain::Ice => scene_handle = asset_handles.scenes.terrain_ice.clone(),
+            &Terrain::Mountain => scene_handle = asset_handles.scenes.terrain_mountain.clone(),
+            &Terrain::Ocean => scene_handle = asset_handles.scenes.terrain_ocean.clone(),
+            &Terrain::Snow => scene_handle = asset_handles.scenes.terrain_snow.clone(),
+            &Terrain::Steppe => scene_handle = asset_handles.scenes.terrain_steppe.clone(),
+            &Terrain::Tundra => scene_handle = asset_handles.scenes.terrain_tundra.clone(),
+        }
+
         // Scene.
         let model = SceneBundle {
-            scene: asset_server.load(terrain.rep()),
+            scene: scene_handle,
             transform: transform,
             ..Default::default()
         };
@@ -60,7 +75,7 @@ pub fn spawn_map(
         // Spawn.
         commands.spawn(TileBundle::new(hex_pos, *terrain, model));
 
-        // State transition.
-        next_game_state.set(GameState::PlayerTurn);
+        // GameState transition.
+        next_game_state.set(GameState::PlayerInit);
     }
 }

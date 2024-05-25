@@ -18,10 +18,13 @@
 
 use bevy::prelude::*;
 
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-pub enum AppState {
-    InBoot,
-    MainMenu,
-    LoadGame,
-    InGame,
+use crate::systems::boot::load_game_assets::load_game_assets;
+
+pub struct BootPlugin;
+
+impl Plugin for BootPlugin {
+    fn build(&self, app: &mut App) {
+        // Add startup scheduled systems to the app.
+        app.add_systems(Startup, load_game_assets);
+    }
 }

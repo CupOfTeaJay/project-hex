@@ -16,12 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-pub enum AppState {
-    InBoot,
-    MainMenu,
-    LoadGame,
-    InGame,
-}
+pub mod load_game_assets;

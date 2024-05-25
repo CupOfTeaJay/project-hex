@@ -57,6 +57,6 @@ impl Plugin for MapPlugin {
         // Insert resources into the app.
         app.insert_resource(map_parameters);
         // Add startup scheduled systems to the app.
-        app.add_systems(Startup, spawn_map.run_if(in_state(GameState::MapGen)));
+        app.add_systems(Update, spawn_map.run_if(in_state(GameState::MapGen)));
     }
 }
