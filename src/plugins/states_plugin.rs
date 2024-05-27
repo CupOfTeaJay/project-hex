@@ -18,29 +18,17 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::is_populated::IsPopulated;
-use crate::components::map_generation::terrain::Terrain;
+use crate::states::app_state::AppState;
+use crate::states::boot_state::BootState;
+use crate::states::game_state::GameState;
 
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct TileBundle {
-    pos: HexPos,
-    terrain: Terrain,
-    populated: IsPopulated,
-    model: SceneBundle,
-}
+pub struct StatesPlugin;
 
-impl TileBundle {
-    /// Creates a tile bundle.
-    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
-        TileBundle {
-            pos: pos,
-            terrain: terrain,
-            populated: IsPopulated::new(false),
-            model: model,
-        }
+impl Plugin for StatesPlugin {
+    fn build(&self, app: &mut App) {
+        // Register states.
+        app.insert_state(BootState::LoadingAssets)
+            .insert_state(AppState::InBoot)
+            .insert_state(GameState::NotInGame);
     }
 }
-
-// TODO: test TileBundle::new()

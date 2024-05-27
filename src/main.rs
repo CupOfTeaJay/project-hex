@@ -1,5 +1,5 @@
 /*
-    Such is Life
+    Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -20,32 +20,34 @@ use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 
-use such_is_life::plugins::boot_plugin::BootPlugin;
-use such_is_life::plugins::camera_plugin::CameraPlugin;
-use such_is_life::plugins::game_start_plugin::GameStartPlugin;
-use such_is_life::plugins::map_plugin::MapPlugin;
-use such_is_life::plugins::stage_setting_plugin::StageSettingPlugin;
-use such_is_life::states::app_state::AppState;
-use such_is_life::states::boot_state::BootState;
-use such_is_life::states::game_state::GameState;
+use project_hex::plugins::boot_plugin::BootPlugin;
+use project_hex::plugins::camera_plugin::CameraPlugin;
+use project_hex::plugins::events_plugin::EventsPlugin;
+use project_hex::plugins::game_start_plugin::GameStartPlugin;
+use project_hex::plugins::map_plugin::MapPlugin;
+use project_hex::plugins::selection_plugin::SelectionPlugin;
+use project_hex::plugins::stage_setting_plugin::StageSettingPlugin;
+use project_hex::plugins::states_plugin::StatesPlugin;
 
 fn main() {
     App::new()
-        // Initialize states.
-        .insert_state(BootState::LoadingAssets)
-        .insert_state(AppState::InBoot)
-        .insert_state(GameState::NotInGame)
-        // Default, community plugins.
-        .add_plugins((DefaultPlugins, DefaultPickingPlugins))
-        // Custom plugins.
+        // External plugins.
+        .add_plugins((
+            DefaultPlugins,
+            DefaultPickingPlugins,
+            WorldInspectorPlugin::new(),
+        ))
+        // Internal plugins.
         .add_plugins((
             BootPlugin,
             CameraPlugin,
             GameStartPlugin,
-            StageSettingPlugin,
             MapPlugin,
+            EventsPlugin,
+            SelectionPlugin,
+            StatesPlugin,
+            StageSettingPlugin,
         ))
-        // "Editor"
-        .add_plugins(WorldInspectorPlugin::new())
+        // Execute.
         .run();
 }

@@ -1,5 +1,5 @@
 /*
-    Such is Life
+    Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ use rand::{thread_rng, Rng};
 
 use crate::{
     components::{common::hex_pos::HexPos, map_generation::terrain::Terrain},
+    events::unit_spawn_event::UnitSpawnEvent,
     states::game_state::GameState,
     utils::coord_conversions::cube_to_cartesian,
 };
@@ -33,6 +34,7 @@ pub fn init_player(
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
     query: Query<(&HexPos, &Terrain)>,
+    mut unit_spawn_event: EventWriter<UnitSpawnEvent>,
 ) {
     let mut trans_terr_map: IndexMap<&HexPos, &Terrain> = IndexMap::new();
 
@@ -75,6 +77,8 @@ pub fn init_player(
         ..Default::default()
     };
 
-    commands.spawn(unit_model);
+    let entity = commands.spawn((Name::new("Unit"), unit_model)).id();
+    unit_spawn_event.send(UnitSpawnEvent::new(entity));
+
     next_game_state.set(GameState::PlayerTurn);
 }

@@ -1,5 +1,5 @@
 /*
-    Such is Life
+    Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -21,4 +21,5 @@ pub mod camera_management;
 pub mod game_start;
 pub mod map_generation;
 pub mod movement;
+pub mod selection;
 pub mod stage_setting;

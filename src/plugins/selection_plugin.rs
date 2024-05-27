@@ -18,29 +18,18 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::is_populated::IsPopulated;
-use crate::components::map_generation::terrain::Terrain;
+use crate::states::app_state::AppState;
+use crate::systems::selection::make_tile_pickable::make_tile_pickable;
+use crate::systems::selection::make_unit_pickable::make_unit_pickable;
 
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct TileBundle {
-    pos: HexPos,
-    terrain: Terrain,
-    populated: IsPopulated,
-    model: SceneBundle,
-}
+pub struct SelectionPlugin;
 
-impl TileBundle {
-    /// Creates a tile bundle.
-    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
-        TileBundle {
-            pos: pos,
-            terrain: terrain,
-            populated: IsPopulated::new(false),
-            model: model,
-        }
+impl Plugin for SelectionPlugin {
+    fn build(&self, app: &mut App) {
+        // Register states.
+        app.add_systems(
+            Update,
+            (make_tile_pickable, make_unit_pickable).run_if(in_state(AppState::InGame)),
+        );
     }
 }
-
-// TODO: test TileBundle::new()

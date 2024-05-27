@@ -1,5 +1,5 @@
 /*
-    Such is Life
+    Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ pub fn load_game_assets(
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let scenes = SceneHandles::new(
-        // Load tile handles.
+        // Load terrain handles.
         asset_server.load("tiles/coastalTile.glb#Scene0"),
         asset_server.load("tiles/debugTile.glb#Scene0"),
         asset_server.load("tiles/desertTile.glb#Scene0"),

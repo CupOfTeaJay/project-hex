@@ -17,30 +17,19 @@
 */
 
 use bevy::prelude::*;
+use bevy_mod_picking::PickableBundle;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::is_populated::IsPopulated;
-use crate::components::map_generation::terrain::Terrain;
+use crate::events::tile_spawn_event::TileSpawnEvent;
 
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct TileBundle {
-    pos: HexPos,
-    terrain: Terrain,
-    populated: IsPopulated,
-    model: SceneBundle,
-}
-
-impl TileBundle {
-    /// Creates a tile bundle.
-    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
-        TileBundle {
-            pos: pos,
-            terrain: terrain,
-            populated: IsPopulated::new(false),
-            model: model,
-        }
+/// Makes a tile scene pickable (selectable).
+pub fn make_tile_pickable(
+    mut tile_spawn_event: EventReader<TileSpawnEvent>,
+    mut commands: Commands,
+) {
+    for event in tile_spawn_event.read() {
+        println!("Event received!");
+        commands
+            .entity(event.entity)
+            .insert(PickableBundle::default());
     }
 }
-
-// TODO: test TileBundle::new()

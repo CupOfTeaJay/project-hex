@@ -1,5 +1,5 @@
 /*
-    Such is Life
+    Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,10 @@
 */
 
 mod components;
+mod events;
 mod resources;
+mod states;
 mod systems;
 mod utils;
 
 pub mod plugins;
-pub mod states;

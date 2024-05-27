@@ -18,29 +18,15 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::is_populated::IsPopulated;
-use crate::components::map_generation::terrain::Terrain;
+use crate::events::tile_spawn_event::TileSpawnEvent;
+use crate::events::unit_spawn_event::UnitSpawnEvent;
 
-/// Suite of components for tile entities.
-#[derive(Bundle)]
-pub struct TileBundle {
-    pos: HexPos,
-    terrain: Terrain,
-    populated: IsPopulated,
-    model: SceneBundle,
-}
+pub struct EventsPlugin;
 
-impl TileBundle {
-    /// Creates a tile bundle.
-    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
-        TileBundle {
-            pos: pos,
-            terrain: terrain,
-            populated: IsPopulated::new(false),
-            model: model,
-        }
+impl Plugin for EventsPlugin {
+    fn build(&self, app: &mut App) {
+        // Register events.
+        app.add_event::<TileSpawnEvent>()
+            .add_event::<UnitSpawnEvent>();
     }
 }
-
-// TODO: test TileBundle::new()
