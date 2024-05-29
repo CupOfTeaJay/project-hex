@@ -72,7 +72,7 @@ pub fn init_player(
     let mut my_transform = Transform::from_xyz(x, y, z);
     my_transform.scale = Vec3::new(0.5, 0.5, 0.5);
     let unit_model = SceneBundle {
-        scene: asset_server.load("units/unit.glb#Scene0"),
+        scene: asset_server.load("units/debug.glb#Scene0"),
         transform: my_transform,
         ..Default::default()
     };
