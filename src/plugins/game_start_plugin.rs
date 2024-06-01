@@ -18,14 +18,30 @@
 
 use ::bevy::prelude::*;
 
-use crate::states::game_state::GameState;
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
+
 use crate::systems::game_start::init_player::init_player;
 
+/// Plugin that initializes players after map-generation. Currently, the GameStartPlugin:
+///     - Initializes the player.
 pub struct GameStartPlugin;
 
 impl Plugin for GameStartPlugin {
     fn build(&self, app: &mut App) {
-        // Add startup scheduled systems to the app.
-        app.add_systems(Update, init_player.run_if(in_state(GameState::PlayerInit)));
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            init_player
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(in_state(GameState::PlayerInit)),
+        );
     }
 }

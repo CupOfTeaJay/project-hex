@@ -18,18 +18,36 @@
 
 use bevy::prelude::*;
 
-use crate::states::app_state::AppState;
-use crate::systems::selection::make_tile_pickable::make_tile_pickable;
-use crate::systems::selection::make_unit_pickable::make_unit_pickable;
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
 
+#[rustfmt::skip]
+use crate::systems::{
+    selection::make_tile_pickable::make_tile_pickable,
+    selection::make_unit_pickable::make_unit_pickable,
+};
+
+/// Plugin that ensures relevant game assets are pickable by the player. Currently, the
+/// SelectionPlugin:
+///     - Makes tiles pickable upon spawning into the world.
+///     - Makes units pickable upon spawning into the world.
 pub struct SelectionPlugin;
 
 impl Plugin for SelectionPlugin {
     fn build(&self, app: &mut App) {
-        // Register states.
+        // Register states with the main application.
         app.add_systems(
             Update,
-            (make_tile_pickable, make_unit_pickable).run_if(in_state(AppState::InGame)),
+            (make_tile_pickable, make_unit_pickable)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
         );
     }
 }

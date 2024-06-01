@@ -16,19 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-use bevy_mod_picking::PickableBundle;
+pub fn debug_not_loaded_entry() {
+    println!("AssetsState entering state 'NotLoaded'.");
+}
 
-use crate::events::tile_spawn_event::TileSpawnEvent;
+pub fn debug_not_loaded_exit() {
+    println!("AssetsState exiting state 'NotLoaded'.");
+}
 
-/// Makes a tile scene pickable (selectable).
-pub fn make_tile_pickable(
-    mut tile_spawn_event: EventReader<TileSpawnEvent>,
-    mut commands: Commands,
-) {
-    for event in tile_spawn_event.read() {
-        commands
-            .entity(event.entity)
-            .insert(PickableBundle::default());
-    }
+pub fn debug_loaded_entry() {
+    println!("AssetsState entering state 'Loaded'.");
+}
+
+pub fn debug_loaded_exit() {
+    println!("AssetsState exiting state 'Loaded'.");
 }

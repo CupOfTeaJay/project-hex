@@ -23,6 +23,7 @@ use std::f32::consts::FRAC_PI_2;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::components::map_generation::tile_bundle::TileBundle;
+use crate::events::tile_spawn_event::TileSpawnEvent;
 use crate::resources::asset_handles::AssetHandles;
 use crate::resources::map_parameters::MapParameters;
 use crate::states::game_state::GameState;
@@ -34,6 +35,7 @@ pub fn spawn_map(
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
     map_par: Res<MapParameters>,
+    mut tile_spawn_event: EventWriter<TileSpawnEvent>,
 ) {
     // Setup.
     let pos_terr_map: IndexMap<(i32, i32, i32), Terrain> = generate_map_data(&map_par);
@@ -73,7 +75,10 @@ pub fn spawn_map(
         let hex_pos = HexPos::new(pos.0, pos.1, pos.2);
 
         // Spawn.
-        commands.spawn(TileBundle::new(hex_pos, *terrain, model));
+        let entity = commands
+            .spawn(TileBundle::new(hex_pos, *terrain, model))
+            .id();
+        tile_spawn_event.send(TileSpawnEvent::new(entity));
 
         // GameState transition.
         next_game_state.set(GameState::PlayerInit);

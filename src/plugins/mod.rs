@@ -18,6 +18,7 @@
 
 pub mod boot_plugin;
 pub mod camera_plugin;
+pub mod debug_plugin;
 pub mod events_plugin;
 pub mod game_start_plugin;
 pub mod map_plugin;

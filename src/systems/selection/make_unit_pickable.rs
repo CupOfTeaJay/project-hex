@@ -27,7 +27,6 @@ pub fn make_unit_pickable(
     mut commands: Commands,
 ) {
     for event in unit_spawn_event.read() {
-        println!("Event received!");
         commands
             .entity(event.entity)
             .insert(PickableBundle::default());

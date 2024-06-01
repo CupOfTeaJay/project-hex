@@ -18,13 +18,44 @@
 
 use bevy::prelude::*;
 
-use crate::systems::boot::load_game_assets::load_game_assets;
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
 
+#[rustfmt::skip]
+use crate::systems::{
+    boot::load_game_assets::load_game_assets,
+    boot::validate_assets_loaded::validate_assets_loaded,
+};
+
+/// Plugin that initializes the game upon launch. Currently, the BootPlugin:
+///     - Loads assets.
+///     - Validates requested assets have successfully loaded.
 pub struct BootPlugin;
 
 impl Plugin for BootPlugin {
     fn build(&self, app: &mut App) {
-        // Add startup scheduled systems to the app.
-        app.add_systems(Startup, load_game_assets);
+        // Add Startup scheduled systems to the main application.
+        app.add_systems(
+            Startup,
+            load_game_assets
+                .run_if(in_state(AppState::InBoot))
+                .run_if(in_state(AssetsState::NotLoaded))
+                .run_if(in_state(BootState::LoadingAssets))
+                .run_if(in_state(GameState::NotInGame)),
+        );
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            validate_assets_loaded
+                .run_if(in_state(AppState::InBoot))
+                .run_if(in_state(AssetsState::NotLoaded))
+                .run_if(in_state(BootState::LoadingAssets))
+                .run_if(in_state(GameState::NotInGame)),
+        );
     }
 }

@@ -16,19 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-use bevy_mod_picking::PickableBundle;
-
-use crate::events::tile_spawn_event::TileSpawnEvent;
-
-/// Makes a tile scene pickable (selectable).
-pub fn make_tile_pickable(
-    mut tile_spawn_event: EventReader<TileSpawnEvent>,
-    mut commands: Commands,
-) {
-    for event in tile_spawn_event.read() {
-        commands
-            .entity(event.entity)
-            .insert(PickableBundle::default());
-    }
-}
+pub mod debug_app_state_transition;
+pub mod debug_assets_state_transition;
+pub mod debug_boot_state_transition;
+pub mod debug_game_state_transition;

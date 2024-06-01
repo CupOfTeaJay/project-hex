@@ -18,17 +18,27 @@
 
 use bevy::prelude::*;
 
-use crate::states::app_state::AppState;
-use crate::states::boot_state::BootState;
-use crate::states::game_state::GameState;
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
 
+/// Plugin that registers states with the main application. Currently, the StatesPlugin:
+///     - Initializes "AppState" to "AppState::InBoot".
+///     - Initializes "AssetsState" to "AssetsState::NotLoaded".
+///     - Initializes "BootState" to "BootState::LoadingAssets".
+///     - Initializes "GameState" to "GameState::NotInGame".
 pub struct StatesPlugin;
 
 impl Plugin for StatesPlugin {
     fn build(&self, app: &mut App) {
-        // Register states.
-        app.insert_state(BootState::LoadingAssets)
-            .insert_state(AppState::InBoot)
+        // Register states with the main application.
+        app.insert_state(AppState::InBoot)
+            .insert_state(AssetsState::NotLoaded)
+            .insert_state(BootState::LoadingAssets)
             .insert_state(GameState::NotInGame);
     }
 }

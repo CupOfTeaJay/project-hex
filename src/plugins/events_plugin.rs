@@ -18,14 +18,20 @@
 
 use bevy::prelude::*;
 
-use crate::events::tile_spawn_event::TileSpawnEvent;
-use crate::events::unit_spawn_event::UnitSpawnEvent;
+#[rustfmt::skip]
+use crate::events::{
+    tile_spawn_event::TileSpawnEvent,
+    unit_spawn_event::UnitSpawnEvent,
+};
 
+/// Plugin that registers events with the main application. Currently, the EventsPlugin:
+///     - Registers "TileSpawnEvent".
+///     - Registers "UnitSpawnEvent".
 pub struct EventsPlugin;
 
 impl Plugin for EventsPlugin {
     fn build(&self, app: &mut App) {
-        // Register events.
+        // Register events with the main application.
         app.add_event::<TileSpawnEvent>()
             .add_event::<UnitSpawnEvent>();
     }

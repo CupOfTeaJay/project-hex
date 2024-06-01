@@ -22,6 +22,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 
 use project_hex::plugins::boot_plugin::BootPlugin;
 use project_hex::plugins::camera_plugin::CameraPlugin;
+// use project_hex::plugins::debug_plugin::DebugPlugin;
 use project_hex::plugins::events_plugin::EventsPlugin;
 use project_hex::plugins::game_start_plugin::GameStartPlugin;
 use project_hex::plugins::map_plugin::MapPlugin;
@@ -41,6 +42,7 @@ fn main() {
         .add_plugins((
             BootPlugin,
             CameraPlugin,
+            // DebugPlugin,
             GameStartPlugin,
             MapPlugin,
             EventsPlugin,

@@ -20,31 +20,14 @@ use bevy::prelude::*;
 
 use crate::resources::asset_handles::AssetHandles;
 use crate::resources::asset_handles::SceneHandles;
-use crate::states::app_state::AppState;
-use crate::states::boot_state::BootState;
-use crate::states::game_state::GameState;
 
 /// Loads all assets into memory, then inserts their handles into a resource for global access.
-pub fn load_game_assets(
-    asset_server: Res<AssetServer>,
-    mut commands: Commands,
-    mut next_app_state: ResMut<NextState<AppState>>,
-    mut next_boot_state: ResMut<NextState<BootState>>,
-    mut next_game_state: ResMut<NextState<GameState>>,
-) {
+pub fn load_game_assets(asset_server: Res<AssetServer>, mut commands: Commands) {
     // Load scenes.
     let scenes: SceneHandles = load_scenes(&asset_server);
 
     // Insert asset handles into the app's resources.
     commands.insert_resource(AssetHandles::new(scenes));
-
-    // Boot state transition.
-    next_boot_state.set(BootState::NotInBoot);
-
-    // App state transition.
-    // TODO: transition to main menu when implemented.
-    next_app_state.set(AppState::InGame);
-    next_game_state.set(GameState::MapGen);
 }
 
 fn load_scenes(asset_server: &Res<AssetServer>) -> SceneHandles {
@@ -57,7 +40,7 @@ fn load_scenes(asset_server: &Res<AssetServer>) -> SceneHandles {
     let terrain_mountain: Handle<Scene> = asset_server.load("tiles/mountainTile.glb#Scene0");
     let terrain_ocean: Handle<Scene> = asset_server.load("tiles/oceanTile.glb#Scene0");
     let terrain_snow: Handle<Scene> = asset_server.load("tiles/snowTile.glb#Scene0");
-    let terrain_steppe: Handle<Scene> = asset_server.load("tiles/stepTile.glb#Scene0");
+    let terrain_steppe: Handle<Scene> = asset_server.load("tiles/steppeTile.glb#Scene0");
     let terrain_tundra: Handle<Scene> = asset_server.load("tiles/tundraTile.glb#Scene0");
 
     // Load unit scene handles.

@@ -18,16 +18,29 @@
 
 use bevy::prelude::*;
 
-use crate::resources::map_parameters::ConvolutionParameters;
-use crate::resources::map_parameters::ElevationParameters;
-use crate::resources::map_parameters::LatitudeParameters;
-use crate::resources::map_parameters::MapParameters;
-use crate::resources::map_parameters::NoiseRequest;
-use crate::resources::map_parameters::NoiseType;
-use crate::resources::map_parameters::TerrainSpawnParameters;
-use crate::states::game_state::GameState;
+#[rustfmt::skip]
+use crate::resources::{
+    map_parameters::ConvolutionParameters,
+    map_parameters::ElevationParameters,
+    map_parameters::LatitudeParameters,
+    map_parameters::MapParameters,
+    map_parameters::NoiseRequest,
+    map_parameters::NoiseType,
+    map_parameters::TerrainSpawnParameters,
+};
+
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
+
 use crate::systems::map_generation::spawn_map::spawn_map;
 
+/// Plugin that encapsulates algorithms related to map generation. Currently, the MapPlugin:
+///     - Spawns a map from a given seed.
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
@@ -54,9 +67,16 @@ impl Plugin for MapPlugin {
             convolution_parameters,
         );
 
-        // Insert resources into the app.
+        // Register resources with the main application.
         app.insert_resource(map_parameters);
-        // Add startup scheduled systems to the app.
-        app.add_systems(Update, spawn_map.run_if(in_state(GameState::MapGen)));
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            spawn_map
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(in_state(GameState::MapGen)),
+        );
     }
 }

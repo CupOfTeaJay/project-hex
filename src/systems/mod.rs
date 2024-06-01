@@ -18,6 +18,7 @@
 
 pub mod boot;
 pub mod camera_management;
+pub mod debug;
 pub mod game_start;
 pub mod map_generation;
 pub mod movement;

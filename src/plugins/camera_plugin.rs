@@ -18,18 +18,46 @@
 
 use bevy::prelude::*;
 
-use crate::systems::camera_management::spawn_camera::spawn_camera;
-use crate::systems::camera_management::translate_camera::translate_camera;
-use crate::systems::camera_management::zoom_camera::zoom_camera;
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
 
-/// Spawns player camera and moves camera in response to player input.
+#[rustfmt::skip]
+use crate::systems::{
+    camera_management::spawn_camera::spawn_camera,
+    camera_management::translate_camera::translate_camera,
+    camera_management::zoom_camera::zoom_camera,
+};
+
+/// Plugin that manages the player's camera. Currently, the CameraPlugin:
+///     - Spawns the player's camera.
+///     - Zooms the camera in response to player input.
+///     - Translates the camera in response to player input.
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        // Add startup scheduled systems to the app.
-        app.add_systems(Startup, spawn_camera);
-        // Add update scheduled systems to the app.
-        app.add_systems(Update, (zoom_camera, translate_camera));
+        // Add GameState::PlayerInit exit scheduled systems to the main application.
+        app.add_systems(
+            OnExit(GameState::PlayerInit),
+            spawn_camera
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(in_state(GameState::PlayerTurn)),
+        );
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            (zoom_camera, translate_camera)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(in_state(GameState::OpponentTurn).or_else(in_state(GameState::PlayerTurn))),
+        );
     }
 }

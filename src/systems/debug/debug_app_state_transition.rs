@@ -16,19 +16,34 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-use bevy_mod_picking::PickableBundle;
+pub fn debug_in_boot_entry() {
+    println!("AppState entering state 'InBoot'.");
+}
 
-use crate::events::tile_spawn_event::TileSpawnEvent;
+pub fn debug_in_boot_exit() {
+    println!("AppState exiting state 'InBoot'.");
+}
 
-/// Makes a tile scene pickable (selectable).
-pub fn make_tile_pickable(
-    mut tile_spawn_event: EventReader<TileSpawnEvent>,
-    mut commands: Commands,
-) {
-    for event in tile_spawn_event.read() {
-        commands
-            .entity(event.entity)
-            .insert(PickableBundle::default());
-    }
+pub fn debug_in_game_entry() {
+    println!("AppState entering state 'InGame'.");
+}
+
+pub fn debug_in_game_exit() {
+    println!("AppState exiting state 'InGame'.");
+}
+
+pub fn debug_load_game_entry() {
+    println!("AppState entering state 'LoadGame'.");
+}
+
+pub fn debug_load_game_exit() {
+    println!("AppState exiting state 'LoadGame'.");
+}
+
+pub fn debug_main_menu_entry() {
+    println!("AppState entering state 'MainMenu'.");
+}
+
+pub fn debug_main_menu_exit() {
+    println!("AppState exiting state 'MainMenu'.");
 }

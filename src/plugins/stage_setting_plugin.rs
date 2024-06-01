@@ -18,13 +18,30 @@
 
 use ::bevy::prelude::*;
 
+#[rustfmt::skip]
+use crate::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
+
 use crate::systems::stage_setting::spawn_sun::spawn_sun;
 
+/// Plugin that decorates the in-game environment. Currently, StageSettingPlugin:
+///     - Spawns a sun into the world.
 pub struct StageSettingPlugin;
 
 impl Plugin for StageSettingPlugin {
     fn build(&self, app: &mut App) {
-        // Add startup scheduled systems to the app.
-        app.add_systems(Startup, spawn_sun);
+        // Add GameState::MapGen exit scheduled systems to the main application.
+        app.add_systems(
+            OnExit(GameState::MapGen),
+            spawn_sun
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
     }
 }

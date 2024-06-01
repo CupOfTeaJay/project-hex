@@ -16,4 +16,66 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
+use bevy::{asset::LoadState, prelude::*};
+
+pub fn test() {}
+
+use crate::{
+    resources::asset_handles::AssetHandles,
+    states::{
+        app_state::AppState, assets_state::AssetsState, boot_state::BootState,
+        game_state::GameState,
+    },
+};
+
+pub fn validate_assets_loaded(
+    asset_handles: Res<AssetHandles>,
+    asset_server: Res<AssetServer>,
+    mut next_app_state: ResMut<NextState<AppState>>,
+    mut next_assets_state: ResMut<NextState<AssetsState>>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+    mut next_boot_state: ResMut<NextState<BootState>>,
+) {
+    // Flag used to signal that all assets are loaded.
+    let mut assets_loaded: bool = true;
+
+    // Validate the asset server has loaded all requested scene handles.
+    validate_scenes_loaded(&mut assets_loaded, &asset_handles, &asset_server);
+
+    // Assert state transition if all assets are loaded.
+    if assets_loaded {
+        next_app_state.set(AppState::InGame);
+        next_assets_state.set(AssetsState::Loaded);
+        next_boot_state.set(BootState::NotInBoot);
+        next_game_state.set(GameState::MapGen);
+    }
+}
+
+fn validate_scenes_loaded(
+    assets_loaded: &mut bool,
+    asset_handles: &Res<AssetHandles>,
+    asset_server: &Res<AssetServer>,
+) {
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_coastal.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_debug.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_desert.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_grassland.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_ice.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_mountain.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_ocean.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_snow.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_steppe.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.terrain_tundra.id()) == LoadState::Loaded;
+    *assets_loaded &=
+        asset_server.load_state(asset_handles.scenes.unit_unit.id()) == LoadState::Loaded;
+}
