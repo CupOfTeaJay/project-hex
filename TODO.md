@@ -18,7 +18,7 @@
 - [ ] Maybe replace all (i32, i32, i32) tuples with hexpos.
 
 # Movement:
-    - [ ] Try to disjoint queries in move_thing.rs
+- [ ] Try to disjoint queries in move_thing.rs
 
 # Multiplayer:
 - Allow for peer-to-peer multiplayer.
