@@ -23,6 +23,8 @@ use crate::components::common::{hex_pos::HexPos, is_movable::IsMovable};
 
 pub fn move_unit(movable_units: Query<(&HexPos, &IsMovable, &PickSelection)>) {
     for (hex_position, is_movable, pick_selection) in movable_units.iter() {
-        if is_movable.status && pick_selection.is_selected {}
+        if is_movable.status && pick_selection.is_selected {
+            println!("Movable thing selected.")
+        }
     }
 }

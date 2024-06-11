@@ -19,14 +19,18 @@
 // Find a random land tile on the map. Spawn a unit there.
 
 use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
 use indexmap::IndexMap;
 use rand::{thread_rng, Rng};
 
 use crate::{
-    components::{common::hex_pos::HexPos, map_generation::terrain::Terrain},
+    components::{
+        combat::unit_bundle::UnitBundle, common::hex_pos::HexPos, map_generation::terrain::Terrain,
+    },
     events::unit_spawn_event::UnitSpawnEvent,
     states::game_state::GameState,
     utils::coord_conversions::cube_to_cartesian,
+    utils::get_top_parent::get_top_parent,
 };
 
 pub fn init_player(
@@ -77,7 +81,24 @@ pub fn init_player(
         ..Default::default()
     };
 
-    let entity = commands.spawn((Name::new("Unit"), unit_model)).id();
+    let entity = commands
+        .spawn((
+            Name::new("Unit"),
+            UnitBundle::new(*random_hex_pos, unit_model),
+            PickSelection { is_selected: false },
+            On::<Pointer<Click>>::run(
+                |event: Listener<Pointer<Click>>,
+                 mut selectables: Query<&mut PickSelection>,
+                 parents: Query<&Parent>| {
+                    selectables
+                        .get_mut(get_top_parent(&event.target, &parents))
+                        .unwrap()
+                        .is_selected = true;
+                },
+            ),
+        ))
+        .id();
+
     unit_spawn_event.send(UnitSpawnEvent::new(entity));
 
     next_game_state.set(GameState::PlayerTurn);

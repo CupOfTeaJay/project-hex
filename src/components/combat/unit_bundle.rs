@@ -24,7 +24,7 @@ use crate::components::common::hex_pos::HexPos;
 use crate::components::common::is_movable::IsMovable;
 
 #[derive(Bundle)]
-struct UnitBundle {
+pub struct UnitBundle {
     pos: HexPos,
     health: Health,
     movable: IsMovable,
@@ -32,7 +32,7 @@ struct UnitBundle {
 }
 
 impl UnitBundle {
-    fn new(pos: HexPos, model: SceneBundle) -> Self {
+    pub fn new(pos: HexPos, model: SceneBundle) -> Self {
         UnitBundle {
             pos: pos,
             health: Health::new(100),

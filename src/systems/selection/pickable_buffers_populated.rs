@@ -18,10 +18,7 @@
 
 use bevy::prelude::*;
 
-use crate::{
-    resources::pickable_buffers::PickableBuffers,
-    states::pickable_buffers_state::PickableBuffersState,
-};
+use crate::resources::pickable_buffers::PickableBuffers;
 
 pub fn pickable_buffers_populated(pickable_buffers: &ResMut<PickableBuffers>) -> bool {
     if pickable_buffers.scenes_not_instanced.len() > 0

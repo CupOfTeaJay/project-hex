@@ -20,4 +20,4 @@ mod air_unit_class;
 mod health;
 mod land_unit_class;
 mod sea_unit_class;
-mod unit_bundle;
+pub mod unit_bundle;

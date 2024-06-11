@@ -24,6 +24,3 @@
 
 # Camera:
 - [ ] Restrict the player's view such that they can't see the ENTIRE map at once, and can infinitely scroll the map East <-> West.
-
-# Optimizations:
-- Limit all queries as much as possible. Maybe add "flag" components to all entities.

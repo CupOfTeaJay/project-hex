@@ -16,5 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod coord_conversions;
-pub mod get_top_parent;
+use bevy::prelude::*;
+
+/// Returns the ancestor of a given entity.
+pub fn get_top_parent(entity: &Entity, parents: &Query<&Parent>) -> Entity {
+    if let Ok(parent) = parents.get(*entity) {
+        get_top_parent(&parent, &parents)
+    } else {
+        *entity
+    }
+}
