@@ -64,8 +64,7 @@ pub fn spawn_map(
             &Terrain::Tundra => scene_handle = asset_handles.scenes.terrain_tundra.clone(),
         }
 
-        // Scene.
-        let model = SceneBundle {
+        let scene_bundle = SceneBundle {
             scene: scene_handle,
             transform: transform,
             ..Default::default()
@@ -76,7 +75,7 @@ pub fn spawn_map(
 
         // Spawn.
         let entity = commands
-            .spawn(TileBundle::new(hex_pos, *terrain, model))
+            .spawn(TileBundle::new(hex_pos, *terrain, scene_bundle))
             .id();
         tile_spawn_event.send(TileSpawnEvent::new(entity));
 

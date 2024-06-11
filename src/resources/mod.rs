@@ -18,3 +18,4 @@
 
 pub mod asset_handles;
 pub mod map_parameters;
+pub mod pickable_deques;

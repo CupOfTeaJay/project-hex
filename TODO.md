@@ -11,6 +11,9 @@
 - [ ] Add another layer to heightmap for highlands.
 - [ ] Maybe replace all (i32, i32, i32) tuples with hexpos.
 
+# Movement:
+    - Movable entities need to be selected.
+
 # Multiplayer:
 - Allow for peer-to-peer multiplayer.
 - Allow for server multiplayer.
@@ -23,4 +26,4 @@
 - [ ] Restrict the player's view such that they can't see the ENTIRE map at once, and can infinitely scroll the map East <-> West.
 
 # Optimizations:
-- Limit all queries as much as possible. Maybe add "flag" components to entities that share similar components.
+- Limit all queries as much as possible. Maybe add "flag" components to all entities.

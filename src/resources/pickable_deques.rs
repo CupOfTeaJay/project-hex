@@ -16,9 +16,21 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod make_tile_pickable;
-pub mod make_unit_pickable;
-pub mod process_scenes_not_instanced;
-pub mod process_scenes_not_ready;
+use std::collections::VecDeque;
 
-mod make_meshes_pickable;
+use bevy::prelude::*;
+
+#[derive(Resource)]
+pub struct PickableDeques {
+    pub scenes_not_instanced: VecDeque<Entity>,
+    pub scenes_not_ready: VecDeque<Entity>,
+}
+
+impl PickableDeques {
+    pub fn new() -> Self {
+        PickableDeques {
+            scenes_not_instanced: VecDeque::new(),
+            scenes_not_ready: VecDeque::new(),
+        }
+    }
+}

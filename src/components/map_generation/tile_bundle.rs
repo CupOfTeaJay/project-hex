@@ -28,17 +28,17 @@ pub struct TileBundle {
     pos: HexPos,
     terrain: Terrain,
     populated: IsPopulated,
-    model: SceneBundle,
+    scene_bundle: SceneBundle,
 }
 
 impl TileBundle {
     /// Creates a tile bundle.
-    pub fn new(pos: HexPos, terrain: Terrain, model: SceneBundle) -> Self {
+    pub fn new(pos: HexPos, terrain: Terrain, scene_bundle: SceneBundle) -> Self {
         TileBundle {
             pos: pos,
             terrain: terrain,
             populated: IsPopulated::new(false),
-            model: model,
+            scene_bundle: scene_bundle,
         }
     }
 }

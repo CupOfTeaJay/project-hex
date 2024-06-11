@@ -16,9 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod make_tile_pickable;
-pub mod make_unit_pickable;
-pub mod process_scenes_not_instanced;
-pub mod process_scenes_not_ready;
+use bevy::{prelude::*, scene::SceneInstance};
 
-mod make_meshes_pickable;
+use crate::resources::pickable_deques::PickableDeques;
+
+pub fn process_scenes_not_instanced(
+    mut pickable_deques: ResMut<PickableDeques>,
+    scene_instances: Query<&SceneInstance>,
+) {
+    if let Some(entity) = pickable_deques.scenes_not_instanced.back().cloned() {
+        if let Ok(_) = scene_instances.get(entity) {
+            pickable_deques.scenes_not_instanced.pop_back();
+            pickable_deques.scenes_not_ready.push_front(entity);
+        }
+    }
+}

@@ -20,32 +20,22 @@ use bevy::prelude::*;
 use bevy::scene::SceneInstance;
 use bevy_mod_picking::prelude::*;
 
-use crate::events::unit_spawn_event::UnitSpawnEvent;
 use crate::resources::pickable_deques::PickableDeques;
-use crate::systems::selection::make_meshes_pickable::make_meshes_pickable;
 
-// TODO: There's probably a much better way to do all of this.
-/// Makes a unit scene pickable (selectable).
-pub fn make_unit_pickable(
+use super::make_meshes_pickable::make_meshes_pickable;
+
+pub fn process_scenes_not_ready(
     mut commands: Commands,
-    mut pickable_deques: ResMut<PickableDeques>,
     children: Query<&Children>,
     entities: Query<Entity, (With<Handle<Mesh>>, Without<Pickable>)>,
-    scenes: Query<&SceneInstance>,
+    mut pickable_deques: ResMut<PickableDeques>,
+    scene_instances: Query<&SceneInstance>,
     scene_manager: Res<SceneSpawner>,
-    mut unit_spawn_event: EventReader<UnitSpawnEvent>,
 ) {
-    for event in unit_spawn_event.read() {
-        if let Ok(scene_instance) = scenes.get(event.entity) {
-            if scene_manager.instance_is_ready(**scene_instance) {
-                make_meshes_pickable(&mut commands, &event.entity, &children, &entities);
-            } else {
-                pickable_deques.scenes_not_ready.push_front(event.entity)
-            }
-        } else {
-            pickable_deques
-                .scenes_not_instanced
-                .push_front(event.entity)
+    if let Some(entity) = pickable_deques.scenes_not_ready.back().cloned() {
+        if scene_manager.instance_is_ready(**scene_instances.get(entity).unwrap()) {
+            pickable_deques.scenes_not_ready.pop_back();
+            make_meshes_pickable(&mut commands, &entity, &children, &entities)
         }
     }
 }

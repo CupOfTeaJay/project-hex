@@ -16,9 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod make_tile_pickable;
-pub mod make_unit_pickable;
-pub mod process_scenes_not_instanced;
-pub mod process_scenes_not_ready;
+use bevy::prelude::*;
+use bevy_mod_picking::selection::PickSelection;
 
-mod make_meshes_pickable;
+use crate::components::common::{hex_pos::HexPos, is_movable::IsMovable};
+
+pub fn move_unit(movable_units: Query<(&HexPos, &IsMovable, &PickSelection)>) {
+    for (hex_position, is_movable, pick_selection) in movable_units.iter() {
+        if is_movable.status && pick_selection.is_selected {}
+    }
+}
