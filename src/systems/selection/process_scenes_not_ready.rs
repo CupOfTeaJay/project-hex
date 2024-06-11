@@ -20,7 +20,7 @@ use bevy::prelude::*;
 use bevy::scene::SceneInstance;
 use bevy_mod_picking::prelude::*;
 
-use crate::resources::pickable_deques::PickableDeques;
+use crate::resources::pickable_buffers::{PickableBufferHelpers, PickableBuffers};
 
 use super::make_meshes_pickable::make_meshes_pickable;
 
@@ -28,14 +28,18 @@ pub fn process_scenes_not_ready(
     mut commands: Commands,
     children: Query<&Children>,
     entities: Query<Entity, (With<Handle<Mesh>>, Without<Pickable>)>,
-    mut pickable_deques: ResMut<PickableDeques>,
+    mut helper_vecs: ResMut<PickableBufferHelpers>,
+    mut pickable_buffers: ResMut<PickableBuffers>,
     scene_instances: Query<&SceneInstance>,
     scene_manager: Res<SceneSpawner>,
 ) {
-    if let Some(entity) = pickable_deques.scenes_not_ready.back().cloned() {
-        if scene_manager.instance_is_ready(**scene_instances.get(entity).unwrap()) {
-            pickable_deques.scenes_not_ready.pop_back();
-            make_meshes_pickable(&mut commands, &entity, &children, &entities)
+    for entity in pickable_buffers.scenes_not_ready.iter() {
+        if scene_manager.instance_is_ready(**scene_instances.get(*entity).unwrap()) {
+            helper_vecs.scenes_ready.push(*entity);
+            make_meshes_pickable(&mut commands, &entity, &children, &entities);
         }
+    }
+    for entity in helper_vecs.scenes_ready.iter() {
+        pickable_buffers.scenes_not_ready.remove(entity);
     }
 }

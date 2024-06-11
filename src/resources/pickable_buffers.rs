@@ -16,8 +16,36 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod app_state;
-pub mod assets_state;
-pub mod boot_state;
-pub mod game_state;
-pub mod pickable_buffers_state;
+use std::collections::HashSet;
+
+use bevy::prelude::*;
+
+#[derive(Resource)]
+pub struct PickableBuffers {
+    pub scenes_not_instanced: HashSet<Entity>,
+    pub scenes_not_ready: HashSet<Entity>,
+}
+
+impl PickableBuffers {
+    pub fn new() -> Self {
+        PickableBuffers {
+            scenes_not_instanced: HashSet::new(),
+            scenes_not_ready: HashSet::new(),
+        }
+    }
+}
+
+#[derive(Resource)]
+pub struct PickableBufferHelpers {
+    pub scenes_instanced: Vec<Entity>,
+    pub scenes_ready: Vec<Entity>,
+}
+
+impl PickableBufferHelpers {
+    pub fn new() -> Self {
+        PickableBufferHelpers {
+            scenes_instanced: Vec::new(),
+            scenes_ready: Vec::new(),
+        }
+    }
+}

@@ -18,16 +18,20 @@
 
 use bevy::{prelude::*, scene::SceneInstance};
 
-use crate::resources::pickable_deques::PickableDeques;
+use crate::resources::pickable_buffers::{PickableBufferHelpers, PickableBuffers};
 
 pub fn process_scenes_not_instanced(
-    mut pickable_deques: ResMut<PickableDeques>,
+    mut helper_vecs: ResMut<PickableBufferHelpers>,
+    mut pickable_buffers: ResMut<PickableBuffers>,
     scene_instances: Query<&SceneInstance>,
 ) {
-    if let Some(entity) = pickable_deques.scenes_not_instanced.back().cloned() {
-        if let Ok(_) = scene_instances.get(entity) {
-            pickable_deques.scenes_not_instanced.pop_back();
-            pickable_deques.scenes_not_ready.push_front(entity);
+    for entity in pickable_buffers.scenes_not_instanced.iter() {
+        if let Ok(_) = scene_instances.get(*entity) {
+            helper_vecs.scenes_instanced.push(*entity);
         }
+    }
+    for entity in helper_vecs.scenes_instanced.iter() {
+        pickable_buffers.scenes_not_instanced.remove(entity);
+        pickable_buffers.scenes_not_ready.insert(*entity);
     }
 }

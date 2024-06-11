@@ -18,6 +18,7 @@
 
 use bevy::prelude::*;
 
+use crate::states::pickable_buffers_state::PickableBuffersState;
 #[rustfmt::skip]
 use crate::states::{
     app_state::AppState,
@@ -31,6 +32,7 @@ use crate::states::{
 ///     - Initializes "AssetsState" to "AssetsState::NotLoaded".
 ///     - Initializes "BootState" to "BootState::LoadingAssets".
 ///     - Initializes "GameState" to "GameState::NotInGame".
+///     - Initializes "PickableBufferState" to "PickableBufferState::Empty"
 pub struct StatesPlugin;
 
 impl Plugin for StatesPlugin {
@@ -39,6 +41,7 @@ impl Plugin for StatesPlugin {
         app.insert_state(AppState::InBoot)
             .insert_state(AssetsState::NotLoaded)
             .insert_state(BootState::LoadingAssets)
-            .insert_state(GameState::NotInGame);
+            .insert_state(GameState::NotInGame)
+            .insert_state(PickableBuffersState::Empty);
     }
 }

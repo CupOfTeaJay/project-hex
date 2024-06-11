@@ -18,8 +18,10 @@
 
 use bevy::prelude::*;
 
+use crate::resources::pickable_buffers::PickableBufferHelpers;
+use crate::states::pickable_buffers_state::PickableBuffersState;
 use crate::{
-    resources::pickable_deques::PickableDeques, systems::selection::process_scenes_not_ready,
+    resources::pickable_buffers::PickableBuffers, systems::selection::process_scenes_not_ready,
 };
 
 #[rustfmt::skip]
@@ -32,6 +34,7 @@ use crate::states::{
 
 #[rustfmt::skip]
 use crate::systems::{
+    selection::check_pickable_buffers::check_pickable_buffers,
     selection::make_tile_pickable::make_tile_pickable,
     selection::make_unit_pickable::make_unit_pickable,
     selection::process_scenes_not_instanced::process_scenes_not_instanced,
@@ -47,19 +50,30 @@ pub struct SelectionPlugin;
 impl Plugin for SelectionPlugin {
     fn build(&self, app: &mut App) {
         // Register resources with the main application.
-        app.insert_resource(PickableDeques::new());
+        app.insert_resource(PickableBuffers::new());
+        app.insert_resource(PickableBufferHelpers::new());
+
         // Register states with the main application.
         app.add_systems(
             Update,
-            (make_tile_pickable, make_unit_pickable)
+            (
+                check_pickable_buffers,
+                make_tile_pickable,
+                make_unit_pickable,
+            )
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
                 .run_if(not(in_state(GameState::NotInGame))),
-        );
-        app.add_systems(
+        )
+        .add_systems(
             Update,
-            (process_scenes_not_instanced, process_scenes_not_ready),
+            (process_scenes_not_instanced, process_scenes_not_ready)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame)))
+                .run_if(in_state(PickableBuffersState::Populated)),
         );
     }
 }

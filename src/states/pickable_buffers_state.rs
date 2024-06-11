@@ -16,8 +16,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod app_state;
-pub mod assets_state;
-pub mod boot_state;
-pub mod game_state;
-pub mod pickable_buffers_state;
+use bevy::prelude::*;
+
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum PickableBuffersState {
+    Empty,
+    Populated,
+}

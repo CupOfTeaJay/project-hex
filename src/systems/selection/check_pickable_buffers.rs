@@ -16,21 +16,22 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::collections::VecDeque;
-
 use bevy::prelude::*;
 
-#[derive(Resource)]
-pub struct PickableDeques {
-    pub scenes_not_instanced: VecDeque<Entity>,
-    pub scenes_not_ready: VecDeque<Entity>,
-}
+use crate::{
+    resources::pickable_buffers::PickableBuffers,
+    states::pickable_buffers_state::PickableBuffersState,
+};
 
-impl PickableDeques {
-    pub fn new() -> Self {
-        PickableDeques {
-            scenes_not_instanced: VecDeque::new(),
-            scenes_not_ready: VecDeque::new(),
-        }
+pub fn check_pickable_buffers(
+    mut next_pickable_buffers_state: ResMut<NextState<PickableBuffersState>>,
+    pickable_buffers: Res<PickableBuffers>,
+) {
+    if pickable_buffers.scenes_not_instanced.len() > 0
+        || pickable_buffers.scenes_not_ready.len() > 0
+    {
+        next_pickable_buffers_state.set(PickableBuffersState::Populated);
+    } else {
+        next_pickable_buffers_state.set(PickableBuffersState::Empty);
     }
 }
