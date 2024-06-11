@@ -1,3 +1,9 @@
+# On Deck:
+- [ ] Implement A* pathfinding.
+- [ ] Implement 'analog' (smooth) movement.
+- [ ] Implement traversability by domain (Sea, Air, Land).
+- [ ] Implement movement points.
+
 # Map Generation:
 - [ ] Restrict terrains by latitude. Perhaps adjust gaussian in such a way, i.e. don't hard code by regions.
 - [ ] Apply "gradient-trick" to noise layers.
@@ -12,7 +18,7 @@
 - [ ] Maybe replace all (i32, i32, i32) tuples with hexpos.
 
 # Movement:
-    - Try to disjoint queries in move_thing.rs
+    - [ ] Try to disjoint queries in move_thing.rs
 
 # Multiplayer:
 - Allow for peer-to-peer multiplayer.
