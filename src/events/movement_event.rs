@@ -17,14 +17,22 @@
 */
 
 use bevy::prelude::*;
-use bevy_mod_picking::selection::PickSelection;
 
-use crate::components::common::{hex_pos::HexPos, is_movable::IsMovable};
+use crate::components::common::hex_pos::HexPos;
 
-pub fn move_unit(movable_units: Query<(&HexPos, &IsMovable, &PickSelection)>) {
-    for (hex_position, is_movable, pick_selection) in movable_units.iter() {
-        if is_movable.status && pick_selection.is_selected {
-            println!("Movable thing selected.")
+#[derive(Event)]
+pub struct MovementEvent {
+    pub origin_entity: Entity,
+    pub dest_entity: Entity,
+    pub dest_pos: HexPos,
+}
+
+impl MovementEvent {
+    pub fn new(origin_entity: Entity, dest_entity: Entity, dest_pos: HexPos) -> Self {
+        MovementEvent {
+            origin_entity,
+            dest_entity,
+            dest_pos,
         }
     }
 }

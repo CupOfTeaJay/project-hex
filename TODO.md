@@ -12,7 +12,7 @@
 - [ ] Maybe replace all (i32, i32, i32) tuples with hexpos.
 
 # Movement:
-    - Movable entities need to be selected.
+    - Try to disjoint queries in move_thing.rs
 
 # Multiplayer:
 - Allow for peer-to-peer multiplayer.
@@ -24,3 +24,6 @@
 
 # Camera:
 - [ ] Restrict the player's view such that they can't see the ENTIRE map at once, and can infinitely scroll the map East <-> West.
+
+# Selection:
+- [ ] Can PickSelection state be bubbled up?

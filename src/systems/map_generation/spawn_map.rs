@@ -17,6 +17,7 @@
 */
 
 use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
 use indexmap::IndexMap;
 use std::f32::consts::FRAC_PI_2;
 
@@ -29,6 +30,7 @@ use crate::resources::map_parameters::MapParameters;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
+use crate::utils::get_top_parent::get_top_parent;
 
 pub fn spawn_map(
     asset_handles: Res<AssetHandles>,
@@ -75,7 +77,20 @@ pub fn spawn_map(
 
         // Spawn.
         let entity = commands
-            .spawn(TileBundle::new(hex_pos, *terrain, scene_bundle))
+            .spawn((
+                TileBundle::new(hex_pos, *terrain, scene_bundle),
+                PickSelection { is_selected: false },
+                On::<Pointer<Up>>::run(
+                    |event: Listener<Pointer<Up>>,
+                     mut selectables: Query<&mut PickSelection>,
+                     parents: Query<&Parent>| {
+                        selectables
+                            .get_mut(get_top_parent(&event.target, &parents))
+                            .unwrap()
+                            .is_selected = true;
+                    },
+                ),
+            ))
             .id();
         tile_spawn_event.send(TileSpawnEvent::new(entity));
 

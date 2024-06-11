@@ -27,7 +27,8 @@ use crate::states::{
     pickable_buffers_state::PickableBuffersState,
 };
 
-use crate::systems::movement::move_unit::move_unit;
+use crate::systems::movement::move_thing::move_thing;
+use crate::systems::movement::movement_event_trigger::movement_event_trigger;
 
 /// TODO
 pub struct MovementPlugin;
@@ -36,7 +37,7 @@ impl Plugin for MovementPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            move_unit
+            (movement_event_trigger, move_thing)
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

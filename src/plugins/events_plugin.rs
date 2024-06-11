@@ -20,6 +20,7 @@ use bevy::prelude::*;
 
 #[rustfmt::skip]
 use crate::events::{
+    movement_event::MovementEvent,
     tile_spawn_event::TileSpawnEvent,
     unit_spawn_event::UnitSpawnEvent,
 };
@@ -32,7 +33,8 @@ pub struct EventsPlugin;
 impl Plugin for EventsPlugin {
     fn build(&self, app: &mut App) {
         // Register events with the main application.
-        app.add_event::<TileSpawnEvent>()
+        app.add_event::<MovementEvent>()
+            .add_event::<TileSpawnEvent>()
             .add_event::<UnitSpawnEvent>();
     }
 }
