@@ -19,10 +19,8 @@
 use bevy::prelude::*;
 
 use crate::resources::pickable_buffers::PickableBufferHelpers;
+use crate::resources::pickable_buffers::PickableBuffers;
 use crate::states::pickable_buffers_state::PickableBuffersState;
-use crate::{
-    resources::pickable_buffers::PickableBuffers, systems::selection::process_scenes_not_ready,
-};
 
 #[rustfmt::skip]
 use crate::states::{
@@ -34,7 +32,6 @@ use crate::states::{
 
 #[rustfmt::skip]
 use crate::systems::{
-    selection::check_pickable_buffers::check_pickable_buffers,
     selection::make_tile_pickable::make_tile_pickable,
     selection::make_unit_pickable::make_unit_pickable,
     selection::process_scenes_not_instanced::process_scenes_not_instanced,
@@ -56,15 +53,15 @@ impl Plugin for SelectionPlugin {
         // Register states with the main application.
         app.add_systems(
             Update,
-            (
-                check_pickable_buffers,
-                make_tile_pickable,
-                make_unit_pickable,
-            )
+            (make_tile_pickable, make_unit_pickable)
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
-                .run_if(not(in_state(GameState::NotInGame))),
+                .run_if(not(in_state(GameState::NotInGame)))
+                .run_if(
+                    in_state(PickableBuffersState::Populated)
+                        .or_else(in_state(PickableBuffersState::Empty)),
+                ),
         )
         .add_systems(
             Update,

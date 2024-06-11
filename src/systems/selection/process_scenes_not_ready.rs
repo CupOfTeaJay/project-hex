@@ -20,15 +20,22 @@ use bevy::prelude::*;
 use bevy::scene::SceneInstance;
 use bevy_mod_picking::prelude::*;
 
-use crate::resources::pickable_buffers::{PickableBufferHelpers, PickableBuffers};
+use crate::{
+    resources::pickable_buffers::{PickableBufferHelpers, PickableBuffers},
+    states::pickable_buffers_state::PickableBuffersState,
+};
 
-use super::make_meshes_pickable::make_meshes_pickable;
+use super::{
+    make_meshes_pickable::make_meshes_pickable,
+    pickable_buffers_populated::pickable_buffers_populated,
+};
 
 pub fn process_scenes_not_ready(
     mut commands: Commands,
     children: Query<&Children>,
     entities: Query<Entity, (With<Handle<Mesh>>, Without<Pickable>)>,
     mut helper_vecs: ResMut<PickableBufferHelpers>,
+    mut next_pickable_buffers_state: ResMut<NextState<PickableBuffersState>>,
     mut pickable_buffers: ResMut<PickableBuffers>,
     scene_instances: Query<&SceneInstance>,
     scene_manager: Res<SceneSpawner>,
@@ -41,5 +48,8 @@ pub fn process_scenes_not_ready(
     }
     for entity in helper_vecs.scenes_ready.iter() {
         pickable_buffers.scenes_not_ready.remove(entity);
+    }
+    if !pickable_buffers_populated(&pickable_buffers) {
+        next_pickable_buffers_state.set(PickableBuffersState::Empty);
     }
 }

@@ -23,15 +23,12 @@ use crate::{
     states::pickable_buffers_state::PickableBuffersState,
 };
 
-pub fn check_pickable_buffers(
-    mut next_pickable_buffers_state: ResMut<NextState<PickableBuffersState>>,
-    pickable_buffers: Res<PickableBuffers>,
-) {
+pub fn pickable_buffers_populated(pickable_buffers: &ResMut<PickableBuffers>) -> bool {
     if pickable_buffers.scenes_not_instanced.len() > 0
         || pickable_buffers.scenes_not_ready.len() > 0
     {
-        next_pickable_buffers_state.set(PickableBuffersState::Populated);
+        true
     } else {
-        next_pickable_buffers_state.set(PickableBuffersState::Empty);
+        false
     }
 }

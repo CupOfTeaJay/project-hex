@@ -22,7 +22,10 @@ use bevy_mod_picking::prelude::*;
 
 use crate::events::unit_spawn_event::UnitSpawnEvent;
 use crate::resources::pickable_buffers::PickableBuffers;
+use crate::states::pickable_buffers_state::PickableBuffersState;
 use crate::systems::selection::make_meshes_pickable::make_meshes_pickable;
+
+use super::pickable_buffers_populated::pickable_buffers_populated;
 
 // TODO: There's probably a much better way to do all of this.
 /// Makes a unit scene pickable (selectable).
@@ -31,6 +34,7 @@ pub fn make_unit_pickable(
     mut pickable_buffers: ResMut<PickableBuffers>,
     children: Query<&Children>,
     entities: Query<Entity, (With<Handle<Mesh>>, Without<Pickable>)>,
+    mut next_pickable_buffers_state: ResMut<NextState<PickableBuffersState>>,
     scenes: Query<&SceneInstance>,
     scene_manager: Res<SceneSpawner>,
     mut unit_spawn_event: EventReader<UnitSpawnEvent>,
@@ -44,6 +48,9 @@ pub fn make_unit_pickable(
             }
         } else {
             pickable_buffers.scenes_not_instanced.insert(event.entity);
+        }
+        if pickable_buffers_populated(&pickable_buffers) {
+            next_pickable_buffers_state.set(PickableBuffersState::Populated);
         }
     }
 }
