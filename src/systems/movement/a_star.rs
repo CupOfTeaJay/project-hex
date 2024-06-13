@@ -16,7 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod asset_handles;
-pub mod land_traversability_map;
-pub mod map_parameters;
-pub mod pickable_buffers;
+use crate::components::common::hex_pos::HexPos;
+
+type Node = (
+    u32, // G-cost.
+    u32, // H-cost.
+    u32, // F-cost.
+);
+
+pub fn a_star(origin: HexPos, destination: HexPos) -> Vec<HexPos> {
+    // Initialize return vector.
+    let mut path: Vec<HexPos> = Vec::new();
+
+    // Return the shortest path.
+    path
+}

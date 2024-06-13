@@ -34,7 +34,7 @@ pub fn move_thing(
         if let Ok((mut origin_hex_pos, mut origin_transform)) =
             origin_data.get_mut(event.origin_entity)
         {
-            if let Ok((mut dest_pick_selection)) = dest_data.get_mut(event.dest_entity) {
+            if let Ok(mut dest_pick_selection) = dest_data.get_mut(event.dest_entity) {
                 origin_hex_pos.q = event.dest_pos.q;
                 origin_hex_pos.r = event.dest_pos.r;
                 origin_hex_pos.s = event.dest_pos.s;

@@ -18,3 +18,5 @@
 
 pub mod move_thing;
 pub mod movement_event_trigger;
+
+mod a_star;

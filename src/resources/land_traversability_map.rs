@@ -16,7 +16,21 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod asset_handles;
-pub mod land_traversability_map;
-pub mod map_parameters;
-pub mod pickable_buffers;
+use std::collections::{HashMap, HashSet};
+
+use bevy::prelude::*;
+
+use crate::components::common::hex_pos::HexPos;
+
+#[derive(Resource)]
+pub struct LandTraversabilityMap {
+    pub cube_pos_to_bool_map: HashMap<HexPos, bool>,
+}
+
+impl LandTraversabilityMap {
+    pub fn new() -> Self {
+        LandTraversabilityMap {
+            cube_pos_to_bool_map: HashMap::new(),
+        }
+    }
+}
