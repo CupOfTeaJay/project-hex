@@ -23,6 +23,7 @@ use crate::resources::{
     asset_handles::AssetHandles,
     map_parameters::MapParameters,
     pickable_buffers::PickableBuffers,
+    pickable_buffers::PickableBufferHelpers,
     pos_neighbors_map::PosNeighborsMap,
     traversability_maps::TraversabilityMaps,
 };
@@ -41,6 +42,7 @@ impl Plugin for ResourcesPlugin {
         app.insert_resource(AssetHandles::new())
             .insert_resource(MapParameters::new())
             .insert_resource(PickableBuffers::new())
+            .insert_resource(PickableBufferHelpers::new())
             .insert_resource(PosNeighborsMap::new())
             .insert_resource(TraversabilityMaps::new());
     }

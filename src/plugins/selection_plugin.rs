@@ -46,10 +46,6 @@ pub struct SelectionPlugin;
 
 impl Plugin for SelectionPlugin {
     fn build(&self, app: &mut App) {
-        // Register resources with the main application.
-        app.insert_resource(PickableBuffers::new());
-        app.insert_resource(PickableBufferHelpers::new());
-
         // Register states with the main application.
         app.add_systems(
             Update,
