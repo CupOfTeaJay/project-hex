@@ -19,46 +19,28 @@
 use bevy::prelude::*;
 
 use crate::resources::asset_handles::AssetHandles;
-use crate::resources::asset_handles::SceneHandles;
 
 /// Loads all assets into memory, then inserts their handles into a resource for global access.
-pub fn load_game_assets(asset_server: Res<AssetServer>, mut commands: Commands) {
+pub fn load_game_assets(mut asset_handles: ResMut<AssetHandles>, asset_server: Res<AssetServer>) {
     // Load scenes.
-    let scenes: SceneHandles = load_scenes(&asset_server);
-
-    // Insert asset handles into the app's resources.
-    commands.insert_resource(AssetHandles::new(scenes));
+    load_scenes(&mut asset_handles, &asset_server);
 }
 
-fn load_scenes(asset_server: &Res<AssetServer>) -> SceneHandles {
+fn load_scenes(asset_handles: &mut ResMut<AssetHandles>, asset_server: &Res<AssetServer>) {
     // Load terrain scene handles.
-    let terrain_coastal: Handle<Scene> = asset_server.load("tiles/coastalTile.glb#Scene0");
-    let terrain_debug: Handle<Scene> = asset_server.load("tiles/debugTile.glb#Scene0");
-    let terrain_desert: Handle<Scene> = asset_server.load("tiles/desertTile.glb#Scene0");
-    let terrain_grassland: Handle<Scene> = asset_server.load("tiles/grasslandTile.glb#Scene0");
-    let terrain_ice: Handle<Scene> = asset_server.load("tiles/iceTile.glb#Scene0");
-    let terrain_mountain: Handle<Scene> = asset_server.load("tiles/mountainTile.glb#Scene0");
-    let terrain_ocean: Handle<Scene> = asset_server.load("tiles/oceanTile.glb#Scene0");
-    let terrain_snow: Handle<Scene> = asset_server.load("tiles/snowTile.glb#Scene0");
-    let terrain_steppe: Handle<Scene> = asset_server.load("tiles/steppeTile.glb#Scene0");
-    let terrain_tundra: Handle<Scene> = asset_server.load("tiles/tundraTile.glb#Scene0");
+    asset_handles.scenes.terrain_coastal = Some(asset_server.load("tiles/coastalTile.glb#Scene0"));
+    asset_handles.scenes.terrain_debug = Some(asset_server.load("tiles/debugTile.glb#Scene0"));
+    asset_handles.scenes.terrain_desert = Some(asset_server.load("tiles/desertTile.glb#Scene0"));
+    asset_handles.scenes.terrain_grassland =
+        Some(asset_server.load("tiles/grasslandTile.glb#Scene0"));
+    asset_handles.scenes.terrain_ice = Some(asset_server.load("tiles/iceTile.glb#Scene0"));
+    asset_handles.scenes.terrain_mountain =
+        Some(asset_server.load("tiles/mountainTile.glb#Scene0"));
+    asset_handles.scenes.terrain_ocean = Some(asset_server.load("tiles/oceanTile.glb#Scene0"));
+    asset_handles.scenes.terrain_snow = Some(asset_server.load("tiles/snowTile.glb#Scene0"));
+    asset_handles.scenes.terrain_steppe = Some(asset_server.load("tiles/steppeTile.glb#Scene0"));
+    asset_handles.scenes.terrain_tundra = Some(asset_server.load("tiles/tundraTile.glb#Scene0"));
 
     // Load unit scene handles.
-    let unit_debug: Handle<Scene> = asset_server.load("units/debug.glb#Scene0");
-
-    SceneHandles::new(
-        // Terrain handles.
-        terrain_coastal,
-        terrain_debug,
-        terrain_desert,
-        terrain_grassland,
-        terrain_ice,
-        terrain_mountain,
-        terrain_ocean,
-        terrain_snow,
-        terrain_steppe,
-        terrain_tundra,
-        // Unit handles.
-        unit_debug,
-    )
+    asset_handles.scenes.unit_unit = Some(asset_server.load("units/debug.glb#Scene0"));
 }

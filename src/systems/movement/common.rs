@@ -16,14 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod boot_plugin;
-pub mod camera_plugin;
-pub mod debug_plugin;
-pub mod events_plugin;
-pub mod game_start_plugin;
-pub mod map_plugin;
-pub mod movement_plugin;
-pub mod resources_plugin;
-pub mod selection_plugin;
-pub mod stage_setting_plugin;
-pub mod states_plugin;
+pub struct AStarNode {
+    f_cost: u32,
+    g_cost: u32,
+    h_cost: u32,
+}
+
+impl AStarNode {
+    pub fn new(g_cost: u32, h_cost: u32) -> Self {
+        AStarNode {
+            f_cost: g_cost + h_cost,
+            g_cost: g_cost,
+            h_cost: h_cost,
+        }
+    }
+}

@@ -27,6 +27,7 @@ use project_hex::plugins::events_plugin::EventsPlugin;
 use project_hex::plugins::game_start_plugin::GameStartPlugin;
 use project_hex::plugins::map_plugin::MapPlugin;
 use project_hex::plugins::movement_plugin::MovementPlugin;
+use project_hex::plugins::resources_plugin::ResourcesPlugin;
 use project_hex::plugins::selection_plugin::SelectionPlugin;
 use project_hex::plugins::stage_setting_plugin::StageSettingPlugin;
 use project_hex::plugins::states_plugin::StatesPlugin;
@@ -48,6 +49,7 @@ fn main() {
             MapPlugin,
             MovementPlugin,
             EventsPlugin,
+            ResourcesPlugin,
             SelectionPlugin,
             StatesPlugin,
             StageSettingPlugin,

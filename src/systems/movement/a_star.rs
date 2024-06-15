@@ -16,18 +16,32 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::collections::HashMap;
+
 use crate::components::common::hex_pos::HexPos;
+use crate::systems::movement::common::AStarNode;
 
-type Node = (
-    u32, // G-cost.
-    u32, // H-cost.
-    u32, // F-cost.
-);
-
+/// TODO:
 pub fn a_star(origin: HexPos, destination: HexPos) -> Vec<HexPos> {
-    // Initialize return vector.
+    // Initialize the return vector.
     let mut path: Vec<HexPos> = Vec::new();
+
+    // Initialize a HexPos -> Node map.
+    let mut pos_to_node_map: HashMap<HexPos, AStarNode> = HashMap::new();
 
     // Return the shortest path.
     path
+}
+
+/// Calculates the displacement between two cube coordinates.
+fn calculate_displacement(a: HexPos, b: HexPos) -> u32 {
+    (((a.q - b.q).abs() + (a.r - b.r).abs() + (a.s - b.s).abs()) / 2) as u32
+}
+
+/// TODO:
+fn calculate_node(origin: HexPos, destination: HexPos, curr_pos: HexPos) -> AStarNode {
+    AStarNode::new(
+        calculate_displacement(origin, curr_pos),
+        calculate_displacement(destination, curr_pos),
+    )
 }

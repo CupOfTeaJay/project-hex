@@ -218,9 +218,7 @@ fn init_terr_incompat_map() -> IndexMap<Terrain, Vec<Terrain>> {
 }
 
 /// Determines the wave function with the lowest entropy.
-fn determine_min_entropy_index(
-    pos_terrwave_map: &IndexMap<HexPos, WaveFunction>,
-) -> usize {
+fn determine_min_entropy_index(pos_terrwave_map: &IndexMap<HexPos, WaveFunction>) -> usize {
     // Get an arbitrary entry from our pos_terrwave_map so we can initialize min_ent and min_key
     // with valid values.
     if let Some(arbitrary) = pos_terrwave_map.get_index(0) {

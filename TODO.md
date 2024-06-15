@@ -33,3 +33,7 @@
 
 # Selection:
 - [ ] Can PickSelection state be bubbled up?
+
+# Resource Management:
+- [ ] All resources should be inserted with empty values using a resources plugin prior to running the app.
+      Fetch them with ResMut in systems to initialize them upon first use.

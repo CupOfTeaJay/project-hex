@@ -24,4 +24,5 @@ mod init_pos_elevation_map;
 mod init_pos_neighbors_map;
 mod init_pos_terr_map;
 mod init_pos_terrwave_map;
+pub mod set_map_parameters;
 pub mod spawn_map;

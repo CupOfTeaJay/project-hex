@@ -33,13 +33,14 @@ use crate::systems::map_generation::init_pos_terrwave_map::init_pos_terrwave_map
 
 /// Generates the layout of a psuedo-random, seeded map as determined by
 /// MapParameters.
-pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<HexPos, Terrain> {
+pub fn generate_map_data(
+    map_par: &Res<MapParameters>,
+) -> (IndexMap<HexPos, Terrain>, IndexMap<HexPos, Vec<HexPos>>) {
     // STEP 1:
     //     At a very minimum, we need to generate a hash table that maps a position to all of its
     //     neighbors. This neighbor relation is needed for certain algorithms, such as Wave Function
     //     Collapse.
-    let pos_neighbors_map: IndexMap<HexPos, Vec<HexPos>> =
-        init_pos_neighbors_map(&map_par);
+    let pos_neighbors_map: IndexMap<HexPos, Vec<HexPos>> = init_pos_neighbors_map(&map_par);
 
     // STEP 2:
     //     We need to establish a psuedo-random heightmap to determine which positions will
@@ -71,5 +72,5 @@ pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<HexPos, Terra
     }
 
     // Stop here for now.
-    pos_terr_map
+    (pos_terr_map, pos_neighbors_map)
 }

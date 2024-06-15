@@ -37,6 +37,7 @@ use crate::states::{
     game_state::GameState,
 };
 
+use crate::systems::map_generation::set_map_parameters::set_map_parameters;
 use crate::systems::map_generation::spawn_map::spawn_map;
 
 /// Plugin that encapsulates algorithms related to map generation. Currently, the MapPlugin:
@@ -45,34 +46,11 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        let elevation_parameters = ElevationParameters::new(
-            vec![
-                // NoiseRequest::new(NoiseType::Simplex, 10, 1.0, 1.0, 1.0),
-                NoiseRequest::new(NoiseType::Worley, 20, 1.0, 1.0, 0.5),
-            ],
-            0.35,
-            0.50,
-            0.85,
-        );
-        let latitude_parameters = LatitudeParameters::new(15.0, 50.0);
-        let terrain_spawn_parameters = TerrainSpawnParameters::new(2.0, 2.0, 2.0, 2.0, 2.0, 2.0);
-        let convolution_parameters = ConvolutionParameters::new(11);
-        let map_parameters = MapParameters::new(
-            106,
-            66,
-            6969420,
-            elevation_parameters,
-            latitude_parameters,
-            terrain_spawn_parameters,
-            convolution_parameters,
-        );
-
-        // Register resources with the main application.
-        app.insert_resource(map_parameters);
         // Add Update scheduled systems to the main application.
         app.add_systems(
             Update,
-            spawn_map
+            (set_map_parameters, spawn_map)
+                .chain()
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

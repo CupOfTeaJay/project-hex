@@ -27,6 +27,7 @@ use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::events::tile_spawn_event::TileSpawnEvent;
 use crate::resources::asset_handles::AssetHandles;
 use crate::resources::map_parameters::MapParameters;
+use crate::resources::pos_neighbors_map::PosNeighborsMap;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
@@ -37,10 +38,19 @@ pub fn spawn_map(
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
     map_par: Res<MapParameters>,
+    mut pos_neighbors_map_res: ResMut<PosNeighborsMap>,
     mut tile_spawn_event: EventWriter<TileSpawnEvent>,
 ) {
     // Setup.
-    let pos_terr_map: IndexMap<HexPos, Terrain> = generate_map_data(&map_par);
+    let (pos_terr_map, pos_neighbors_map): (
+        IndexMap<HexPos, Terrain>,
+        IndexMap<HexPos, Vec<HexPos>>,
+    ) = generate_map_data(&map_par);
+
+    // Insert the HexPos -> HexPos neighbors map into app resources. It's useful for other
+    // algorithms, such as A* pathfinding.
+    pos_neighbors_map_res.map = pos_neighbors_map;
+
     let mut transform: Transform = Transform::from_xyz(0.0, 0.0, 0.0);
     transform.rotate_y(FRAC_PI_2);
 
@@ -54,16 +64,22 @@ pub fn spawn_map(
 
         let scene_handle: Handle<Scene>;
         match terrain {
-            &Terrain::Coastal => scene_handle = asset_handles.scenes.terrain_coastal.clone(),
-            &Terrain::Debug => scene_handle = asset_handles.scenes.terrain_debug.clone(),
-            &Terrain::Desert => scene_handle = asset_handles.scenes.terrain_desert.clone(),
-            &Terrain::Grassland => scene_handle = asset_handles.scenes.terrain_grassland.clone(),
-            &Terrain::Ice => scene_handle = asset_handles.scenes.terrain_ice.clone(),
-            &Terrain::Mountain => scene_handle = asset_handles.scenes.terrain_mountain.clone(),
-            &Terrain::Ocean => scene_handle = asset_handles.scenes.terrain_ocean.clone(),
-            &Terrain::Snow => scene_handle = asset_handles.scenes.terrain_snow.clone(),
-            &Terrain::Steppe => scene_handle = asset_handles.scenes.terrain_steppe.clone(),
-            &Terrain::Tundra => scene_handle = asset_handles.scenes.terrain_tundra.clone(),
+            &Terrain::Coastal => {
+                scene_handle = asset_handles.scenes.terrain_coastal.clone().unwrap()
+            }
+            &Terrain::Debug => scene_handle = asset_handles.scenes.terrain_debug.clone().unwrap(),
+            &Terrain::Desert => scene_handle = asset_handles.scenes.terrain_desert.clone().unwrap(),
+            &Terrain::Grassland => {
+                scene_handle = asset_handles.scenes.terrain_grassland.clone().unwrap()
+            }
+            &Terrain::Ice => scene_handle = asset_handles.scenes.terrain_ice.clone().unwrap(),
+            &Terrain::Mountain => {
+                scene_handle = asset_handles.scenes.terrain_mountain.clone().unwrap()
+            }
+            &Terrain::Ocean => scene_handle = asset_handles.scenes.terrain_ocean.clone().unwrap(),
+            &Terrain::Snow => scene_handle = asset_handles.scenes.terrain_snow.clone().unwrap(),
+            &Terrain::Steppe => scene_handle = asset_handles.scenes.terrain_steppe.clone().unwrap(),
+            &Terrain::Tundra => scene_handle = asset_handles.scenes.terrain_tundra.clone().unwrap(),
         }
 
         let scene_bundle = SceneBundle {

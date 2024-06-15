@@ -30,23 +30,15 @@ pub struct MapParameters {
 }
 
 impl MapParameters {
-    pub fn new(
-        width: u32,
-        height: u32,
-        seed: u32,
-        elevation_parameters: ElevationParameters,
-        latitude_parameters: LatitudeParameters,
-        terrain_spawn_parameters: TerrainSpawnParameters,
-        convolution_parameters: ConvolutionParameters,
-    ) -> Self {
+    pub fn new() -> Self {
         MapParameters {
-            width,
-            height,
-            seed,
-            elevation_parameters,
-            latitude_parameters,
-            terrain_spawn_parameters,
-            convolution_parameters,
+            width: 0,
+            height: 0,
+            seed: 0,
+            elevation_parameters: ElevationParameters::new(),
+            latitude_parameters: LatitudeParameters::new(),
+            terrain_spawn_parameters: TerrainSpawnParameters::new(),
+            convolution_parameters: ConvolutionParameters::new(),
         }
     }
 }
@@ -56,9 +48,9 @@ pub struct ConvolutionParameters {
 }
 
 impl ConvolutionParameters {
-    pub fn new(terrain_convolutions: u32) -> Self {
+    pub fn new() -> Self {
         ConvolutionParameters {
-            terrain_convolutions,
+            terrain_convolutions: 0,
         }
     }
 }
@@ -71,29 +63,13 @@ pub struct ElevationParameters {
 }
 
 impl ElevationParameters {
-    pub fn new(
-        noise_requests: Vec<NoiseRequest>,
-        ocean_threshold: f64,
-        coastal_threshold: f64,
-        land_threshold: f64,
-    ) -> Self {
-        // Constraints.
-        if ocean_threshold <= 0.0 {
-            panic!("\nElevationParameters Error: ocean threshold must be greater than 0.0!\n")
-        } else if ocean_threshold > coastal_threshold {
-            panic!("\nElevationParameters Error: ocean threshold exceeds coastal threshold!\n")
-        } else if coastal_threshold > land_threshold {
-            panic!("\nElevationParameters Error: coastal threshold exceeds land threshold!\n")
-        } else if land_threshold >= 1.0 {
-            panic!("\nElevationParameters Error: land threshold must be greater than 1.0!\n")
-        }
-
+    pub fn new() -> Self {
         // Return new elevation parameters.
         ElevationParameters {
-            noise_requests,
-            ocean_threshold,
-            coastal_threshold,
-            land_threshold,
+            noise_requests: Vec::new(),
+            ocean_threshold: 0.0,
+            coastal_threshold: 0.0,
+            land_threshold: 0.0,
         }
     }
 }
@@ -105,8 +81,11 @@ pub struct LatitudeParameters {
 }
 
 impl LatitudeParameters {
-    pub fn new(sigma: f32, temperature: f32) -> Self {
-        LatitudeParameters { sigma, temperature }
+    pub fn new() -> Self {
+        LatitudeParameters {
+            sigma: 0.0,
+            temperature: 0.0,
+        }
     }
 }
 
@@ -138,21 +117,14 @@ pub struct TerrainSpawnParameters {
 }
 
 impl TerrainSpawnParameters {
-    pub fn new(
-        desert_bias: f32,
-        grassland_bias: f32,
-        ice_bias: f32,
-        snow_bias: f32,
-        steppe_bias: f32,
-        tundra_bias: f32,
-    ) -> Self {
+    pub fn new() -> Self {
         TerrainSpawnParameters {
-            desert_bias,
-            grassland_bias,
-            ice_bias,
-            snow_bias,
-            steppe_bias,
-            tundra_bias,
+            desert_bias: 0.0,
+            grassland_bias: 0.0,
+            ice_bias: 0.0,
+            snow_bias: 0.0,
+            steppe_bias: 0.0,
+            tundra_bias: 0.0,
         }
     }
 }

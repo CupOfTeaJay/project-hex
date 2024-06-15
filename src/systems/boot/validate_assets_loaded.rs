@@ -51,31 +51,42 @@ pub fn validate_assets_loaded(
     }
 }
 
+/// TODO:
 fn validate_scenes_loaded(
     assets_loaded: &mut bool,
     asset_handles: &Res<AssetHandles>,
     asset_server: &Res<AssetServer>,
 ) {
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_coastal.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_debug.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_desert.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_grassland.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_ice.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_mountain.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_ocean.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_snow.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_steppe.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.terrain_tundra.id()) == LoadState::Loaded;
-    *assets_loaded &=
-        asset_server.load_state(asset_handles.scenes.unit_unit.id()) == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_coastal.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_debug.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_desert.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_grassland.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_ice.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_mountain.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_ocean.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_snow.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_steppe.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.terrain_tundra.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server.load_state(asset_handles.scenes.unit_unit.clone().unwrap().id())
+        == LoadState::Loaded;
 }
