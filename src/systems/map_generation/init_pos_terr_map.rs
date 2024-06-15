@@ -22,6 +22,7 @@ use rand::rngs::StdRng;
 use rand::Rng;
 use rand::SeedableRng;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::common::WaveFunction;
@@ -30,11 +31,11 @@ use crate::systems::map_generation::common::WaveFunction;
 /// wave-function collapse algorithm.
 pub fn init_pos_terr_map(
     map_par: &Res<MapParameters>,
-    pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
-    pos_terrwave_map: &mut IndexMap<(i32, i32, i32), WaveFunction>,
-) -> IndexMap<(i32, i32, i32), Terrain> {
+    pos_neighbors_map: &IndexMap<HexPos, Vec<HexPos>>,
+    pos_terrwave_map: &mut IndexMap<HexPos, WaveFunction>,
+) -> IndexMap<HexPos, Terrain> {
     // Initialize a new position to terrain hash table.
-    let mut pos_terr_map: IndexMap<(i32, i32, i32), Terrain> = IndexMap::new();
+    let mut pos_terr_map: IndexMap<HexPos, Terrain> = IndexMap::new();
 
     // Initialize the terrain incompatability hash table.
     let terr_incompat_map: IndexMap<Terrain, Vec<Terrain>> = init_terr_incompat_map();
@@ -42,8 +43,8 @@ pub fn init_pos_terr_map(
     // Declare / init loop vars.
     let total_wave_functions: usize = pos_terrwave_map.len();
     let mut remaining_wave_functions: usize = total_wave_functions;
-    let (mut pos, mut wave_func): (&(i32, i32, i32), &WaveFunction);
-    let mut pos_clone: (i32, i32, i32);
+    let (mut pos, mut wave_func): (&HexPos, &WaveFunction);
+    let mut pos_clone: HexPos;
     let mut min_entropy_index: usize;
     let mut choice: Terrain;
 
@@ -95,9 +96,9 @@ pub fn init_pos_terr_map(
 fn adjust_neighbors(
     choice: &Terrain,
     map_par: &Res<MapParameters>,
-    pos: &(i32, i32, i32),
-    pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
-    pos_terrwave_map: &mut IndexMap<(i32, i32, i32), WaveFunction>,
+    pos: &HexPos,
+    pos_neighbors_map: &IndexMap<HexPos, Vec<HexPos>>,
+    pos_terrwave_map: &mut IndexMap<HexPos, WaveFunction>,
     terr_incompat_map: &IndexMap<Terrain, Vec<Terrain>>,
 ) {
     // Get neighbors of this position and what they can no longer collapse to (incompatabilities).
@@ -218,13 +219,13 @@ fn init_terr_incompat_map() -> IndexMap<Terrain, Vec<Terrain>> {
 
 /// Determines the wave function with the lowest entropy.
 fn determine_min_entropy_index(
-    pos_terrwave_map: &IndexMap<(i32, i32, i32), WaveFunction>,
+    pos_terrwave_map: &IndexMap<HexPos, WaveFunction>,
 ) -> usize {
     // Get an arbitrary entry from our pos_terrwave_map so we can initialize min_ent and min_key
     // with valid values.
     if let Some(arbitrary) = pos_terrwave_map.get_index(0) {
         // Init vars to update.
-        let mut min_key: &(i32, i32, i32) = arbitrary.0;
+        let mut min_key: &HexPos = arbitrary.0;
         let mut min_ent: usize = arbitrary.1.entropy;
         let mut curr_ent: usize;
 

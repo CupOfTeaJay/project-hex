@@ -22,6 +22,7 @@ use bevy::prelude::*;
 use indexmap::IndexMap;
 use noise::{NoiseFn, Simplex, Worley};
 
+use crate::components::common::hex_pos::HexPos;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::map_parameters::NoiseType;
 use crate::systems::map_generation::common::Elevation;
@@ -30,8 +31,8 @@ use crate::systems::map_generation::common::Elevation;
 /// elevation.
 pub fn init_pos_elevation_map(
     map_par: &Res<MapParameters>,
-    pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
-) -> IndexMap<(i32, i32, i32), Elevation> {
+    pos_neighbors_map: &IndexMap<HexPos, Vec<HexPos>>,
+) -> IndexMap<HexPos, Elevation> {
     // Initialize a blank vector to store noise samples.
     let mut samples: Vec<f64> = Vec::new();
 
@@ -139,15 +140,15 @@ fn apply_noise_layer<T: NoiseFn<f64, 3>>(
 /// parameters.
 fn hash_samples_to_elevations(
     map_par: &Res<MapParameters>,
-    pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
+    pos_neighbors_map: &IndexMap<HexPos, Vec<HexPos>>,
     samples: &Vec<f64>,
-) -> IndexMap<(i32, i32, i32), Elevation> {
+) -> IndexMap<HexPos, Elevation> {
     // Init map to return.
-    let mut pos_elevation_map: IndexMap<(i32, i32, i32), Elevation> = IndexMap::new();
+    let mut pos_elevation_map: IndexMap<HexPos, Elevation> = IndexMap::new();
 
     // Simultaneously loop through the position neighbors map and samples vector to construct a new
     // position elevation map.
-    let mut pos: (i32, i32, i32);
+    let mut pos: HexPos;
     let mut sample: f64;
     let mut elevation: Elevation;
     for index in 0..(map_par.width as usize * map_par.height as usize) {

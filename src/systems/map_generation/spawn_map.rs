@@ -40,14 +40,14 @@ pub fn spawn_map(
     mut tile_spawn_event: EventWriter<TileSpawnEvent>,
 ) {
     // Setup.
-    let pos_terr_map: IndexMap<(i32, i32, i32), Terrain> = generate_map_data(&map_par);
+    let pos_terr_map: IndexMap<HexPos, Terrain> = generate_map_data(&map_par);
     let mut transform: Transform = Transform::from_xyz(0.0, 0.0, 0.0);
     transform.rotate_y(FRAC_PI_2);
 
     // Spawn.
     let (mut x, mut y, mut z): (f32, f32, f32);
     for (pos, terrain) in pos_terr_map.iter() {
-        (x, y, z) = cube_to_cartesian(pos.0 as f32, pos.1 as f32, pos.2 as f32);
+        (x, y, z) = cube_to_cartesian(pos.q as f32, pos.r as f32, pos.s as f32);
         transform.translation.x = x;
         transform.translation.y = y;
         transform.translation.z = z;
@@ -72,13 +72,10 @@ pub fn spawn_map(
             ..Default::default()
         };
 
-        // HexPos.
-        let hex_pos = HexPos::new(pos.0, pos.1, pos.2);
-
         // Spawn.
         let entity = commands
             .spawn((
-                TileBundle::new(hex_pos, *terrain, scene_bundle),
+                TileBundle::new(*pos, *terrain, scene_bundle),
                 PickSelection { is_selected: false },
                 On::<Pointer<Up>>::run(
                     |event: Listener<Pointer<Up>>,

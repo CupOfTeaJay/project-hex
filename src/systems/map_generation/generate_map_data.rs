@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::apply_terr_convolution::apply_terr_convolution;
@@ -32,25 +33,25 @@ use crate::systems::map_generation::init_pos_terrwave_map::init_pos_terrwave_map
 
 /// Generates the layout of a psuedo-random, seeded map as determined by
 /// MapParameters.
-pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<(i32, i32, i32), Terrain> {
+pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<HexPos, Terrain> {
     // STEP 1:
     //     At a very minimum, we need to generate a hash table that maps a position to all of its
     //     neighbors. This neighbor relation is needed for certain algorithms, such as Wave Function
     //     Collapse.
-    let pos_neighbors_map: IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>> =
+    let pos_neighbors_map: IndexMap<HexPos, Vec<HexPos>> =
         init_pos_neighbors_map(&map_par);
 
     // STEP 2:
     //     We need to establish a psuedo-random heightmap to determine which positions will
     //     become ocean, coastal, land, and mountain tiles. This is done using an amalgam of noise
     //     generators.
-    let pos_elevation_map: IndexMap<(i32, i32, i32), Elevation> =
+    let pos_elevation_map: IndexMap<HexPos, Elevation> =
         init_pos_elevation_map(&map_par, &pos_neighbors_map);
 
     // STEP 3:
     //     Now that we know what types of terrain a position should spawn based on its elevation,
     //     We can construct a position to wave function hash table in preperation for terrain WFC.
-    let mut pos_terrwave_map: IndexMap<(i32, i32, i32), WaveFunction> =
+    let mut pos_terrwave_map: IndexMap<HexPos, WaveFunction> =
         init_pos_terrwave_map(&map_par, &pos_elevation_map);
 
     // STEP 4:
@@ -61,7 +62,7 @@ pub fn generate_map_data(map_par: &Res<MapParameters>) -> IndexMap<(i32, i32, i3
     // STEP 5:
     //     With the position to terrain wave-function map finalized, initialize a possition to
     //     terrain map using the wave-function collapse algorithm.
-    let mut pos_terr_map: IndexMap<(i32, i32, i32), Terrain> =
+    let mut pos_terr_map: IndexMap<HexPos, Terrain> =
         init_pos_terr_map(&map_par, &pos_neighbors_map, &mut pos_terrwave_map);
 
     // STEP 6:

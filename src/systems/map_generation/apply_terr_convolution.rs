@@ -18,16 +18,17 @@
 
 use indexmap::IndexMap;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 
 /// Applies a convoloution to map terrain. The number of passes is specified in the map parameters.
 pub fn apply_terr_convolution(
-    pos_neighbors_map: &IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>>,
-    pos_terr_map: &mut IndexMap<(i32, i32, i32), Terrain>,
+    pos_neighbors_map: &IndexMap<HexPos, Vec<HexPos>>,
+    pos_terr_map: &mut IndexMap<HexPos, Terrain>,
 ) {
     // We're not going to mutate pos_terr_map in place (so the convolution does not propogate).
     // Instead, make a copy to replace it with.
-    let mut temp_pos_terr_map: IndexMap<(i32, i32, i32), Terrain> = pos_terr_map.clone();
+    let mut temp_pos_terr_map: IndexMap<HexPos, Terrain> = pos_terr_map.clone();
 
     // Initialize terrain to frequency map.
     let mut terr_freqs: IndexMap<&Terrain, u32> = IndexMap::new();
@@ -43,9 +44,9 @@ pub fn apply_terr_convolution(
     terr_freqs.insert(&Terrain::Tundra, 0);
 
     // Loop vars to update.
-    let mut curr_pos: &(i32, i32, i32);
+    let mut curr_pos: &HexPos;
     let mut curr_terr: &Terrain;
-    let mut pos_clone: (i32, i32, i32);
+    let mut pos_clone: HexPos;
     let mut max_freq: u32;
     let mut max_terr: &Terrain;
 

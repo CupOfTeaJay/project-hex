@@ -19,14 +19,13 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::resources::map_parameters::MapParameters;
 
 /// Generates a hash table that maps any cube coordinate to its neighboring cube coordinates.
-pub fn init_pos_neighbors_map(
-    map_par: &Res<MapParameters>,
-) -> IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>> {
+pub fn init_pos_neighbors_map(map_par: &Res<MapParameters>) -> IndexMap<HexPos, Vec<HexPos>> {
     // Init map to return.
-    let mut pos_neighbors_map: IndexMap<(i32, i32, i32), Vec<(i32, i32, i32)>> = IndexMap::new();
+    let mut pos_neighbors_map: IndexMap<HexPos, Vec<HexPos>> = IndexMap::new();
 
     // Loop constraints.
     let mut q_min: i32 = 0;
@@ -46,7 +45,10 @@ pub fn init_pos_neighbors_map(
             s = -q - r;
 
             // Insert data into the return map after determining this position's neighbors.
-            pos_neighbors_map.insert((q, r, s), determine_neighbors((q, r, s), map_par));
+            pos_neighbors_map.insert(
+                HexPos::new(q, r, s),
+                determine_neighbors((q, r, s), map_par),
+            );
         }
     }
 
@@ -56,10 +58,7 @@ pub fn init_pos_neighbors_map(
 
 /// Given some cube coordinate, determines its neighboring cube coordinates. Coordinates that lie
 /// upon the edges of the x-axis should wrap by selecting their appropriate neighbors.
-fn determine_neighbors(
-    curr_pos: (i32, i32, i32),
-    map_par: &Res<MapParameters>,
-) -> Vec<(i32, i32, i32)> {
+fn determine_neighbors(curr_pos: (i32, i32, i32), map_par: &Res<MapParameters>) -> Vec<HexPos> {
     // Init vars for readability.
     let width = map_par.width as i32;
     let q = curr_pos.0;
@@ -67,57 +66,57 @@ fn determine_neighbors(
     let s = curr_pos.2;
 
     // Vector to return.
-    let neighbors: Vec<(i32, i32, i32)>;
+    let neighbors: Vec<HexPos>;
 
     // Neighbors for tiles on the LEFT edge of the map.
     if r == -2 * q {
         neighbors = vec![
-            (q + 1, r - 1, s),                        // Northeastern neighbor.
-            (q + 1, r, s - 1),                        // Eastern neighbor.
-            (q, r + 1, s - 1),                        // Southeastern neighbor.
-            (q + (width - 1), r + 1, -q - r - width), // Southwestern neighbor.
-            (q + (width - 1), r, -q - r - width + 1), // Western neighbor.
-            (q + width, r - 1, -q - r - width + 1),   // Northwestern neighbor.
+            HexPos::new(q + 1, r - 1, s), // Northeastern neighbor.
+            HexPos::new(q + 1, r, s - 1), // Eastern neighbor.
+            HexPos::new(q, r + 1, s - 1), // Southeastern neighbor.
+            HexPos::new(q + (width - 1), r + 1, -q - r - width), // Southwestern neighbor.
+            HexPos::new(q + (width - 1), r, -q - r - width + 1), // Western neighbor.
+            HexPos::new(q + width, r - 1, -q - r - width + 1), // Northwestern neighbor.
         ]
     } else if r == -2 * q + 1 {
         neighbors = vec![
-            (q + 1, r - 1, s),                        // Northeastern neighbor.
-            (q + 1, r, s - 1),                        // Eastern neighbor.
-            (q, r + 1, s - 1),                        // Southeastern neighbor.
-            (q - 1, r + 1, s),                        // Southwestern neighbor.
-            (q + (width - 1), r, -q - r - width + 1), // Western neighbor.
-            (q, r - 1, s + 1),                        // Northwestern neighbor.
+            HexPos::new(q + 1, r - 1, s), // Northeastern neighbor.
+            HexPos::new(q + 1, r, s - 1), // Eastern neighbor.
+            HexPos::new(q, r + 1, s - 1), // Southeastern neighbor.
+            HexPos::new(q - 1, r + 1, s), // Southwestern neighbor.
+            HexPos::new(q + (width - 1), r, -q - r - width + 1), // Western neighbor.
+            HexPos::new(q, r - 1, s + 1), // Northwestern neighbor.
         ];
     }
     // Neighbors for tiles on the RIGHT edge of the map.
     else if r == 2 * (width - q - 1) {
         neighbors = vec![
-            (q + 1, r - 1, s),                        // Northeastern neighbor.
-            (q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
-            (q, r + 1, s - 1),                        // Southeastern neighbor.
-            (q - 1, r + 1, s),                        // Southwestern neighbor.
-            (q - 1, r, s + 1),                        // Western neighbor.
-            (q, r - 1, s + 1),                        // Northwestern neighbor.
+            HexPos::new(q + 1, r - 1, s), // Northeastern neighbor.
+            HexPos::new(q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
+            HexPos::new(q, r + 1, s - 1), // Southeastern neighbor.
+            HexPos::new(q - 1, r + 1, s), // Southwestern neighbor.
+            HexPos::new(q - 1, r, s + 1), // Western neighbor.
+            HexPos::new(q, r - 1, s + 1), // Northwestern neighbor.
         ];
     } else if r == 2 * (width - q) - 1 {
         neighbors = vec![
-            (q - (width - 1), r - 1, -q - r + width), // Northeastern neighbor.
-            (q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
-            (q - width, r + 1, -q - r + width - 1),   // Southeastern neighbor.
-            (q - 1, r + 1, s),                        // Southwestern neighbor.
-            (q - 1, r, s + 1),                        // Western neighbor.
-            (q, r - 1, s + 1),                        // Northwestern neighbor.
+            HexPos::new(q - (width - 1), r - 1, -q - r + width), // Northeastern neighbor.
+            HexPos::new(q - (width - 1), r, -q - r + width - 1), // Eastern neighbor.
+            HexPos::new(q - width, r + 1, -q - r + width - 1),   // Southeastern neighbor.
+            HexPos::new(q - 1, r + 1, s),                        // Southwestern neighbor.
+            HexPos::new(q - 1, r, s + 1),                        // Western neighbor.
+            HexPos::new(q, r - 1, s + 1),                        // Northwestern neighbor.
         ];
 
     // Neighbors for tiles that are NOT on the edges, and do NOT need to wrap.
     } else {
         neighbors = vec![
-            (q + 1, r - 1, s), // Northeastern neighbor.
-            (q + 1, r, s - 1), // Eastern neighbor.
-            (q, r + 1, s - 1), // Southeastern neighbor.
-            (q - 1, r + 1, s), // Southwestern neighbor.
-            (q - 1, r, s + 1), // Western neighbor.
-            (q, r - 1, s + 1), // Northwestern neighbor.
+            HexPos::new(q + 1, r - 1, s), // Northeastern neighbor.
+            HexPos::new(q + 1, r, s - 1), // Eastern neighbor.
+            HexPos::new(q, r + 1, s - 1), // Southeastern neighbor.
+            HexPos::new(q - 1, r + 1, s), // Southwestern neighbor.
+            HexPos::new(q - 1, r, s + 1), // Western neighbor.
+            HexPos::new(q, r - 1, s + 1), // Northwestern neighbor.
         ];
     }
 

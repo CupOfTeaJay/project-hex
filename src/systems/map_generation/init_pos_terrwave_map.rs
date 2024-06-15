@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::common::Elevation;
@@ -27,19 +28,19 @@ use crate::systems::map_generation::common::WaveFunction;
 /// Initializes terrain wave functions for every cube coordinate on the map.
 pub fn init_pos_terrwave_map(
     map_par: &Res<MapParameters>,
-    pos_elevation_map: &IndexMap<(i32, i32, i32), Elevation>,
-) -> IndexMap<(i32, i32, i32), WaveFunction> {
+    pos_elevation_map: &IndexMap<HexPos, Elevation>,
+) -> IndexMap<HexPos, WaveFunction> {
     // Initialize a wave function hash table.
-    let mut pos_wave_map: IndexMap<(i32, i32, i32), WaveFunction> = IndexMap::new();
+    let mut pos_wave_map: IndexMap<HexPos, WaveFunction> = IndexMap::new();
     for pos in pos_elevation_map.keys() {
         pos_wave_map.insert(*pos, WaveFunction::new());
     }
 
     // Adjust the newly created hash table according to the input position elevation map.
-    let (mut pos, mut elevation): (&(i32, i32, i32), &Elevation);
+    let (mut pos, mut elevation): (&HexPos, &Elevation);
     for index in 0..pos_wave_map.len() {
         (pos, elevation) = pos_elevation_map.get_index(index).unwrap();
-        if pos.1 == 0 || pos.1 == (map_par.height as i32) - 1 {
+        if pos.r == 0 || pos.r == (map_par.height as i32) - 1 {
             // The northermost and southernmost latitudes should only be ice tiles.
             pos_wave_map[pos].purge(&Terrain::Coastal);
             pos_wave_map[pos].purge(&Terrain::Debug);
