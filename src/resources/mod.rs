@@ -17,6 +17,7 @@
 */
 
 pub mod asset_handles;
-pub mod land_traversability_map;
 pub mod map_parameters;
 pub mod pickable_buffers;
+pub mod traversability_maps;
+
