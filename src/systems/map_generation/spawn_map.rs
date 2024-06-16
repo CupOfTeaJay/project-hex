@@ -28,6 +28,7 @@ use crate::events::tile_spawn_event::TileSpawnEvent;
 use crate::resources::asset_handles::AssetHandles;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::pos_neighbors_map::PosNeighborsMap;
+use crate::resources::traversability_maps::TraversabilityMaps;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
@@ -40,6 +41,7 @@ pub fn spawn_map(
     map_par: Res<MapParameters>,
     mut pos_neighbors_map_res: ResMut<PosNeighborsMap>,
     mut tile_spawn_event: EventWriter<TileSpawnEvent>,
+    mut traversability_maps: ResMut<TraversabilityMaps>,
 ) {
     // Setup.
     let (pos_terr_map, pos_neighbors_map): (
@@ -65,21 +67,65 @@ pub fn spawn_map(
         let scene_handle: Handle<Scene>;
         match terrain {
             &Terrain::Coastal => {
-                scene_handle = asset_handles.scenes.terrain_coastal.clone().unwrap()
+                scene_handle = asset_handles.scenes.terrain_coastal.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, false);
             }
-            &Terrain::Debug => scene_handle = asset_handles.scenes.terrain_debug.clone().unwrap(),
-            &Terrain::Desert => scene_handle = asset_handles.scenes.terrain_desert.clone().unwrap(),
+            &Terrain::Debug => {
+                scene_handle = asset_handles.scenes.terrain_debug.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, false);
+            }
+            &Terrain::Desert => {
+                scene_handle = asset_handles.scenes.terrain_desert.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, true);
+            }
             &Terrain::Grassland => {
-                scene_handle = asset_handles.scenes.terrain_grassland.clone().unwrap()
+                scene_handle = asset_handles.scenes.terrain_grassland.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, true);
             }
-            &Terrain::Ice => scene_handle = asset_handles.scenes.terrain_ice.clone().unwrap(),
+            &Terrain::Ice => {
+                scene_handle = asset_handles.scenes.terrain_ice.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, false);
+            }
             &Terrain::Mountain => {
-                scene_handle = asset_handles.scenes.terrain_mountain.clone().unwrap()
+                scene_handle = asset_handles.scenes.terrain_mountain.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, false);
             }
-            &Terrain::Ocean => scene_handle = asset_handles.scenes.terrain_ocean.clone().unwrap(),
-            &Terrain::Snow => scene_handle = asset_handles.scenes.terrain_snow.clone().unwrap(),
-            &Terrain::Steppe => scene_handle = asset_handles.scenes.terrain_steppe.clone().unwrap(),
-            &Terrain::Tundra => scene_handle = asset_handles.scenes.terrain_tundra.clone().unwrap(),
+            &Terrain::Ocean => {
+                scene_handle = asset_handles.scenes.terrain_ocean.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, false);
+            }
+            &Terrain::Snow => {
+                scene_handle = asset_handles.scenes.terrain_snow.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, true);
+            }
+            &Terrain::Steppe => {
+                scene_handle = asset_handles.scenes.terrain_steppe.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, true);
+            }
+            &Terrain::Tundra => {
+                scene_handle = asset_handles.scenes.terrain_tundra.clone().unwrap();
+                traversability_maps
+                    .pos_land_traversability_map
+                    .insert(*pos, true);
+            }
         }
 
         let scene_bundle = SceneBundle {

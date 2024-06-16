@@ -24,15 +24,15 @@ use crate::components::common::hex_pos::HexPos;
 
 #[derive(Resource)]
 pub struct TraversabilityMaps {
-    pub pos_to_land_traversability_map: HashMap<HexPos, bool>,
-    pub pos_to_sea_traversability_map: HashMap<HexPos, bool>,
+    pub pos_land_traversability_map: HashMap<HexPos, bool>,
+    pub pos_sea_traversability_map: HashMap<HexPos, bool>,
 }
 
 impl TraversabilityMaps {
     pub fn new() -> Self {
         TraversabilityMaps {
-            pos_to_land_traversability_map: HashMap::new(),
-            pos_to_sea_traversability_map: HashMap::new(),
+            pos_land_traversability_map: HashMap::new(),
+            pos_sea_traversability_map: HashMap::new(),
         }
     }
 }

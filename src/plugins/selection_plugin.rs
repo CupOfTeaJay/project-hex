@@ -18,8 +18,6 @@
 
 use bevy::prelude::*;
 
-use crate::resources::pickable_buffers::PickableBufferHelpers;
-use crate::resources::pickable_buffers::PickableBuffers;
 use crate::states::pickable_buffers_state::PickableBuffersState;
 
 #[rustfmt::skip]

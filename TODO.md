@@ -15,7 +15,7 @@
     - when equal # of counts happens for multiple terrains, randomize pick based on map seed.
         - Should break up little "pockets" of terrain.
 - [ ] Add another layer to heightmap for highlands.
-- [ ] Maybe replace all (i32, i32, i32) tuples with hexpos.
+- [ ] Error check map paremeter inputs.
 
 # Movement:
 - [ ] Try to disjoint queries in move_thing.rs
@@ -33,7 +33,3 @@
 
 # Selection:
 - [ ] Can PickSelection state be bubbled up?
-
-# Resource Management:
-- [ ] All resources should be inserted with empty values using a resources plugin prior to running the app.
-      Fetch them with ResMut in systems to initialize them upon first use.
