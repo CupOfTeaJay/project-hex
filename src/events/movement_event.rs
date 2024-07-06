@@ -21,18 +21,20 @@ use bevy::prelude::*;
 use crate::components::common::hex_pos::HexPos;
 
 #[derive(Event)]
+/// An event sent whenever the movement of some entity has been requested.
+/// It contains two positions - an origin and destination. These positions are
+/// used by the A* pathfinding algorithm to determine the shortest path between
+/// them.
 pub struct MovementEvent {
-    pub origin_entity: Entity,
-    pub dest_entity: Entity,
-    pub dest_pos: HexPos,
+    pub origin: HexPos,
+    pub destination: HexPos,
 }
 
 impl MovementEvent {
-    pub fn new(origin_entity: Entity, dest_entity: Entity, dest_pos: HexPos) -> Self {
+    pub fn new(origin: HexPos, destination: HexPos) -> Self {
         MovementEvent {
-            origin_entity,
-            dest_entity,
-            dest_pos,
+            origin,
+            destination,
         }
     }
 }

@@ -16,8 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use crate::components::common::hex_pos::HexPos;
+
 // TODO: Check if this is right... someday.
 const SCALE: f32 = 1.0;
+
+// TODO: Replace tuples with HexPos and Vec3.
+// TODO: Rename file.
 
 // /// Converts a cartesian coordinates to cube coordinates.
 // fn vec3_to_hex_pos(x: f32, y: f32, z: f32) -> (f32, f32, f32) {
@@ -39,4 +44,9 @@ pub fn cube_to_cartesian(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
 
     // Return new cartesian coordinates.
     (x, y, z)
+}
+
+/// Calculates the distance between two cube coordinates.
+pub fn calc_distance(a: &HexPos, b: &HexPos) -> u32 {
+    ((a.q - b.q) + (a.r - b.r) + (a.s - b.s)) as u32
 }

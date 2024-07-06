@@ -1,5 +1,5 @@
 # On Deck:
-- [x] Implement A* pathfinding.
+- [ ] Implement A* pathfinding.
 - [ ] Add "Movement Queue" component.
 - [ ] Implement 'analog' (smooth) movement.
 - [ ] Implement traversability by domain (Sea, Air, Land).

@@ -16,7 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod move_thing;
-pub mod movement_event_trigger;
-
-mod a_star;
+pub mod pathfind;
+pub mod send_movement_event;

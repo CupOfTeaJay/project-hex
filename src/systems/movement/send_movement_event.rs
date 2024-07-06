@@ -1,0 +1,61 @@
+/*
+    Project Hex
+    Copyright (C) 2024 Clevermeld™ LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+use bevy::prelude::*;
+use bevy_mod_picking::selection::PickSelection;
+
+#[rustfmt::skip]
+use crate::components::{
+    common::hex_pos::HexPos,
+    common::is_movable::IsMovable,
+    common::is_traversable::IsTraversable,
+};
+
+#[rustfmt::skip]
+use crate::events::movement_event::MovementEvent;
+
+/// Checks to see if special criteria are met every frame. If so, write a movement event. This
+/// function effectively initiates the movement of all movable entities.
+pub fn post_movement_event(
+    movable_entities: Query<(&HexPos, &IsMovable, &PickSelection), Without<IsTraversable>>,
+    mut movement_event: EventWriter<MovementEvent>,
+    traversable_entities: Query<(&HexPos, &IsTraversable, &PickSelection), Without<IsMovable>>,
+) {
+    // Iterate over all non-traversable entities that:
+    //     - Could possibly be moved.
+    //     - Could possibly be selected.
+    for (origin_position, is_movable, origin_pick_selection) in movable_entities.iter() {
+        // If there is in fact an entity that is selected AND movable...
+        if origin_pick_selection.is_selected && is_movable.status {
+            // ...then iterate over all non-movable entities that:
+            //     - Could possibly be traversed.
+            //     - Count possibly be selected.
+            for (destination_position, is_traversable, destination_pick_selection) in
+                traversable_entities.iter()
+            {
+                // If there is in fact an entity that is selected AND traversable...
+                if destination_pick_selection.is_selected && is_traversable.status {
+                    // ...then all criteria have been met. Send a movement event and
+                    // commence pathfinding.
+                    movement_event
+                        .send(MovementEvent::new(*origin_position, *destination_position));
+                }
+            }
+        }
+    }
+}
