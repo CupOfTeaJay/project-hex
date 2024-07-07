@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use bevy::prelude::*;
 
@@ -24,15 +24,15 @@ use crate::components::common::hex_pos::HexPos;
 
 #[derive(Resource)]
 pub struct TraversabilityMaps {
-    pub pos_land_traversability_map: HashMap<HexPos, bool>,
-    pub pos_sea_traversability_map: HashMap<HexPos, bool>,
+    pub pos_land_map: HashMap<HexPos, bool>,
+    pub pos_sea_map: HashMap<HexPos, bool>,
 }
 
 impl TraversabilityMaps {
     pub fn new() -> Self {
         TraversabilityMaps {
-            pos_land_traversability_map: HashMap::new(),
-            pos_sea_traversability_map: HashMap::new(),
+            pos_land_map: HashMap::new(),
+            pos_sea_map: HashMap::new(),
         }
     }
 }

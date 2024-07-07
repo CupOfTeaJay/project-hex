@@ -17,17 +17,20 @@
 */
 
 use bevy::prelude::*;
+use indexmap::IndexSet;
 
 use crate::components::common::hex_pos::HexPos;
 
 use crate::events::movement_event::MovementEvent;
 
 use crate::resources::pos_neighbors_map::PosNeighborsMap;
+use crate::resources::traversability_maps::TraversabilityMaps;
 
 use crate::utils::coord_conversions::calc_distance;
 
 /// An A* Node. Can be linked to a proceeding Node by way of the 'next'
 /// pointer.
+#[derive(Clone, Hash, Eq, PartialEq)]
 struct Node<'a> {
     f_cost: u32,
     g_cost: u32,
@@ -38,9 +41,15 @@ struct Node<'a> {
 
 impl<'a> Node<'a> {
     /// Creates a new A* Node.
-    fn new(pos: &'a HexPos, start: &HexPos, end: &HexPos) -> Self {
+    fn new(
+        curr_steps: &u32,
+        pos: &'a HexPos,
+        start: &HexPos,
+        end: &HexPos,
+        next: Option<Box<Node<'a>>>,
+    ) -> Self {
         // Calculate the costs of this node.6
-        let g_cost: u32 = calc_distance(pos, start);
+        let g_cost: u32 = calc_distance(pos, start) + curr_steps;
         let h_cost: u32 = calc_distance(pos, end);
 
         // Allocate and return the node.
@@ -49,7 +58,7 @@ impl<'a> Node<'a> {
             g_cost: g_cost,
             h_cost: h_cost,
             pos,
-            next: None,
+            next: next,
         }
     }
 }
@@ -58,14 +67,60 @@ impl<'a> Node<'a> {
 pub fn pathfind(
     mut movement_event: EventReader<MovementEvent>,
     pos_neighbors_map: Res<PosNeighborsMap>,
+    traversability_maps: Res<TraversabilityMaps>,
 ) {
     // For every movement event received...
     for event in movement_event.read() {
-        // Initialize the first A* node. We're going to be moving backwards here,
+        // Initialize a vector to store all A* nodes for the duration of
+        // the algorithm.
+        let mut nodes: IndexSet<Box<Node>> = IndexSet::new();
+
+        // Vector to return... TODO:
+        let mut path: Vec<&HexPos> = Vec::new();
+
+        // TODO:
+        let mut curr_steps: u32 = 0;
+        let mut min: u32;
+
+        // Initialize the first node. We're going to be moving backwards here,
         // with the "origin" and "destination" fields of MovementEvent
         // corresponding to "end" and "start", respectively.
         let start: &HexPos = &event.destination;
         let end: &HexPos = &event.origin;
-        let mut curr_node: Node = Node::new(start, start, end);
+        let mut curr_node: Box<Node> = Box::new(Node::new(&curr_steps, start, start, end, None));
+
+        // TODO:
+        while curr_node.pos != end {
+            // Determine which neighboring positions are traversable and
+            // initialize nodes for them.
+            for neighbor in pos_neighbors_map.map.get(curr_node.pos).unwrap().iter() {
+                if *traversability_maps.pos_land_map.get(neighbor).unwrap() == true {
+                    nodes.insert(Box::new(Node::new(
+                        &curr_steps,
+                        neighbor,
+                        start,
+                        end,
+                        Some(curr_node.clone()),
+                    )));
+                }
+            }
+
+            // Determine the "cheapest" node in nodes, and update curr_node
+            // accordingly.
+            curr_node = nodes[0].clone();
+            min = curr_node.f_cost;
+            for node in nodes.iter() {
+                if node.f_cost < min {
+                    curr_node = node.clone();
+                    min = node.f_cost;
+                }
+            }
+
+            // If we haven't seen this node before, then we just took a step!
+            // This will affect future g_costs.
+            if !nodes.contains(&curr_node) {
+                curr_steps += 1;
+            }
+        }
     }
 }
