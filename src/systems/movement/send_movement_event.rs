@@ -34,7 +34,10 @@ use crate::events::movement_event::MovementEvent;
 pub fn post_movement_event(
     movable_entities: Query<(&HexPos, &IsMovable, &PickSelection), Without<IsTraversable>>,
     mut movement_event: EventWriter<MovementEvent>,
-    traversable_entities: Query<(&HexPos, &IsTraversable, &PickSelection), Without<IsMovable>>,
+    mut traversable_entities: Query<
+        (&HexPos, &IsTraversable, &mut PickSelection),
+        Without<IsMovable>,
+    >,
 ) {
     // Iterate over all non-traversable entities that:
     //     - Could possibly be moved.
@@ -45,8 +48,8 @@ pub fn post_movement_event(
             // ...then iterate over all non-movable entities that:
             //     - Could possibly be traversed.
             //     - Count possibly be selected.
-            for (destination_position, is_traversable, destination_pick_selection) in
-                traversable_entities.iter()
+            for (destination_position, is_traversable, mut destination_pick_selection) in
+                traversable_entities.iter_mut()
             {
                 // If there is in fact an entity that is selected AND traversable...
                 if destination_pick_selection.is_selected && is_traversable.status {
@@ -54,6 +57,9 @@ pub fn post_movement_event(
                     // commence pathfinding.
                     movement_event
                         .send(MovementEvent::new(*origin_position, *destination_position));
+
+                    // TODO:
+                    destination_pick_selection.is_selected = false;
                 }
             }
         }

@@ -41,15 +41,9 @@ struct Node<'a> {
 
 impl<'a> Node<'a> {
     /// Creates a new A* Node.
-    fn new(
-        curr_steps: &u32,
-        pos: &'a HexPos,
-        start: &HexPos,
-        end: &HexPos,
-        next: Option<Box<Node<'a>>>,
-    ) -> Self {
+    fn new(pos: &'a HexPos, start: &HexPos, end: &HexPos, next: Option<Box<Node<'a>>>) -> Self {
         // Calculate the costs of this node.6
-        let g_cost: u32 = calc_distance(pos, start) + curr_steps;
+        let g_cost: u32 = calc_distance(pos, start);
         let h_cost: u32 = calc_distance(pos, end);
 
         // Allocate and return the node.
@@ -71,15 +65,16 @@ pub fn pathfind(
 ) {
     // For every movement event received...
     for event in movement_event.read() {
-        // Initialize a vector to store all A* nodes for the duration of
-        // the algorithm.
-        let mut nodes: IndexSet<Box<Node>> = IndexSet::new();
+        // Initialize vectors to classify and store A* nodes / positions
+        // for the duration of the algorithm.
+        let mut open_nodes: IndexSet<Box<Node>> = IndexSet::new();
+        let mut closed_nodes: IndexSet<Box<Node>> = IndexSet::new();
+        let mut closed_pos: IndexSet<HexPos> = IndexSet::new();
 
         // Vector to return... TODO:
         let mut path: Vec<&HexPos> = Vec::new();
 
         // TODO:
-        let mut curr_steps: u32 = 0;
         let mut min: u32;
 
         // Initialize the first node. We're going to be moving backwards here,
@@ -87,7 +82,7 @@ pub fn pathfind(
         // corresponding to "end" and "start", respectively.
         let start: &HexPos = &event.destination;
         let end: &HexPos = &event.origin;
-        let mut curr_node: Box<Node> = Box::new(Node::new(&curr_steps, start, start, end, None));
+        let mut curr_node: Box<Node> = Box::new(Node::new(start, start, end, None));
 
         // TODO:
         while curr_node.pos != end {
@@ -95,32 +90,44 @@ pub fn pathfind(
             // initialize nodes for them.
             for neighbor in pos_neighbors_map.map.get(curr_node.pos).unwrap().iter() {
                 if *traversability_maps.pos_land_map.get(neighbor).unwrap() == true {
-                    nodes.insert(Box::new(Node::new(
-                        &curr_steps,
-                        neighbor,
-                        start,
-                        end,
-                        Some(curr_node.clone()),
-                    )));
+                    if !closed_pos.contains(neighbor) {
+                        open_nodes.insert(Box::new(Node::new(
+                            neighbor,
+                            start,
+                            end,
+                            Some(curr_node.clone()),
+                        )));
+                    }
                 }
             }
 
-            // Determine the "cheapest" node in nodes, and update curr_node
+            // Update the open and closed sets.
+            closed_nodes.insert(curr_node.clone());
+            closed_pos.insert(*curr_node.pos);
+            if open_nodes.contains(&curr_node) {
+                open_nodes.swap_remove(&curr_node);
+            }
+
+            // Determine the "cheapest" node in open_nodes, and update curr_node
             // accordingly.
-            curr_node = nodes[0].clone();
+            curr_node = open_nodes[0].clone();
             min = curr_node.f_cost;
-            for node in nodes.iter() {
+            for node in open_nodes.iter() {
                 if node.f_cost < min {
                     curr_node = node.clone();
                     min = node.f_cost;
                 }
             }
 
-            // If we haven't seen this node before, then we just took a step!
-            // This will affect future g_costs.
-            if !nodes.contains(&curr_node) {
-                curr_steps += 1;
-            }
+            let q = curr_node.pos.q;
+            let r = curr_node.pos.r;
+            let s = curr_node.pos.s;
+            let tq = end.q;
+            let tr = end.r;
+            let ts = end.s;
+            println!("Current position: ({q}, {r}, {s}) --- Target: ({tq}, {tr}, {ts})");
         }
+
+        println!("Target found!");
     }
 }

@@ -68,63 +68,43 @@ pub fn spawn_map(
         match terrain {
             &Terrain::Coastal => {
                 scene_handle = asset_handles.scenes.terrain_coastal.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, false);
+                traversability_maps.pos_land_map.insert(*pos, false);
             }
             &Terrain::Debug => {
                 scene_handle = asset_handles.scenes.terrain_debug.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, false);
+                traversability_maps.pos_land_map.insert(*pos, false);
             }
             &Terrain::Desert => {
                 scene_handle = asset_handles.scenes.terrain_desert.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, true);
+                traversability_maps.pos_land_map.insert(*pos, true);
             }
             &Terrain::Grassland => {
                 scene_handle = asset_handles.scenes.terrain_grassland.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, true);
+                traversability_maps.pos_land_map.insert(*pos, true);
             }
             &Terrain::Ice => {
                 scene_handle = asset_handles.scenes.terrain_ice.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, false);
+                traversability_maps.pos_land_map.insert(*pos, false);
             }
             &Terrain::Mountain => {
                 scene_handle = asset_handles.scenes.terrain_mountain.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, false);
+                traversability_maps.pos_land_map.insert(*pos, false);
             }
             &Terrain::Ocean => {
                 scene_handle = asset_handles.scenes.terrain_ocean.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, false);
+                traversability_maps.pos_land_map.insert(*pos, false);
             }
             &Terrain::Snow => {
                 scene_handle = asset_handles.scenes.terrain_snow.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, true);
+                traversability_maps.pos_land_map.insert(*pos, true);
             }
             &Terrain::Steppe => {
                 scene_handle = asset_handles.scenes.terrain_steppe.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, true);
+                traversability_maps.pos_land_map.insert(*pos, true);
             }
             &Terrain::Tundra => {
                 scene_handle = asset_handles.scenes.terrain_tundra.clone().unwrap();
-                traversability_maps
-                    .pos_land_traversability_map
-                    .insert(*pos, true);
+                traversability_maps.pos_land_map.insert(*pos, true);
             }
         }
 
