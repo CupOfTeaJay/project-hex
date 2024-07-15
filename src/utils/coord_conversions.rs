@@ -48,5 +48,5 @@ pub fn cube_to_cartesian(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
 
 /// Calculates the distance between two cube coordinates.
 pub fn calc_distance(a: &HexPos, b: &HexPos) -> u32 {
-    ((a.q - b.q) + (a.r - b.r) + (a.s - b.s)) as u32
+    (((a.q - b.q).abs() + (a.r - b.r).abs() + (a.s - b.s).abs()) / 2) as u32
 }

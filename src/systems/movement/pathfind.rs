@@ -42,7 +42,7 @@ struct Node<'a> {
 impl<'a> Node<'a> {
     /// Creates a new A* Node.
     fn new(pos: &'a HexPos, start: &HexPos, end: &HexPos, next: Option<Box<Node<'a>>>) -> Self {
-        // Calculate the costs of this node.6
+        // Calculate the costs of this node.
         let g_cost: u32 = calc_distance(pos, start);
         let h_cost: u32 = calc_distance(pos, end);
 
@@ -65,69 +65,65 @@ pub fn pathfind(
 ) {
     // For every movement event received...
     for event in movement_event.read() {
-        // Initialize vectors to classify and store A* nodes / positions
-        // for the duration of the algorithm.
-        let mut open_nodes: IndexSet<Box<Node>> = IndexSet::new();
-        let mut closed_nodes: IndexSet<Box<Node>> = IndexSet::new();
-        let mut closed_pos: IndexSet<HexPos> = IndexSet::new();
+        // Initialize an empty "path".
+        let mut path: Vec<HexPos> = Vec::new();
 
-        // Vector to return... TODO:
-        let mut path: Vec<&HexPos> = Vec::new();
-
-        // TODO:
-        let mut min: u32;
-
-        // Initialize the first node. We're going to be moving backwards here,
-        // with the "origin" and "destination" fields of MovementEvent
-        // corresponding to "end" and "start", respectively.
+        // Initialize reference positions. We're going to be moving backwards
+        // here, with "start" and "end" referring to the movement event's
+        // "destination" and "origin", respectively.
         let start: &HexPos = &event.destination;
         let end: &HexPos = &event.origin;
-        let mut curr_node: Box<Node> = Box::new(Node::new(start, start, end, None));
 
-        // TODO:
+        // Initialize open and closed sets to store nodes for the duration of
+        // the algorithm.
+        let mut open_nodes: IndexSet<Node> = IndexSet::new();
+        let mut closed_nodes: IndexSet<Node> = IndexSet::new();
+        let mut open_pos: IndexSet<HexPos> = IndexSet::new();
+        let mut closed_pos: IndexSet<HexPos> = IndexSet::new();
+
+        // Initialize the starting node.
+        let mut curr_node: Node = Node::new(start, start, end, None);
+        open_nodes.insert(curr_node.clone());
+        open_pos.insert(*start);
+
+        // Loop until we've found a path that links "start" to "end".
         while curr_node.pos != end {
-            // Determine which neighboring positions are traversable and
-            // initialize nodes for them.
-            for neighbor in pos_neighbors_map.map.get(curr_node.pos).unwrap().iter() {
-                if *traversability_maps.pos_land_map.get(neighbor).unwrap() == true {
-                    if !closed_pos.contains(neighbor) {
-                        open_nodes.insert(Box::new(Node::new(
-                            neighbor,
+            // First things first, grab the current node's neighbors and
+            // initialize them in the open nodes set if they're traversable,
+            // not present in the open positons set, and not present in the
+            // closed positions set.
+            for neighbor_pos in pos_neighbors_map.map.get(curr_node.pos).unwrap() {
+                if *traversability_maps.pos_land_map.get(neighbor_pos).unwrap() {
+                    if !open_pos.contains(neighbor_pos) && !closed_pos.contains(neighbor_pos) {
+                        open_pos.insert(*neighbor_pos);
+                        open_nodes.insert(Node::new(
+                            neighbor_pos,
                             start,
                             end,
-                            Some(curr_node.clone()),
-                        )));
+                            Some(Box::new(curr_node.clone())),
+                        ));
                     }
                 }
             }
 
-            // Update the open and closed sets.
+            // Add the current node and its position to the closed sets,
+            // we don't need to look at them anymore.
+            open_nodes.swap_remove(&curr_node);
             closed_nodes.insert(curr_node.clone());
+            open_pos.swap_remove(curr_node.pos);
             closed_pos.insert(*curr_node.pos);
-            if open_nodes.contains(&curr_node) {
-                open_nodes.swap_remove(&curr_node);
-            }
 
-            // Determine the "cheapest" node in open_nodes, and update curr_node
-            // accordingly.
-            curr_node = open_nodes[0].clone();
-            min = curr_node.f_cost;
+            // Iterate the curr_node by finding the cheapest node in the open
+            // nodes set.
+            curr_node = open_nodes.get_index(0).unwrap().clone();
             for node in open_nodes.iter() {
-                if node.f_cost < min {
+                if node.f_cost < curr_node.f_cost {
                     curr_node = node.clone();
-                    min = node.f_cost;
+                } else if node.f_cost == curr_node.f_cost && node.g_cost < curr_node.f_cost {
+                    curr_node = node.clone();
                 }
             }
-
-            let q = curr_node.pos.q;
-            let r = curr_node.pos.r;
-            let s = curr_node.pos.s;
-            let tq = end.q;
-            let tr = end.r;
-            let ts = end.s;
-            println!("Current position: ({q}, {r}, {s}) --- Target: ({tq}, {tr}, {ts})");
         }
-
-        println!("Target found!");
+        println!("Done.");
     }
 }

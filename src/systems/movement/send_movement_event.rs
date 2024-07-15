@@ -51,14 +51,20 @@ pub fn post_movement_event(
             for (destination_position, is_traversable, mut destination_pick_selection) in
                 traversable_entities.iter_mut()
             {
-                // If there is in fact an entity that is selected AND traversable...
-                if destination_pick_selection.is_selected && is_traversable.status {
-                    // ...then all criteria have been met. Send a movement event and
-                    // commence pathfinding.
+                // If the destination is not the origin AND there is in fact an
+                // entity that is selected AND that same entity is
+                // traversable...
+                if origin_position != destination_position
+                    && destination_pick_selection.is_selected
+                    && is_traversable.status
+                {
+                    // ...then all criteria have been met. Send a movement
+                    // event and commence pathfinding.
                     movement_event
                         .send(MovementEvent::new(*origin_position, *destination_position));
 
-                    // TODO:
+                    // Deselect the destination position to prevent looping
+                    // indefinitely.
                     destination_pick_selection.is_selected = false;
                 }
             }
