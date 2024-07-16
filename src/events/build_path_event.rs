@@ -16,6 +16,17 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod common;
-pub mod pathfind;
-pub mod send_movement_event;
+use bevy::prelude::*;
+
+use crate::systems::movement::common::Node;
+
+#[derive(Event)]
+pub struct BuildPathEvent {
+    pub root: Node,
+}
+
+impl BuildPathEvent {
+    pub fn new(root: Node) -> Self {
+        BuildPathEvent { root }
+    }
+}
