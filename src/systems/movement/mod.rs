@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod build_path;
 pub mod common;
 pub mod pathfind;
 pub mod send_movement_event;

@@ -18,25 +18,21 @@
 
 use bevy::prelude::*;
 
-#[rustfmt::skip]
-use crate::events::{
-    build_path_event::BuildPathEvent,
-    movement_event::MovementEvent,
-    tile_spawn_event::TileSpawnEvent,
-    unit_spawn_event::UnitSpawnEvent,
-};
+use crate::events::build_path_event::BuildPathEvent;
+use crate::systems::movement::common::Node;
 
-/// Plugin that registers events with the main application. Currently, the EventsPlugin:
-///     - Registers "TileSpawnEvent".
-///     - Registers "UnitSpawnEvent".
-pub struct EventsPlugin;
+pub fn build_path(mut build_path_event: EventReader<BuildPathEvent>) {
+    for event in build_path_event.read() {
+        recurse_nodes(&event.root);
+    }
+}
 
-impl Plugin for EventsPlugin {
-    fn build(&self, app: &mut App) {
-        // Register events with the main application.
-        app.add_event::<BuildPathEvent>()
-            .add_event::<MovementEvent>()
-            .add_event::<TileSpawnEvent>()
-            .add_event::<UnitSpawnEvent>();
+fn recurse_nodes(node: &Node) {
+    let q = node.pos.q;
+    let r = node.pos.r;
+    let s = node.pos.s;
+    println!("({q}, {r}, {s})");
+    if let Some(next_node) = &node.next {
+        recurse_nodes(next_node);
     }
 }
