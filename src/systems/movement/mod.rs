@@ -18,5 +18,6 @@
 
 pub mod build_path;
 pub mod common;
+pub mod move_unit;
 pub mod pathfind;
 pub mod send_movement_event;

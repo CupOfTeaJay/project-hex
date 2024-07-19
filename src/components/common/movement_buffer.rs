@@ -19,27 +19,14 @@
 use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
-use crate::components::common::movement_buffer::MovementBuffer;
-use crate::events::build_path_event::BuildPathEvent;
-use crate::systems::movement::common::Node;
 
-pub fn build_path(
-    mut build_path_event: EventReader<BuildPathEvent>,
-    mut movement_buffers: Query<&mut MovementBuffer>,
-) {
-    for event in build_path_event.read() {
-        // Initialize an empty "path" vector.
-        let mut path: Vec<HexPos> = Vec::new();
-        recurse_nodes(&event.root, &mut path);
-        if let Ok(mut movbuff) = movement_buffers.get_mut(event.entity) {
-            *movbuff = MovementBuffer::new(path);
-        }
-    }
+#[derive(Component)]
+pub struct MovementBuffer {
+    pub buffer: Vec<HexPos>,
 }
 
-fn recurse_nodes(node: &Node, path: &mut Vec<HexPos>) {
-    path.push(node.pos);
-    if let Some(next_node) = &node.next {
-        recurse_nodes(next_node, path);
+impl MovementBuffer {
+    pub fn new(buffer: Vec<HexPos>) -> Self {
+        MovementBuffer { buffer }
     }
 }

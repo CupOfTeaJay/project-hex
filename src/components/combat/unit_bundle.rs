@@ -17,17 +17,18 @@
 */
 
 use bevy::prelude::*;
-use bevy_mod_picking::prelude::*;
 
 use crate::components::combat::health::Health;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::common::is_movable::IsMovable;
+use crate::components::common::movement_buffer::MovementBuffer;
 
 #[derive(Bundle)]
 pub struct UnitBundle {
     pos: HexPos,
     health: Health,
     movable: IsMovable,
+    movbuff: MovementBuffer,
     model: SceneBundle,
 }
 
@@ -37,6 +38,7 @@ impl UnitBundle {
             pos: pos,
             health: Health::new(100),
             movable: IsMovable::new(true),
+            movbuff: MovementBuffer::new(Vec::new()),
             model: model,
         }
     }

@@ -20,3 +20,4 @@ pub mod hex_pos;
 pub mod is_movable;
 pub mod is_populated;
 pub mod is_traversable;
+pub mod movement_buffer;

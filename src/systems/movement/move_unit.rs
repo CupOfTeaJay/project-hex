@@ -20,26 +20,17 @@ use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::common::movement_buffer::MovementBuffer;
-use crate::events::build_path_event::BuildPathEvent;
-use crate::systems::movement::common::Node;
+use crate::utils::coord_conversions::cube_to_cartesian;
 
-pub fn build_path(
-    mut build_path_event: EventReader<BuildPathEvent>,
-    mut movement_buffers: Query<&mut MovementBuffer>,
-) {
-    for event in build_path_event.read() {
-        // Initialize an empty "path" vector.
-        let mut path: Vec<HexPos> = Vec::new();
-        recurse_nodes(&event.root, &mut path);
-        if let Ok(mut movbuff) = movement_buffers.get_mut(event.entity) {
-            *movbuff = MovementBuffer::new(path);
+pub fn move_unit(mut movable_units: Query<(&mut HexPos, &mut MovementBuffer, &mut Transform)>) {
+    for (mut pos, mut movbuff, mut transform) in movable_units.iter_mut() {
+        if !movbuff.buffer.is_empty() {
+            let bonk = movbuff.buffer.remove(0);
+            pos.q = bonk.q;
+            pos.r = bonk.r;
+            pos.s = bonk.s;
+            let (x, y, z) = cube_to_cartesian(pos.q as f32, pos.r as f32, pos.s as f32);
+            transform.translation = Vec3::new(x, y, z);
         }
-    }
-}
-
-fn recurse_nodes(node: &Node, path: &mut Vec<HexPos>) {
-    path.push(node.pos);
-    if let Some(next_node) = &node.next {
-        recurse_nodes(next_node, path);
     }
 }

@@ -22,11 +22,12 @@ use crate::systems::movement::common::Node;
 
 #[derive(Event)]
 pub struct BuildPathEvent {
+    pub entity: Entity,
     pub root: Node,
 }
 
 impl BuildPathEvent {
-    pub fn new(root: Node) -> Self {
-        BuildPathEvent { root }
+    pub fn new(entity: Entity, root: Node) -> Self {
+        BuildPathEvent { entity, root }
     }
 }

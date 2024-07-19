@@ -26,13 +26,15 @@ use crate::components::common::hex_pos::HexPos;
 /// used by the A* pathfinding algorithm to determine the shortest path between
 /// them.
 pub struct MovementEvent {
+    pub entity: Entity,
     pub origin: HexPos,
     pub destination: HexPos,
 }
 
 impl MovementEvent {
-    pub fn new(origin: HexPos, destination: HexPos) -> Self {
+    pub fn new(entity: Entity, origin: HexPos, destination: HexPos) -> Self {
         MovementEvent {
+            entity,
             origin,
             destination,
         }

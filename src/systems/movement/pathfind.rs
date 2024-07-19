@@ -94,6 +94,6 @@ pub fn pathfind(
             }
         }
 
-        build_path_event.send(BuildPathEvent::new(curr_node));
+        build_path_event.send(BuildPathEvent::new(event.entity, curr_node));
     }
 }

@@ -28,6 +28,7 @@ use crate::states::{
 };
 
 use crate::systems::movement::build_path::build_path;
+use crate::systems::movement::move_unit::move_unit;
 use crate::systems::movement::pathfind::pathfind;
 use crate::systems::movement::send_movement_event::post_movement_event;
 
@@ -38,7 +39,7 @@ impl Plugin for MovementPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (post_movement_event, pathfind, build_path)
+            (post_movement_event, pathfind, build_path, move_unit)
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
