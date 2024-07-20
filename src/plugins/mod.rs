@@ -27,3 +27,4 @@ pub mod resources_plugin;
 pub mod selection_plugin;
 pub mod stage_setting_plugin;
 pub mod states_plugin;
+pub mod ui_plugin;

@@ -17,7 +17,6 @@
 */
 
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 
 use project_hex::plugins::boot_plugin::BootPlugin;
@@ -31,15 +30,12 @@ use project_hex::plugins::resources_plugin::ResourcesPlugin;
 use project_hex::plugins::selection_plugin::SelectionPlugin;
 use project_hex::plugins::stage_setting_plugin::StageSettingPlugin;
 use project_hex::plugins::states_plugin::StatesPlugin;
+use project_hex::plugins::ui_plugin::UIPlugin;
 
 fn main() {
     App::new()
         // External plugins.
-        .add_plugins((
-            DefaultPlugins,
-            DefaultPickingPlugins,
-            WorldInspectorPlugin::new(),
-        ))
+        .add_plugins((DefaultPlugins, DefaultPickingPlugins))
         // Internal plugins.
         .add_plugins((
             BootPlugin,
@@ -53,7 +49,8 @@ fn main() {
             SelectionPlugin,
             StatesPlugin,
             StageSettingPlugin,
+            UIPlugin,
         ))
-        // Execute.
+        // Execute execute execute!
         .run();
 }

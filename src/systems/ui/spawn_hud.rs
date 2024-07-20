@@ -16,12 +16,24 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod boot;
-pub mod camera_management;
-pub mod debug;
-pub mod game_start;
-pub mod map_generation;
-pub mod movement;
-pub mod selection;
-pub mod stage_setting;
-pub mod ui;
+use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
+
+pub fn spawn_hud(mut commands: Commands) {
+    // Root node.
+    println!("Spawned root node!");
+    commands.spawn((
+        NodeBundle {
+            style: Style {
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
+                justify_content: JustifyContent::SpaceBetween,
+                border: UiRect::all(Val::Px(10.0)),
+                ..default()
+            },
+            border_color: BorderColor(Color::srgb(1.00, 0.00, 0.00)),
+            ..default()
+        },
+        Pickable::IGNORE,
+    ));
+}

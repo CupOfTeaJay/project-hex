@@ -30,5 +30,5 @@ pub fn spawn_camera(mut commands: Commands) {
         ..default()
     };
     // Spawn the camera.
-    commands.spawn(camera);
+    commands.spawn((camera, IsDefaultUiCamera));
 }
