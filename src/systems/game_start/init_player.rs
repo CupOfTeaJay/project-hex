@@ -29,8 +29,11 @@ use crate::{
     },
     events::unit_spawn_event::UnitSpawnEvent,
     states::game_state::GameState,
+    systems::selection::clear_selection_focus::clear_selection_focus,
+    systems::selection::select_ancestor_only::select_ancestor_only,
+    systems::ui::default_brw_view::show_default_brw_view,
+    systems::ui::pilgrim_view::show_pilgrim_view,
     utils::coord_conversions::cube_to_cartesian,
-    utils::get_top_parent::get_top_parent,
 };
 
 pub fn init_player(
@@ -86,16 +89,8 @@ pub fn init_player(
             Name::new("Unit"),
             UnitBundle::new(*random_hex_pos, unit_model),
             PickSelection { is_selected: false },
-            On::<Pointer<Click>>::run(
-                |event: Listener<Pointer<Click>>,
-                 mut selectables: Query<&mut PickSelection>,
-                 parents: Query<&Parent>| {
-                    selectables
-                        .get_mut(get_top_parent(&event.target, &parents))
-                        .unwrap()
-                        .is_selected = true;
-                },
-            ),
+            On::<Pointer<Select>>::run(select_ancestor_only.pipe(show_pilgrim_view)),
+            On::<Pointer<Deselect>>::run(clear_selection_focus.pipe(show_default_brw_view)),
         ))
         .id();
 

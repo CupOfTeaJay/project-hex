@@ -32,7 +32,7 @@ use crate::resources::traversability_maps::TraversabilityMaps;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
 use crate::utils::coord_conversions::cube_to_cartesian;
-use crate::utils::get_top_parent::get_top_parent;
+use crate::utils::get_ancestor::get_ancestor;
 
 pub fn spawn_map(
     asset_handles: Res<AssetHandles>,
@@ -124,7 +124,7 @@ pub fn spawn_map(
                      mut selectables: Query<&mut PickSelection>,
                      parents: Query<&Parent>| {
                         selectables
-                            .get_mut(get_top_parent(&event.target, &parents))
+                            .get_mut(get_ancestor(&event.target, &parents))
                             .unwrap()
                             .is_selected = true;
                     },

@@ -20,4 +20,5 @@ pub mod asset_handles;
 pub mod map_parameters;
 pub mod pickable_buffers;
 pub mod pos_neighbors_map;
+pub mod selection_focus;
 pub mod traversability_maps;

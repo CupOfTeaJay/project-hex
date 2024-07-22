@@ -19,16 +19,28 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+#[rustfmt::skip]
+use crate::components::{
+    ui::hud::HudRoot,
+    ui::hud::HudRightPane,
+    ui::hud::HudTopRightWidget,
+    ui::hud::HudBottomRightWidget,
+    ui::hud::HudLeftPane,
+    ui::hud::HudTopLeftWidget,
+    ui::hud::HudBottomLeftWidget,
+};
+
 pub fn spawn_hud(mut commands: Commands) {
     // Root node. Encapsulates the entire screen.
     commands
         .spawn((
+            HudRoot,
             NodeBundle {
                 style: Style {
                     width: Val::Percent(100.0),
                     height: Val::Percent(100.0),
-                    justify_content: JustifyContent::SpaceBetween,
                     border: UiRect::all(Val::Px(5.0)),
+                    flex_direction: FlexDirection::Row,
                     ..default()
                 },
                 border_color: BorderColor(Color::srgb(1.00, 0.00, 0.00)),
@@ -38,32 +50,100 @@ pub fn spawn_hud(mut commands: Commands) {
         ))
         .with_children(|parent| {
             // Left "pane" (vertical split of root).
-            parent.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(50.0),
-                        justify_self: JustifySelf::Start,
-                        border: UiRect::all(Val::Px(5.0)),
+            parent
+                .spawn((
+                    HudLeftPane,
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Percent(50.0),
+                            border: UiRect::all(Val::Px(5.0)),
+                            flex_direction: FlexDirection::Column,
+                            justify_content: JustifyContent::SpaceBetween,
+                            ..default()
+                        },
+                        border_color: Color::srgb(0.6, 0.0, 0.4).into(),
                         ..default()
                     },
-                    border_color: Color::srgb(0.6, 0.0, 0.4).into(),
-                    ..default()
-                },
-                Pickable::IGNORE,
-            ));
+                    Pickable::IGNORE,
+                ))
+                .with_children(|parent| {
+                    // Top-left "widget".
+                    parent.spawn((
+                        HudTopLeftWidget,
+                        NodeBundle {
+                            style: Style {
+                                width: Val::Percent(75.0),
+                                height: Val::Percent(12.5),
+                                border: UiRect::all(Val::Px(5.0)),
+                                ..default()
+                            },
+                            border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                            ..default()
+                        },
+                    ));
+                    // Bottom-left "widget".
+                    parent.spawn((
+                        HudBottomLeftWidget,
+                        NodeBundle {
+                            style: Style {
+                                width: Val::Percent(75.0),
+                                height: Val::Percent(12.5),
+                                border: UiRect::all(Val::Px(5.0)),
+                                ..default()
+                            },
+                            border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                            ..default()
+                        },
+                    ));
+                });
             // Right "pane" (vertical split of root).
-            parent.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(50.0),
-                        justify_self: JustifySelf::End,
-                        border: UiRect::all(Val::Px(5.0)),
+            parent
+                .spawn((
+                    HudRightPane,
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Percent(50.0),
+                            border: UiRect::all(Val::Px(5.0)),
+                            flex_direction: FlexDirection::Column,
+                            justify_content: JustifyContent::SpaceBetween,
+                            ..default()
+                        },
+                        border_color: Color::srgb(0.6, 0.0, 0.4).into(),
                         ..default()
                     },
-                    border_color: Color::srgb(0.6, 0.0, 0.4).into(),
-                    ..default()
-                },
-                Pickable::IGNORE,
-            ));
+                    Pickable::IGNORE,
+                ))
+                .with_children(|parent| {
+                    // Top-right "widget".
+                    parent.spawn((
+                        HudTopRightWidget,
+                        NodeBundle {
+                            style: Style {
+                                width: Val::Percent(75.0),
+                                height: Val::Percent(12.5),
+                                border: UiRect::all(Val::Px(5.0)),
+                                align_self: AlignSelf::End,
+                                ..default()
+                            },
+                            border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                            ..default()
+                        },
+                    ));
+                    // Bottom-right "widget".
+                    parent.spawn((
+                        HudBottomRightWidget,
+                        NodeBundle {
+                            style: Style {
+                                width: Val::Percent(75.0),
+                                height: Val::Percent(12.5),
+                                border: UiRect::all(Val::Px(5.0)),
+                                align_self: AlignSelf::End,
+                                ..default()
+                            },
+                            border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                            ..default()
+                        },
+                    ));
+                });
         });
 }

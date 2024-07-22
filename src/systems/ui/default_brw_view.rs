@@ -18,21 +18,14 @@
 
 use bevy::prelude::*;
 
-use crate::components::combat::land_unit_class::LandUnitClass;
-use crate::components::combat::unit_bundle::UnitBundle;
-use crate::components::common::hex_pos::HexPos;
+use crate::components::ui::hud::HudBottomRightWidget;
 
-#[derive(Bundle)]
-pub struct LandUnitBundle {
-    unit_data: UnitBundle,
-    class: LandUnitClass,
-}
-
-impl LandUnitBundle {
-    pub fn new(pos: HexPos, model: SceneBundle, class: LandUnitClass) -> Self {
-        LandUnitBundle {
-            unit_data: UnitBundle::new(pos, model),
-            class: class,
-        }
-    }
+pub fn show_default_brw_view(
+    mut commands: Commands,
+    ui_query: Query<(Entity, &HudBottomRightWidget)>,
+) {
+    // Update view.
+    commands
+        .entity(ui_query.get_single().unwrap().0)
+        .despawn_descendants();
 }

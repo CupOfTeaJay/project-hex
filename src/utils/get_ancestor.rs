@@ -16,12 +16,13 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod clear_selection_focus;
-pub mod make_tile_pickable;
-pub mod make_unit_pickable;
-pub mod pickable_buffers_populated;
-pub mod process_scenes_not_instanced;
-pub mod process_scenes_not_ready;
-pub mod select_ancestor_only;
+use bevy::prelude::*;
 
-mod make_meshes_pickable;
+/// Returns the ancestor of a given entity.
+pub fn get_ancestor(entity: &Entity, parents: &Query<&Parent>) -> Entity {
+    if let Ok(parent) = parents.get(*entity) {
+        get_ancestor(&parent, &parents)
+    } else {
+        *entity
+    }
+}

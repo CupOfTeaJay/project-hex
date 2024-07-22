@@ -19,11 +19,22 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-enum SeaUnitClass {
-    Capital,      // Flagships, command and control.
-    HeavyWarship, // Strongest naval class. For frontal assault and defense.
-    Recon,        // Light navalcraft. Best for reconnaissance purposes.
-    Submersive,   // Submarines, submersibles... Primary naval stealth class.
-    Support,      // Hospital ships, minelayers, etc.
-    Warship,      // Default naval class. Jack of all trades, master of none.
-}
+pub struct HudRoot;
+
+#[derive(Component)]
+pub struct HudLeftPane;
+
+#[derive(Component)]
+pub struct HudTopLeftWidget;
+
+#[derive(Component)]
+pub struct HudBottomLeftWidget;
+
+#[derive(Component)]
+pub struct HudRightPane;
+
+#[derive(Component)]
+pub struct HudTopRightWidget;
+
+#[derive(Component)]
+pub struct HudBottomRightWidget;

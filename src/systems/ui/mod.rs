@@ -16,4 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod button_router;
+pub mod default_brw_view;
+pub mod pilgrim_view;
 pub mod spawn_hud;

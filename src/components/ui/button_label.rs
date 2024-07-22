@@ -18,11 +18,7 @@
 
 use bevy::prelude::*;
 
-/// Returns the ancestor of a given entity.
-pub fn get_top_parent(entity: &Entity, parents: &Query<&Parent>) -> Entity {
-    if let Ok(parent) = parents.get(*entity) {
-        get_top_parent(&parent, &parents)
-    } else {
-        *entity
-    }
+#[derive(Component)]
+pub enum ButtonLabel {
+    PilgrimSettle,
 }

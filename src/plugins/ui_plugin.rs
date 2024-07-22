@@ -27,6 +27,7 @@ use crate::states::{
 };
 
 use crate::systems::camera_management::spawn_camera::spawn_camera;
+use crate::systems::ui::button_router::button_router;
 use crate::systems::ui::spawn_hud::spawn_hud;
 
 /// Plugin that defines the game's user interface. Currently, the UIPlugin:
@@ -41,6 +42,16 @@ impl Plugin for UIPlugin {
             OnExit(GameState::PlayerInit),
             spawn_hud
                 .after(spawn_camera)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            button_router
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

@@ -18,15 +18,18 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub enum LandUnitClass {
-    Artillery,     // Far-ranged units that provide indirect fire, level fortifications.
-    Cavalry,       // Strong land class. Bad without support from other classes.
-    Command,       // Generals, officers, command and control.
-    HeavyCavalry,  // Strongest land class. Bad without support from other classes.
-    HeavyInfantry, // Stronger land class. For frontal assault and defense.
-    Infantry,      // Default land class. Jack of all trades, master of none.
-    Recon,         // Light land units. Best for reconniassance purposes.
-    Support,       // Medics, engineers, etc.
-    Suppressive,   // Ranged units that lower opponent's combat effectiveness.
+use crate::components::ui::button_label::ButtonLabel;
+
+pub fn button_router(
+    mut interactions: Query<(&ButtonLabel, &Interaction), (Changed<Interaction>, With<Button>)>,
+) {
+    for (button, interaction) in interactions.iter() {
+        match *interaction {
+            Interaction::Pressed => match *button {
+                ButtonLabel::PilgrimSettle => println!("Settled!"),
+            },
+            Interaction::Hovered => println!("Hovering over 'Settle'!"),
+            Interaction::None => {}
+        }
+    }
 }

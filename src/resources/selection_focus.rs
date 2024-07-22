@@ -18,21 +18,21 @@
 
 use bevy::prelude::*;
 
-use crate::components::combat::air_unit_class::AirUnitClass;
-use crate::components::combat::unit_bundle::UnitBundle;
-use crate::components::common::hex_pos::HexPos;
-
-#[derive(Bundle)]
-struct AirUnitBundle {
-    class: AirUnitClass,
-    unit_data: UnitBundle,
+#[derive(Resource)]
+pub struct SelectionFocus {
+    pub focus: Option<Entity>,
 }
 
-impl AirUnitBundle {
-    fn new(pos: HexPos, class: AirUnitClass, model: SceneBundle) -> Self {
-        AirUnitBundle {
-            class: class,
-            unit_data: UnitBundle::new(pos, model),
-        }
+impl SelectionFocus {
+    pub fn new() -> Self {
+        SelectionFocus { focus: None }
+    }
+
+    pub fn clear_focus(&mut self) {
+        self.focus = None;
+    }
+
+    pub fn set_focus(&mut self, entity: Entity) {
+        self.focus = Some(entity);
     }
 }

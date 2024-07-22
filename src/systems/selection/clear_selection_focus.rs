@@ -18,11 +18,8 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
-enum AirUnitClass {
-    Attack,  // Default aircraft class. Jack of all trades, master of none.
-    Bomber,  // Aircraft class that specializes in air-to-ground combat.
-    Fighter, // Aircraft class that specialize in air-to-air combat.
-    Recon,   // Light aircraft. Best for reconniassance purposes.
-    Rotary,  // Helicopters and the like.
+use crate::resources::selection_focus::SelectionFocus;
+
+pub fn clear_selection_focus(mut selection_focus: ResMut<SelectionFocus>) {
+    selection_focus.clear_focus();
 }

@@ -25,6 +25,7 @@ use crate::resources::{
     pickable_buffers::PickableBuffers,
     pickable_buffers::PickableBufferHelpers,
     pos_neighbors_map::PosNeighborsMap,
+    selection_focus::SelectionFocus,
     traversability_maps::TraversabilityMaps,
 };
 
@@ -44,6 +45,7 @@ impl Plugin for ResourcesPlugin {
             .insert_resource(PickableBuffers::new())
             .insert_resource(PickableBufferHelpers::new())
             .insert_resource(PosNeighborsMap::new())
+            .insert_resource(SelectionFocus::new())
             .insert_resource(TraversabilityMaps::new());
     }
 }

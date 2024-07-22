@@ -16,8 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod air_unit_class;
 mod health;
-mod land_unit_class;
-mod sea_unit_class;
 pub mod unit_bundle;

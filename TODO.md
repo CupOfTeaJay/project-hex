@@ -1,3 +1,5 @@
+Note: "Marker Components"
+
 # On Deck:
 - [ ] Implement A* pathfinding.
 - [ ] Add "Movement Queue" component.
