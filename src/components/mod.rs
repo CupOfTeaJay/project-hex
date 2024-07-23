@@ -19,4 +19,5 @@
 pub mod combat;
 pub mod common;
 pub mod map_generation;
+pub mod selection;
 pub mod ui;

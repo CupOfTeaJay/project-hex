@@ -16,7 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod default_brw_view;
-pub mod pilgrim_view;
-pub mod settle;
-pub mod spawn_hud;
+use bevy::prelude::*;
+
+use crate::components::selection::label::Label;
+use crate::resources::selection_focus::SelectionFocus;
+
+pub fn settle(selection_focus: ResMut<SelectionFocus>) {
+    if let Some(entity) = selection_focus.focus {
+        match selection_focus.label {
+            Label::Pilgrim => println!("Settled!"),
+            _ => println!("Something's not right!"),
+        }
+    }
+}

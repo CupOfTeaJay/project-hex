@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+use crate::components::selection::label::Label;
 use crate::resources::selection_focus::SelectionFocus;
 use crate::utils::get_ancestor::get_ancestor;
 
@@ -26,6 +27,7 @@ pub fn select_ancestor_only(
     pointer_click_event: Listener<Pointer<Select>>,
     mut selectables: Query<&mut PickSelection>,
     parents: Query<&Parent>,
+    labels: Query<&Label>,
     mut selection_focus: ResMut<SelectionFocus>,
 ) {
     // Unselect the entity that is the subject of this event.
@@ -39,5 +41,5 @@ pub fn select_ancestor_only(
     selectables.get_mut(ancestor).unwrap().is_selected = true;
 
     // TODO:.
-    selection_focus.set_focus(ancestor);
+    selection_focus.set_focus(&ancestor, labels.get(ancestor).unwrap());
 }

@@ -24,6 +24,7 @@ use indexmap::IndexMap;
 use rand::{thread_rng, Rng};
 
 use crate::{
+    components::selection::label::Label,
     components::{
         combat::unit_bundle::UnitBundle, common::hex_pos::HexPos, map_generation::terrain::Terrain,
     },
@@ -87,6 +88,7 @@ pub fn init_player(
     let entity = commands
         .spawn((
             Name::new("Unit"),
+            Label::Pilgrim,
             UnitBundle::new(*random_hex_pos, unit_model),
             PickSelection { is_selected: false },
             On::<Pointer<Select>>::run(select_ancestor_only.pipe(show_pilgrim_view)),

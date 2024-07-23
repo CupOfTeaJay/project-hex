@@ -18,18 +18,8 @@
 
 use bevy::prelude::*;
 
-use crate::components::ui::button_label::ButtonLabel;
-
-pub fn button_router(
-    mut interactions: Query<(&ButtonLabel, &Interaction), (Changed<Interaction>, With<Button>)>,
-) {
-    for (button, interaction) in interactions.iter() {
-        match *interaction {
-            Interaction::Pressed => match *button {
-                ButtonLabel::PilgrimSettle => println!("Settled!"),
-            },
-            Interaction::Hovered => println!("Hovering over 'Settle'!"),
-            Interaction::None => {}
-        }
-    }
+#[derive(Component, Clone, Copy)]
+pub enum Label {
+    Void,
+    Pilgrim,
 }

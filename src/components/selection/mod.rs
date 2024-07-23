@@ -16,9 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(Component)]
-pub enum ButtonLabel {
-    PilgrimSettle,
-}
+pub mod label;
