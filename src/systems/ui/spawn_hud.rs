@@ -28,7 +28,10 @@ use crate::components::{
     ui::hud::HudLeftPane,
     ui::hud::HudTopLeftWidget,
     ui::hud::HudBottomLeftWidget,
+    ui::hud::EndTurnButton,
 };
+
+use crate::systems::ui::end_turn::end_turn;
 
 pub fn spawn_hud(mut commands: Commands) {
     // Root node. Encapsulates the entire screen.
@@ -56,12 +59,12 @@ pub fn spawn_hud(mut commands: Commands) {
                     NodeBundle {
                         style: Style {
                             width: Val::Percent(50.0),
-                            border: UiRect::all(Val::Px(5.0)),
+                            // border: UiRect::all(Val::Px(5.0)),
                             flex_direction: FlexDirection::Column,
                             justify_content: JustifyContent::SpaceBetween,
                             ..default()
                         },
-                        border_color: Color::srgb(0.6, 0.0, 0.4).into(),
+                        // border_color: Color::srgb(0.6, 0.0, 0.4).into(),
                         ..default()
                     },
                     Pickable::IGNORE,
@@ -103,12 +106,12 @@ pub fn spawn_hud(mut commands: Commands) {
                     NodeBundle {
                         style: Style {
                             width: Val::Percent(50.0),
-                            border: UiRect::all(Val::Px(5.0)),
+                            // border: UiRect::all(Val::Px(5.0)),
                             flex_direction: FlexDirection::Column,
                             justify_content: JustifyContent::SpaceBetween,
                             ..default()
                         },
-                        border_color: Color::srgb(0.6, 0.0, 0.4).into(),
+                        // border_color: Color::srgb(0.6, 0.0, 0.4).into(),
                         ..default()
                     },
                     Pickable::IGNORE,
@@ -130,20 +133,47 @@ pub fn spawn_hud(mut commands: Commands) {
                         },
                     ));
                     // Bottom-right "widget".
-                    parent.spawn((
-                        HudBottomRightWidget,
-                        NodeBundle {
-                            style: Style {
-                                width: Val::Percent(75.0),
-                                height: Val::Percent(12.5),
-                                border: UiRect::all(Val::Px(5.0)),
-                                align_self: AlignSelf::End,
+                    parent
+                        .spawn((
+                            HudBottomRightWidget,
+                            NodeBundle {
+                                style: Style {
+                                    width: Val::Percent(75.0),
+                                    height: Val::Percent(12.5),
+                                    border: UiRect::all(Val::Px(5.0)),
+                                    flex_direction: FlexDirection::Column,
+                                    align_self: AlignSelf::End,
+                                    ..default()
+                                },
+                                border_color: Color::srgb(0.2, 0.0, 0.8).into(),
                                 ..default()
                             },
-                            border_color: Color::srgb(0.2, 0.0, 0.8).into(),
-                            ..default()
-                        },
-                    ));
+                        ))
+                        // "End turn" button.
+                        .with_children(|parent| {
+                            parent
+                                .spawn((
+                                    ButtonBundle {
+                                        style: Style {
+                                            width: Val::Percent(25.0),
+                                            height: Val::Percent(100.0),
+                                            border: UiRect::all(Val::Px(5.0)),
+                                            align_self: AlignSelf::End,
+                                            ..default()
+                                        },
+                                        border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                                        ..default()
+                                    },
+                                    On::<Pointer<Click>>::run(end_turn),
+                                    EndTurnButton,
+                                ))
+                                .with_children(|parent| {
+                                    parent.spawn(TextBundle::from_section(
+                                        "End turn",
+                                        TextStyle { ..default() },
+                                    ));
+                                });
+                        });
                 });
         });
 }

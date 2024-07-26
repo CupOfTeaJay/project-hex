@@ -17,6 +17,7 @@
 */
 
 pub mod default_brw_view;
+pub mod end_turn;
 pub mod pilgrim_view;
 pub mod settle;
 pub mod spawn_hud;

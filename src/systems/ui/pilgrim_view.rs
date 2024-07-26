@@ -19,8 +19,10 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+use crate::components::ui::hud::EndTurnButton;
 use crate::components::ui::hud::HudBottomRightWidget;
 use crate::systems::ui::default_brw_view::show_default_brw_view;
+use crate::systems::ui::end_turn::end_turn;
 use crate::systems::ui::settle::settle;
 
 pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBottomRightWidget)>) {
@@ -28,8 +30,8 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
     commands
         .entity(ui_query.get_single().unwrap().0)
         .despawn_descendants()
-        // "Settle" button.
         .with_children(|parent| {
+            // "Settle" button.
             parent
                 .spawn((
                     ButtonBundle {
@@ -48,6 +50,29 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
                         "Settle",
+                        TextStyle { ..default() },
+                    ));
+                });
+            // "End turn" button.
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: Style {
+                            width: Val::Percent(25.0),
+                            height: Val::Percent(100.0),
+                            border: UiRect::all(Val::Px(5.0)),
+                            align_self: AlignSelf::End,
+                            ..default()
+                        },
+                        border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                        ..default()
+                    },
+                    On::<Pointer<Click>>::run(end_turn),
+                    EndTurnButton,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "End turn",
                         TextStyle { ..default() },
                     ));
                 });

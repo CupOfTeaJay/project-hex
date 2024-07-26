@@ -34,11 +34,13 @@ pub fn settle(
         match selection_focus.label {
             Label::Pilgrim => {
                 let (pos, tran): (&HexPos, &Transform) = positions.get(selection).unwrap();
+                let mut tran_cop = tran.clone();
+                tran_cop.scale = Vec3::new(1.0, 1.0, 1.0);
                 commands.entity(selection).despawn_recursive();
                 let ent: Entity = commands
                     .spawn(SceneBundle {
                         scene: asset_server.load("city/cityCenter.glb#Scene0"),
-                        transform: *tran,
+                        transform: tran_cop,
                         ..default()
                     })
                     .id();
