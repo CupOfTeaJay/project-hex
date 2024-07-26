@@ -16,8 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod hex_pos;
-pub mod is_movable;
-pub mod is_populated;
-pub mod is_traversable;
-pub mod movement_buffer;
+pub mod combat;
+pub mod labels;
+pub mod movement;

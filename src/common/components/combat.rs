@@ -19,12 +19,12 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct IsTraversable {
-    pub status: bool,
+pub struct Health {
+    value: u8,
 }
 
-impl IsTraversable {
-    pub fn new(status: bool) -> Self {
-        IsTraversable { status }
+impl Health {
+    pub fn new() -> Self {
+        Health { value: 100 }
     }
 }

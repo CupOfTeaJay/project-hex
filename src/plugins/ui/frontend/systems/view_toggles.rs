@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+use crate::plugins::ui::backend::systems::button_callbacks::settle;
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
 use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
@@ -49,7 +50,8 @@ pub fn toggle_end_turn_button_opponent_turn_exit(
         });
 }
 
-pub fn show_default_brw_view(
+// TODO: decouple EndTurnButton.
+pub fn toggle_bottom_right_widget_default(
     mut commands: Commands,
     ui_query: Query<Entity, With<HudBottomRightWidget>>,
 ) {
@@ -65,10 +67,14 @@ pub fn show_default_brw_view(
         });
 }
 
-pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBottomRightWidget)>) {
+// TODO: make bundle.
+pub fn toggle_bottom_right_widget_pilgrim(
+    mut commands: Commands,
+    ui_query: Query<Entity, With<HudBottomRightWidget>>,
+) {
     // Update view.
     commands
-        .entity(ui_query.get_single().unwrap().0)
+        .entity(ui_query.get_single().unwrap())
         .despawn_descendants()
         .with_children(|parent| {
             // "Settle" button.
@@ -84,7 +90,7 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
                         border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                         ..default()
                     },
-                    On::<Pointer<Click>>::run(show_default_brw_view),
+                    On::<Pointer<Click>>::run(toggle_bottom_right_widget_default.pipe(settle)),
                 ))
                 // "Settle" button text.
                 .with_children(|parent| {

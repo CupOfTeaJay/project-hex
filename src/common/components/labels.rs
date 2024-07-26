@@ -19,12 +19,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct IsPopulated {
-    pub status: bool,
-}
-
-impl IsPopulated {
-    pub fn new(status: bool) -> Self {
-        IsPopulated { status }
-    }
+pub enum Label {
+    Void,
+    Pilgrim,
 }

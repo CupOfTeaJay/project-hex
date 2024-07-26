@@ -16,5 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod health;
-pub mod unit_bundle;
+mod bundles;
+pub mod components;
+pub mod systems;

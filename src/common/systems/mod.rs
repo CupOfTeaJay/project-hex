@@ -16,17 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::components::common::hex_pos::HexPos;
-
-#[derive(Component)]
-pub struct MovementBuffer {
-    pub buffer: Vec<HexPos>,
-}
-
-impl MovementBuffer {
-    pub fn new(buffer: Vec<HexPos>) -> Self {
-        MovementBuffer { buffer }
-    }
-}
+pub mod builders;
+mod utils;

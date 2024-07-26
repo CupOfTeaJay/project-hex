@@ -16,37 +16,27 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::components::common::hex_pos::HexPos;
+use bevy::prelude::*;
+
+use crate::common::components::movement::HexPos;
 
 // TODO: Check if this is right... someday.
 const SCALE: f32 = 1.0;
 
-// TODO: Replace tuples with HexPos and Vec3.
-// TODO: Rename file.
-
-// /// Converts a cartesian coordinates to cube coordinates.
-// fn vec3_to_hex_pos(x: f32, y: f32, z: f32) -> (f32, f32, f32) {
-//     // Perform coordinate conversion.
-//     let q: f32 = (1.0 / 3.0_f32.sqrt()) * x * SCALE;
-//     let r: f32 = (2.0 / 3.0) * z;
-//     let s: f32 = -(1.0 / 3.0_f32.sqrt()) * x * SCALE;
-
-//     // Return new cube coordinates.
-//     (q, r, s)
-// }
-
-/// Converts cube coordinates to cartesian coordinates.
-pub fn cube_to_cartesian(q: f32, r: f32, s: f32) -> (f32, f32, f32) {
-    // Perform coordinate conversion.
-    let x: f32 = (3.0_f32.sqrt() / 2.0) * (q - s) * SCALE;
-    let y: f32 = 0.0;
-    let z: f32 = 1.5 * r * SCALE;
-
-    // Return new cartesian coordinates.
-    (x, y, z)
+/// Converts an input 'HexPos' to Bevy's 'Vec3'.
+pub fn hexpos_to_vec3(hexpos: &HexPos) -> Vec3 {
+    Vec3::new(
+        // X coordinate.
+        (3.0_f32.sqrt() / 2.0) * ((hexpos.q - hexpos.s) as f32) * SCALE,
+        // Y coordinate.
+        0.0,
+        // Z coordinate.
+        1.5 * (hexpos.r as f32) * SCALE,
+    )
 }
 
-/// Calculates the distance between two cube coordinates.
+/// Calculates the distance between two hex positions.
 pub fn calc_distance(a: &HexPos, b: &HexPos) -> u32 {
     (((a.q - b.q).abs() + (a.r - b.r).abs() + (a.s - b.s).abs()) / 2) as u32
 }
+

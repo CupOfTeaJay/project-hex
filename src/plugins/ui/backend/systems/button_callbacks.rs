@@ -24,3 +24,7 @@ use crate::states::game_state::GameState;
 pub fn end_turn(mut next_game_state: ResMut<NextState<GameState>>) {
     next_game_state.set(GameState::OpponentTurn);
 }
+
+pub fn settle() {
+    println!("Pilgrim settled!");
+}

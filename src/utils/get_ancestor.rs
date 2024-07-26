@@ -18,7 +18,7 @@
 
 use bevy::prelude::*;
 
-/// Returns the ancestor of a given entity.
+/// Returns the ancestor (greatest parent) of a given entity.
 pub fn get_ancestor(entity: &Entity, parents: &Query<&Parent>) -> Entity {
     if let Ok(parent) = parents.get(*entity) {
         get_ancestor(&parent, &parents)
