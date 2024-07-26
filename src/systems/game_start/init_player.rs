@@ -32,8 +32,6 @@ use crate::{
     states::game_state::GameState,
     systems::selection::clear_selection_focus::clear_selection_focus,
     systems::selection::select_ancestor_only::select_ancestor_only,
-    systems::ui::default_brw_view::show_default_brw_view,
-    systems::ui::pilgrim_view::show_pilgrim_view,
     utils::coord_conversions::cube_to_cartesian,
 };
 
@@ -91,8 +89,8 @@ pub fn init_player(
             Label::Pilgrim,
             UnitBundle::new(*random_hex_pos, unit_model),
             PickSelection { is_selected: false },
-            On::<Pointer<Select>>::run(select_ancestor_only.pipe(show_pilgrim_view)),
-            On::<Pointer<Deselect>>::run(clear_selection_focus.pipe(show_default_brw_view)),
+            On::<Pointer<Select>>::run(select_ancestor_only),
+            // On::<Pointer<Deselect>>::run(clear_selection_focus.pipe(show_default_brw_view)),
         ))
         .id();
 

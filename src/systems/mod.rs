@@ -24,4 +24,3 @@ pub mod map_generation;
 pub mod movement;
 pub mod selection;
 pub mod stage_setting;
-pub mod ui;

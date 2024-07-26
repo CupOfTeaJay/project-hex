@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 
+use project_hex::plugins::ai::ai_plugin::AiPlugin;
 use project_hex::plugins::boot_plugin::BootPlugin;
 use project_hex::plugins::camera_plugin::CameraPlugin;
 use project_hex::plugins::debug_plugin::DebugPlugin;
@@ -30,7 +31,7 @@ use project_hex::plugins::resources_plugin::ResourcesPlugin;
 use project_hex::plugins::selection_plugin::SelectionPlugin;
 use project_hex::plugins::stage_setting_plugin::StageSettingPlugin;
 use project_hex::plugins::states_plugin::StatesPlugin;
-use project_hex::plugins::ui_plugin::UIPlugin;
+use project_hex::plugins::ui::ui_plugin::UiPlugin;
 
 fn main() {
     App::new()
@@ -38,6 +39,7 @@ fn main() {
         .add_plugins((DefaultPlugins, DefaultPickingPlugins))
         // Internal plugins.
         .add_plugins((
+            AiPlugin,
             BootPlugin,
             CameraPlugin,
             DebugPlugin,
@@ -49,7 +51,7 @@ fn main() {
             SelectionPlugin,
             StatesPlugin,
             StageSettingPlugin,
-            UIPlugin,
+            UiPlugin,
         ))
         // Execute execute execute!
         .run();

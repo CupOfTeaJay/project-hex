@@ -16,25 +16,4 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::components::ui::hud::EndTurnButton;
-use crate::states::game_state::GameState;
-
-pub fn end_turn(
-    mut commands: Commands,
-    mut next_game_state: ResMut<NextState<GameState>>,
-    ui_query: Query<Entity, With<EndTurnButton>>,
-) {
-    let end_turn_button = ui_query.get_single().unwrap();
-    commands
-        .entity(end_turn_button)
-        .despawn_descendants()
-        .with_children(|parent| {
-            parent.spawn(TextBundle::from_section(
-                "Wait...",
-                TextStyle { ..default() },
-            ));
-        });
-    next_game_state.set(GameState::OpponentTurn);
-}
+pub mod systems;

@@ -16,7 +16,30 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod combat;
-pub mod common;
-pub mod map_generation;
-pub mod selection;
+use bevy::prelude::*;
+
+#[derive(Bundle)]
+pub struct EndTurnText {
+    text: TextBundle,
+}
+
+impl EndTurnText {
+    pub fn new() -> Self {
+        EndTurnText {
+            text: TextBundle::from_section("End turn", TextStyle { ..default() }),
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct OpponentTurnText {
+    text: TextBundle,
+}
+
+impl OpponentTurnText {
+    pub fn new() -> Self {
+        OpponentTurnText {
+            text: TextBundle::from_section("Opponent turn", TextStyle { ..default() }),
+        }
+    }
+}

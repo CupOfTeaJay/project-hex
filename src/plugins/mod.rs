@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod ai;
 pub mod boot_plugin;
 pub mod camera_plugin;
 pub mod debug_plugin;
@@ -27,4 +28,4 @@ pub mod resources_plugin;
 pub mod selection_plugin;
 pub mod stage_setting_plugin;
 pub mod states_plugin;
-pub mod ui_plugin;
+pub mod ui;

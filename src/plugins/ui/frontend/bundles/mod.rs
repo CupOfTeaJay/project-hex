@@ -16,28 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(Component)]
-pub struct HudRoot;
-
-#[derive(Component)]
-pub struct HudLeftPane;
-
-#[derive(Component)]
-pub struct HudTopLeftWidget;
-
-#[derive(Component)]
-pub struct HudBottomLeftWidget;
-
-#[derive(Component)]
-pub struct HudRightPane;
-
-#[derive(Component)]
-pub struct HudTopRightWidget;
-
-#[derive(Component)]
-pub struct HudBottomRightWidget;
-
-#[derive(Component)]
-pub struct EndTurnButton;
+pub mod buttons;
+pub mod texts;

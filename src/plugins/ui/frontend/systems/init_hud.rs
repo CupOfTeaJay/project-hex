@@ -19,21 +19,15 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-#[rustfmt::skip]
-use crate::components::{
-    ui::hud::HudRoot,
-    ui::hud::HudRightPane,
-    ui::hud::HudTopRightWidget,
-    ui::hud::HudBottomRightWidget,
-    ui::hud::HudLeftPane,
-    ui::hud::HudTopLeftWidget,
-    ui::hud::HudBottomLeftWidget,
-    ui::hud::EndTurnButton,
+use crate::plugins::ui::frontend::components::{
+    markers::HudBottomLeftWidget, markers::HudBottomRightWidget, markers::HudLeftPane,
+    markers::HudRightPane, markers::HudRoot, markers::HudTopLeftWidget, markers::HudTopRightWidget,
 };
 
-use crate::systems::ui::end_turn::end_turn;
+use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
+use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 
-pub fn spawn_hud(mut commands: Commands) {
+pub fn init_hud(mut commands: Commands) {
     // Root node. Encapsulates the entire screen.
     commands
         .spawn((
@@ -149,29 +143,14 @@ pub fn spawn_hud(mut commands: Commands) {
                                 ..default()
                             },
                         ))
-                        // "End turn" button.
-                        .with_children(|parent| {
-                            parent
-                                .spawn((
-                                    ButtonBundle {
-                                        style: Style {
-                                            width: Val::Percent(25.0),
-                                            height: Val::Percent(100.0),
-                                            border: UiRect::all(Val::Px(5.0)),
-                                            align_self: AlignSelf::End,
-                                            ..default()
-                                        },
-                                        border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                                        ..default()
-                                    },
-                                    On::<Pointer<Click>>::run(end_turn),
-                                    EndTurnButton,
-                                ))
-                                .with_children(|parent| {
-                                    parent.spawn(TextBundle::from_section(
-                                        "End turn",
-                                        TextStyle { ..default() },
-                                    ));
+                        .with_children(|bottom_right_widget| {
+                            bottom_right_widget
+                                // "End turn" button.
+                                .spawn(EndTurnButton::new())
+                                .with_children(|end_turn_button| {
+                                    end_turn_button
+                                        // ""End turn" text.
+                                        .spawn(EndTurnText::new());
                                 });
                         });
                 });

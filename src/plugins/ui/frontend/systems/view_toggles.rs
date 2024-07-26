@@ -19,11 +19,51 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::components::ui::hud::EndTurnButton;
-use crate::components::ui::hud::HudBottomRightWidget;
-use crate::systems::ui::default_brw_view::show_default_brw_view;
-use crate::systems::ui::end_turn::end_turn;
-use crate::systems::ui::settle::settle;
+use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
+use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
+use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
+use crate::plugins::ui::frontend::components::markers::HudBottomRightWidget;
+use crate::plugins::ui::frontend::components::markers::HudEndTurnButton;
+
+pub fn toggle_end_turn_button_player_turn_exit(
+    mut commands: Commands,
+    ui_query: Query<Entity, With<HudEndTurnButton>>,
+) {
+    commands
+        .entity(ui_query.get_single().unwrap())
+        .despawn_descendants()
+        .with_children(|end_turn_button| {
+            end_turn_button.spawn(OpponentTurnText::new());
+        });
+}
+
+pub fn toggle_end_turn_button_opponent_turn_exit(
+    mut commands: Commands,
+    ui_query: Query<Entity, With<HudEndTurnButton>>,
+) {
+    commands
+        .entity(ui_query.get_single().unwrap())
+        .despawn_descendants()
+        .with_children(|end_turn_button| {
+            end_turn_button.spawn(EndTurnText::new());
+        });
+}
+
+pub fn show_default_brw_view(
+    mut commands: Commands,
+    ui_query: Query<Entity, With<HudBottomRightWidget>>,
+) {
+    // Update view.
+    commands
+        .entity(ui_query.get_single().unwrap())
+        .despawn_descendants()
+        .with_children(|parent| {
+            // "End turn" button.
+            parent.spawn(EndTurnButton::new()).with_children(|parent| {
+                parent.spawn(EndTurnText::new());
+            });
+        });
+}
 
 pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBottomRightWidget)>) {
     // Update view.
@@ -44,7 +84,7 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
                         border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                         ..default()
                     },
-                    On::<Pointer<Click>>::run(settle.pipe(show_default_brw_view)),
+                    On::<Pointer<Click>>::run(show_default_brw_view),
                 ))
                 // "Settle" button text.
                 .with_children(|parent| {
@@ -54,27 +94,8 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
                     ));
                 });
             // "End turn" button.
-            parent
-                .spawn((
-                    ButtonBundle {
-                        style: Style {
-                            width: Val::Percent(25.0),
-                            height: Val::Percent(100.0),
-                            border: UiRect::all(Val::Px(5.0)),
-                            align_self: AlignSelf::End,
-                            ..default()
-                        },
-                        border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                        ..default()
-                    },
-                    On::<Pointer<Click>>::run(end_turn),
-                    EndTurnButton,
-                ))
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "End turn",
-                        TextStyle { ..default() },
-                    ));
-                });
+            parent.spawn(EndTurnButton::new()).with_children(|parent| {
+                parent.spawn(EndTurnText::new());
+            });
         });
 }

@@ -26,21 +26,48 @@ use crate::states::{
     game_state::GameState,
 };
 
+use crate::plugins::ui::frontend::systems::init_hud::init_hud;
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_exit;
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_exit;
+
+// TODO: Decouple camera plugin.
 use crate::systems::camera_management::spawn_camera::spawn_camera;
-use crate::systems::ui::spawn_hud::spawn_hud;
 
 /// Plugin that defines the game's user interface. Currently, the UIPlugin:
-///     - TODO:
-pub struct UIPlugin;
+///     - Initializes the player's HUD (Heads Up Display) at the start of the
+///       game.
+///     - Toggles HUD node views upon GameState transitions.
+pub struct UiPlugin;
 
-impl Plugin for UIPlugin {
+impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         // Add GameState::PlayerInit exit scheduled systems to the main
         // application.
         app.add_systems(
             OnExit(GameState::PlayerInit),
-            spawn_hud
+            init_hud
+                // TODO: Decouple camera plugin?
                 .after(spawn_camera)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+        // Add GameState::PlayerTurn exit scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnExit(GameState::PlayerTurn),
+            toggle_end_turn_button_player_turn_exit
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+        // Add GameState::OpponentTurn exit scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnExit(GameState::OpponentTurn),
+            toggle_end_turn_button_opponent_turn_exit
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

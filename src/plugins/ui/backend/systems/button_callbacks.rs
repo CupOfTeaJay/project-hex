@@ -16,7 +16,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod combat;
-pub mod common;
-pub mod map_generation;
-pub mod selection;
+use bevy::prelude::*;
+
+use crate::states::game_state::GameState;
+
+/// Callback function for the "End turn" button.
+pub fn end_turn(mut next_game_state: ResMut<NextState<GameState>>) {
+    next_game_state.set(GameState::OpponentTurn);
+}
