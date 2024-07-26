@@ -57,6 +57,7 @@ fn validate_scenes_loaded(
     asset_handles: &Res<AssetHandles>,
     asset_server: &Res<AssetServer>,
 ) {
+    // Check tile scenes.
     *assets_loaded &= asset_server
         .load_state(asset_handles.scenes.terrain_coastal.clone().unwrap().id())
         == LoadState::Loaded;
@@ -87,6 +88,13 @@ fn validate_scenes_loaded(
     *assets_loaded &= asset_server
         .load_state(asset_handles.scenes.terrain_tundra.clone().unwrap().id())
         == LoadState::Loaded;
+
+    // Check unit scenes.
     *assets_loaded &= asset_server.load_state(asset_handles.scenes.unit_unit.clone().unwrap().id())
+        == LoadState::Loaded;
+
+    // Check city scenes.
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.city_center.clone().unwrap().id())
         == LoadState::Loaded;
 }

@@ -45,6 +45,8 @@ pub struct SceneHandles {
     pub terrain_tundra: Option<Handle<Scene>>,
     // Unit scene handles.
     pub unit_unit: Option<Handle<Scene>>,
+    // City scene handles.
+    pub city_center: Option<Handle<Scene>>,
 }
 
 impl SceneHandles {
@@ -63,6 +65,8 @@ impl SceneHandles {
             terrain_tundra: None,
             // Unit scene handles.
             unit_unit: None,
+            // City scene handles.
+            city_center: None,
         }
     }
 }

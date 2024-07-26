@@ -20,6 +20,7 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::components::ui::hud::HudBottomRightWidget;
+use crate::systems::ui::default_brw_view::show_default_brw_view;
 use crate::systems::ui::settle::settle;
 
 pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBottomRightWidget)>) {
@@ -41,7 +42,7 @@ pub fn show_pilgrim_view(mut commands: Commands, ui_query: Query<(Entity, &HudBo
                         border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                         ..default()
                     },
-                    On::<Pointer<Click>>::run(settle),
+                    On::<Pointer<Click>>::run(settle.pipe(show_default_brw_view)),
                 ))
                 // "Settle" button text.
                 .with_children(|parent| {

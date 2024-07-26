@@ -18,14 +18,28 @@
 
 use bevy::prelude::*;
 
+use crate::components::common::hex_pos::HexPos;
 use crate::components::selection::label::Label;
 use crate::resources::selection_focus::SelectionFocus;
 
-pub fn settle(selection_focus: ResMut<SelectionFocus>) {
-    if let Some(entity) = selection_focus.focus {
+pub fn settle(
+    asset_server: Res<AssetServer>,
+    mut commands: Commands,
+    selection_focus: ResMut<SelectionFocus>,
+    positions: Query<(&HexPos, &Transform)>,
+) {
+    if let Some(selection) = selection_focus.focus {
         match selection_focus.label {
-            Label::Pilgrim => println!("Settled!"),
-            _ => println!("Something's not right!"),
+            Label::Pilgrim => {
+                let (pos, tran): (&HexPos, &Transform) = positions.get(selection).unwrap();
+                commands.entity(selection).despawn_recursive();
+                commands.spawn(SceneBundle {
+                    scene: asset_server.load("city/cityCenter.glb#Scene0"),
+                    transform: *tran,
+                    ..default()
+                });
+            }
+            _ => {}
         }
     }
 }
