@@ -20,3 +20,4 @@ pub mod debug_app_state_transition;
 pub mod debug_assets_state_transition;
 pub mod debug_boot_state_transition;
 pub mod debug_game_state_transition;
+pub mod debug_pickable_buffers_state_transition;

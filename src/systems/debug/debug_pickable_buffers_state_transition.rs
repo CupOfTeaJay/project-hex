@@ -16,15 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(Event)]
-pub struct TileSpawnEvent {
-    pub entity: Entity,
+pub fn debug_empty_entry() {
+    println!("PickableBuffersState entering state 'Empty'.");
 }
 
-impl TileSpawnEvent {
-    pub fn new(entity: Entity) -> Self {
-        TileSpawnEvent { entity }
-    }
+pub fn debug_empty_exit() {
+    println!("PickableBuffersState exiting state 'Empty'.");
+}
+
+pub fn debug_populated_entry() {
+    println!("PickableBuffersState entering state 'Populated'.");
+}
+
+pub fn debug_populated_exit() {
+    println!("PickableBuffersState exiting state 'Populated'.");
 }

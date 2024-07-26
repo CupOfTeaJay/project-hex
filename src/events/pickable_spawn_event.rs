@@ -19,12 +19,12 @@
 use bevy::prelude::*;
 
 #[derive(Event)]
-pub struct UnitSpawnEvent {
+pub struct PickableSpawnEvent {
     pub entity: Entity,
 }
 
-impl UnitSpawnEvent {
+impl PickableSpawnEvent {
     pub fn new(entity: Entity) -> Self {
-        UnitSpawnEvent { entity }
+        PickableSpawnEvent { entity }
     }
 }

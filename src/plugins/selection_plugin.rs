@@ -30,8 +30,7 @@ use crate::states::{
 
 #[rustfmt::skip]
 use crate::systems::{
-    selection::make_tile_pickable::make_tile_pickable,
-    selection::make_unit_pickable::make_unit_pickable,
+    selection::make_entity_pickable::make_entity_pickable,
     selection::process_scenes_not_instanced::process_scenes_not_instanced,
     selection::process_scenes_not_ready::process_scenes_not_ready,
 };
@@ -47,7 +46,7 @@ impl Plugin for SelectionPlugin {
         // Register states with the main application.
         app.add_systems(
             Update,
-            (make_tile_pickable, make_unit_pickable)
+            (make_entity_pickable)
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

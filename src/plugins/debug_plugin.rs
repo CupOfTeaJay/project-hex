@@ -24,36 +24,16 @@ use crate::states::{
     assets_state::AssetsState,
     boot_state::BootState,
     game_state::GameState,
+    pickable_buffers_state::PickableBuffersState,
 };
 
 #[rustfmt::skip]
 use crate::systems::{
-    debug::debug_app_state_transition::debug_in_boot_entry,
-    debug::debug_app_state_transition::debug_in_boot_exit,
-    debug::debug_app_state_transition::debug_in_game_entry,
-    debug::debug_app_state_transition::debug_in_game_exit,
-    debug::debug_app_state_transition::debug_load_game_entry,
-    debug::debug_app_state_transition::debug_load_game_exit,
-    debug::debug_app_state_transition::debug_main_menu_entry,
-    debug::debug_app_state_transition::debug_main_menu_exit,
-    debug::debug_assets_state_transition::debug_loaded_entry,
-    debug::debug_assets_state_transition::debug_loaded_exit,
-    debug::debug_assets_state_transition::debug_not_loaded_entry,
-    debug::debug_assets_state_transition::debug_not_loaded_exit,
-    debug::debug_boot_state_transition::debug_loading_assets_entry,
-    debug::debug_boot_state_transition::debug_loading_assets_exit,
-    debug::debug_boot_state_transition::debug_not_in_boot_entry,
-    debug::debug_boot_state_transition::debug_not_in_boot_exit,
-    debug::debug_game_state_transition::debug_map_gen_entry,
-    debug::debug_game_state_transition::debug_map_gen_exit,
-    debug::debug_game_state_transition::debug_not_in_game_entry,
-    debug::debug_game_state_transition::debug_not_in_game_exit,
-    debug::debug_game_state_transition::debug_opponent_turn_entry,
-    debug::debug_game_state_transition::debug_opponent_turn_exit,
-    debug::debug_game_state_transition::debug_player_init_entry,
-    debug::debug_game_state_transition::debug_player_init_exit,
-    debug::debug_game_state_transition::debug_player_turn_entry,
-    debug::debug_game_state_transition::debug_player_turn_exit,
+    debug::debug_app_state_transition::*,
+    debug::debug_assets_state_transition::*,
+    debug::debug_boot_state_transition::*,
+    debug::debug_game_state_transition::*,
+    debug::debug_pickable_buffers_state_transition::*,
 };
 
 /// Plugin that is used for debugging purposes. Currently, the DebugPlugin
@@ -63,43 +43,49 @@ pub struct DebugPlugin;
 #[rustfmt::skip]
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::InBoot), debug_in_boot_entry);
-        app.add_systems(OnExit(AppState::InBoot), debug_in_boot_exit);
+        // app.add_systems(OnEnter(AppState::InBoot), debug_in_boot_entry);
+        // app.add_systems(OnExit(AppState::InBoot), debug_in_boot_exit);
 
-        app.add_systems(OnEnter(AppState::InGame), debug_in_game_entry);
-        app.add_systems(OnExit(AppState::InGame), debug_in_game_exit);
+        // app.add_systems(OnEnter(AppState::InGame), debug_in_game_entry);
+        // app.add_systems(OnExit(AppState::InGame), debug_in_game_exit);
 
-        app.add_systems(OnEnter(AppState::LoadGame), debug_load_game_entry);
-        app.add_systems(OnExit(AppState::LoadGame), debug_load_game_exit);
+        // app.add_systems(OnEnter(AppState::LoadGame), debug_load_game_entry);
+        // app.add_systems(OnExit(AppState::LoadGame), debug_load_game_exit);
 
-        app.add_systems(OnEnter(AppState::MainMenu), debug_main_menu_entry);
-        app.add_systems(OnExit(AppState::MainMenu), debug_main_menu_exit);
+        // app.add_systems(OnEnter(AppState::MainMenu), debug_main_menu_entry);
+        // app.add_systems(OnExit(AppState::MainMenu), debug_main_menu_exit);
 
-        app.add_systems(OnEnter(AssetsState::Loaded), debug_loaded_entry);
-        app.add_systems(OnExit(AssetsState::Loaded), debug_loaded_exit);
+        // app.add_systems(OnEnter(AssetsState::Loaded), debug_loaded_entry);
+        // app.add_systems(OnExit(AssetsState::Loaded), debug_loaded_exit);
 
-        app.add_systems(OnEnter(AssetsState::NotLoaded), debug_not_loaded_entry);
-        app.add_systems(OnExit(AssetsState::NotLoaded), debug_not_loaded_exit);
+        // app.add_systems(OnEnter(AssetsState::NotLoaded), debug_not_loaded_entry);
+        // app.add_systems(OnExit(AssetsState::NotLoaded), debug_not_loaded_exit);
 
-        app.add_systems(OnEnter(BootState::LoadingAssets), debug_loading_assets_entry,);
-        app.add_systems(OnExit(BootState::LoadingAssets), debug_loading_assets_exit);
+        // app.add_systems(OnEnter(BootState::LoadingAssets), debug_loading_assets_entry,);
+        // app.add_systems(OnExit(BootState::LoadingAssets), debug_loading_assets_exit);
 
-        app.add_systems(OnEnter(BootState::NotInBoot), debug_not_in_boot_entry);
-        app.add_systems(OnExit(BootState::NotInBoot), debug_not_in_boot_exit);
+        // app.add_systems(OnEnter(BootState::NotInBoot), debug_not_in_boot_entry);
+        // app.add_systems(OnExit(BootState::NotInBoot), debug_not_in_boot_exit);
 
-        app.add_systems(OnEnter(GameState::MapGen), debug_map_gen_entry);
-        app.add_systems(OnExit(GameState::MapGen), debug_map_gen_exit);
+        // app.add_systems(OnEnter(GameState::MapGen), debug_map_gen_entry);
+        // app.add_systems(OnExit(GameState::MapGen), debug_map_gen_exit);
 
-        app.add_systems(OnEnter(GameState::NotInGame), debug_not_in_game_entry);
-        app.add_systems(OnExit(GameState::NotInGame), debug_not_in_game_exit);
+        // app.add_systems(OnEnter(GameState::NotInGame), debug_not_in_game_entry);
+        // app.add_systems(OnExit(GameState::NotInGame), debug_not_in_game_exit);
 
-        app.add_systems(OnEnter(GameState::OpponentTurn), debug_opponent_turn_entry);
-        app.add_systems(OnExit(GameState::OpponentTurn), debug_opponent_turn_exit);
+        // app.add_systems(OnEnter(GameState::OpponentTurn), debug_opponent_turn_entry);
+        // app.add_systems(OnExit(GameState::OpponentTurn), debug_opponent_turn_exit);
 
-        app.add_systems(OnEnter(GameState::PlayerInit), debug_player_init_entry);
-        app.add_systems(OnExit(GameState::PlayerInit), debug_player_init_exit);
+        // app.add_systems(OnEnter(GameState::PlayerInit), debug_player_init_entry);
+        // app.add_systems(OnExit(GameState::PlayerInit), debug_player_init_exit);
 
-        app.add_systems(OnEnter(GameState::PlayerTurn), debug_player_turn_entry);
-        app.add_systems(OnExit(GameState::PlayerTurn), debug_player_turn_exit);
+        // app.add_systems(OnEnter(GameState::PlayerTurn), debug_player_turn_entry);
+        // app.add_systems(OnExit(GameState::PlayerTurn), debug_player_turn_exit);
+
+        app.add_systems(OnEnter(PickableBuffersState::Empty), debug_empty_entry);
+        app.add_systems(OnExit(PickableBuffersState::Empty), debug_empty_exit);
+
+        app.add_systems(OnEnter(PickableBuffersState::Populated), debug_populated_entry);
+        app.add_systems(OnExit(PickableBuffersState::Populated), debug_populated_exit);
     }
 }

@@ -24,7 +24,7 @@ use std::f32::consts::FRAC_PI_2;
 use crate::components::common::hex_pos::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::components::map_generation::tile_bundle::TileBundle;
-use crate::events::tile_spawn_event::TileSpawnEvent;
+use crate::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::resources::asset_handles::AssetHandles;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::pos_neighbors_map::PosNeighborsMap;
@@ -40,7 +40,7 @@ pub fn spawn_map(
     mut next_game_state: ResMut<NextState<GameState>>,
     map_par: Res<MapParameters>,
     mut pos_neighbors_map_res: ResMut<PosNeighborsMap>,
-    mut tile_spawn_event: EventWriter<TileSpawnEvent>,
+    mut tile_spawn_event: EventWriter<PickableSpawnEvent>,
     mut traversability_maps: ResMut<TraversabilityMaps>,
 ) {
     // Setup.
@@ -131,7 +131,7 @@ pub fn spawn_map(
                 ),
             ))
             .id();
-        tile_spawn_event.send(TileSpawnEvent::new(entity));
+        tile_spawn_event.send(PickableSpawnEvent::new(entity));
 
         // GameState transition.
         next_game_state.set(GameState::PlayerInit);

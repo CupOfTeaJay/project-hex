@@ -28,7 +28,7 @@ use crate::{
     components::{
         combat::unit_bundle::UnitBundle, common::hex_pos::HexPos, map_generation::terrain::Terrain,
     },
-    events::unit_spawn_event::UnitSpawnEvent,
+    events::pickable_spawn_event::PickableSpawnEvent,
     states::game_state::GameState,
     systems::selection::clear_selection_focus::clear_selection_focus,
     systems::selection::select_ancestor_only::select_ancestor_only,
@@ -42,7 +42,7 @@ pub fn init_player(
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
     query: Query<(&HexPos, &Terrain)>,
-    mut unit_spawn_event: EventWriter<UnitSpawnEvent>,
+    mut unit_spawn_event: EventWriter<PickableSpawnEvent>,
 ) {
     let mut trans_terr_map: IndexMap<&HexPos, &Terrain> = IndexMap::new();
 
@@ -96,7 +96,7 @@ pub fn init_player(
         ))
         .id();
 
-    unit_spawn_event.send(UnitSpawnEvent::new(entity));
+    unit_spawn_event.send(PickableSpawnEvent::new(entity));
 
     next_game_state.set(GameState::PlayerTurn);
 }

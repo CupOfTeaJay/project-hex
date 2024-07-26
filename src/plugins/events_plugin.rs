@@ -22,8 +22,7 @@ use bevy::prelude::*;
 use crate::events::{
     build_path_event::BuildPathEvent,
     movement_event::MovementEvent,
-    tile_spawn_event::TileSpawnEvent,
-    unit_spawn_event::UnitSpawnEvent,
+    pickable_spawn_event::PickableSpawnEvent,
 };
 
 /// Plugin that registers events with the main application. Currently, the EventsPlugin:
@@ -36,7 +35,6 @@ impl Plugin for EventsPlugin {
         // Register events with the main application.
         app.add_event::<BuildPathEvent>()
             .add_event::<MovementEvent>()
-            .add_event::<TileSpawnEvent>()
-            .add_event::<UnitSpawnEvent>();
+            .add_event::<PickableSpawnEvent>();
     }
 }

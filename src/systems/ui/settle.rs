@@ -20,6 +20,7 @@ use bevy::prelude::*;
 
 use crate::components::common::hex_pos::HexPos;
 use crate::components::selection::label::Label;
+use crate::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::resources::selection_focus::SelectionFocus;
 
 pub fn settle(
@@ -27,17 +28,21 @@ pub fn settle(
     mut commands: Commands,
     selection_focus: ResMut<SelectionFocus>,
     positions: Query<(&HexPos, &Transform)>,
+    mut pickable_spawn_event: EventWriter<PickableSpawnEvent>,
 ) {
     if let Some(selection) = selection_focus.focus {
         match selection_focus.label {
             Label::Pilgrim => {
                 let (pos, tran): (&HexPos, &Transform) = positions.get(selection).unwrap();
                 commands.entity(selection).despawn_recursive();
-                commands.spawn(SceneBundle {
-                    scene: asset_server.load("city/cityCenter.glb#Scene0"),
-                    transform: *tran,
-                    ..default()
-                });
+                let ent: Entity = commands
+                    .spawn(SceneBundle {
+                        scene: asset_server.load("city/cityCenter.glb#Scene0"),
+                        transform: *tran,
+                        ..default()
+                    })
+                    .id();
+                pickable_spawn_event.send(PickableSpawnEvent::new(ent));
             }
             _ => {}
         }

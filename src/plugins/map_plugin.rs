@@ -19,17 +19,6 @@
 use bevy::prelude::*;
 
 #[rustfmt::skip]
-use crate::resources::{
-    map_parameters::ConvolutionParameters,
-    map_parameters::ElevationParameters,
-    map_parameters::LatitudeParameters,
-    map_parameters::MapParameters,
-    map_parameters::NoiseRequest,
-    map_parameters::NoiseType,
-    map_parameters::TerrainSpawnParameters,
-};
-
-#[rustfmt::skip]
 use crate::states::{
     app_state::AppState,
     assets_state::AssetsState,

@@ -18,5 +18,4 @@
 
 pub mod build_path_event;
 pub mod movement_event;
-pub mod tile_spawn_event;
-pub mod unit_spawn_event;
+pub mod pickable_spawn_event;

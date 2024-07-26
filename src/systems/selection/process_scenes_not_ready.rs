@@ -41,15 +41,21 @@ pub fn process_scenes_not_ready(
     scene_manager: Res<SceneSpawner>,
 ) {
     for entity in pickable_buffers.scenes_not_ready.iter() {
-        if scene_manager.instance_is_ready(**scene_instances.get(*entity).unwrap()) {
-            helper_vecs.scenes_ready.push(*entity);
-            make_meshes_pickable(&mut commands, &entity, &children, &entities);
+        if let Ok(scene) = scene_instances.get(*entity) {
+            if scene_manager.instance_is_ready(**scene) {
+                helper_vecs.scenes_ready.push(*entity);
+                make_meshes_pickable(&mut commands, &entity, &children, &entities);
+            }
         }
     }
     for entity in helper_vecs.scenes_ready.iter() {
         pickable_buffers.scenes_not_ready.remove(entity);
     }
     if !pickable_buffers_populated(&pickable_buffers) {
+        // Dump helper vectors.
+        helper_vecs.scenes_instanced.clear();
+        helper_vecs.scenes_ready.clear();
+        // State transition.
         next_pickable_buffers_state.set(PickableBuffersState::Empty);
     }
 }

@@ -17,8 +17,7 @@
 */
 
 pub mod clear_selection_focus;
-pub mod make_tile_pickable;
-pub mod make_unit_pickable;
+pub mod make_entity_pickable;
 pub mod pickable_buffers_populated;
 pub mod process_scenes_not_instanced;
 pub mod process_scenes_not_ready;

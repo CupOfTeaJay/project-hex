@@ -18,6 +18,7 @@
 
 use bevy::prelude::*;
 
+use crate::resources::pickable_buffers::PickableBufferHelpers;
 use crate::resources::pickable_buffers::PickableBuffers;
 
 pub fn pickable_buffers_populated(pickable_buffers: &ResMut<PickableBuffers>) -> bool {

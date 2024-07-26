@@ -20,16 +20,16 @@ use bevy::prelude::*;
 use bevy::scene::SceneInstance;
 use bevy_mod_picking::prelude::*;
 
-use crate::events::unit_spawn_event::UnitSpawnEvent;
+use crate::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::resources::pickable_buffers::PickableBuffers;
 use crate::states::pickable_buffers_state::PickableBuffersState;
 use crate::systems::selection::make_meshes_pickable::make_meshes_pickable;
 
-use super::pickable_buffers_populated::pickable_buffers_populated;
+use crate::systems::selection::pickable_buffers_populated::pickable_buffers_populated;
 
 // TODO: There's probably a much better way to do all of this.
 /// Makes a unit scene pickable (selectable).
-pub fn make_unit_pickable(
+pub fn make_entity_pickable(
     mut commands: Commands,
     mut pickable_buffers: ResMut<PickableBuffers>,
     children: Query<&Children>,
@@ -37,9 +37,9 @@ pub fn make_unit_pickable(
     mut next_pickable_buffers_state: ResMut<NextState<PickableBuffersState>>,
     scenes: Query<&SceneInstance>,
     scene_manager: Res<SceneSpawner>,
-    mut unit_spawn_event: EventReader<UnitSpawnEvent>,
+    mut tile_spawn_event: EventReader<PickableSpawnEvent>,
 ) {
-    for event in unit_spawn_event.read() {
+    for event in tile_spawn_event.read() {
         if let Ok(scene_instance) = scenes.get(event.entity) {
             if scene_manager.instance_is_ready(**scene_instance) {
                 make_meshes_pickable(&mut commands, &event.entity, &children, &entities);
