@@ -16,7 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+mod backend;
 pub mod frontend;
 pub mod ui_plugin;
-
-mod backend;

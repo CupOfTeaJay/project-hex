@@ -16,16 +16,31 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+use crate::common::components::movement::HexPos;
+use crate::common::components::movement::IsTraversable;
+use crate::plugins::map::components::terrain::Terrain;
+
+/// Suite of components for tile entities.
+#[derive(Bundle)]
+pub struct TileBundle {
+    pos: HexPos,
+    terrain: Terrain,
+    scene_bundle: SceneBundle,
+    is_traversable: IsTraversable,
+}
+
+impl TileBundle {
+    /// Creates a tile bundle.
+    pub fn new(pos: HexPos, terrain: Terrain, scene_bundle: SceneBundle) -> Self {
+        TileBundle {
+            pos: pos,
+            terrain: terrain,
+            scene_bundle: scene_bundle,
+            is_traversable: IsTraversable::new(),
+        }
+    }
+}
+
+// TODO: test TileBundle::new()

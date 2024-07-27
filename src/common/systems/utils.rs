@@ -23,6 +23,15 @@ use crate::common::components::movement::HexPos;
 // TODO: Check if this is right... someday.
 const SCALE: f32 = 1.0;
 
+/// Returns the ancestor (greatest parent) of a given entity.
+pub fn get_ancestor(entity: &Entity, parents: &Query<&Parent>) -> Entity {
+    if let Ok(parent) = parents.get(*entity) {
+        get_ancestor(&parent, &parents)
+    } else {
+        *entity
+    }
+}
+
 /// Converts an input 'HexPos' to Bevy's 'Vec3'.
 pub fn hexpos_to_vec3(hexpos: &HexPos) -> Vec3 {
     Vec3::new(
@@ -39,4 +48,3 @@ pub fn hexpos_to_vec3(hexpos: &HexPos) -> Vec3 {
 pub fn calc_distance(a: &HexPos, b: &HexPos) -> u32 {
     (((a.q - b.q).abs() + (a.r - b.r).abs() + (a.s - b.s).abs()) / 2) as u32
 }
-

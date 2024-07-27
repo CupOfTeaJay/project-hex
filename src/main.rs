@@ -20,17 +20,17 @@ use bevy::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 
 use project_hex::plugins::ai::ai_plugin::AiPlugin;
-use project_hex::plugins::boot_plugin::BootPlugin;
-use project_hex::plugins::camera_plugin::CameraPlugin;
-use project_hex::plugins::debug_plugin::DebugPlugin;
-use project_hex::plugins::events_plugin::EventsPlugin;
-use project_hex::plugins::game_start_plugin::GameStartPlugin;
-use project_hex::plugins::map_plugin::MapPlugin;
-use project_hex::plugins::movement_plugin::MovementPlugin;
-use project_hex::plugins::resources_plugin::ResourcesPlugin;
-use project_hex::plugins::selection_plugin::SelectionPlugin;
-use project_hex::plugins::stage_setting_plugin::StageSettingPlugin;
-use project_hex::plugins::states_plugin::StatesPlugin;
+use project_hex::plugins::ambience::ambience_plugin::StageSettingPlugin;
+use project_hex::plugins::boot::boot_plugin::BootPlugin;
+use project_hex::plugins::camera::camera_plugin::CameraPlugin;
+use project_hex::plugins::debug::debug_plugin::DebugPlugin;
+use project_hex::plugins::events::events_plugin::EventsPlugin;
+use project_hex::plugins::map::map_plugin::MapPlugin;
+use project_hex::plugins::movement::movement_plugin::MovementPlugin;
+use project_hex::plugins::resources::resources_plugin::ResourcesPlugin;
+use project_hex::plugins::selection::selection_plugin::SelectionPlugin;
+use project_hex::plugins::start::start_plugin::GameStartPlugin;
+use project_hex::plugins::states::states_plugin::StatesPlugin;
 use project_hex::plugins::ui::ui_plugin::UiPlugin;
 
 fn main() {

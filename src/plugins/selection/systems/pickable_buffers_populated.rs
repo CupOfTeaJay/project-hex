@@ -16,16 +16,16 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+use crate::common::resources::pickable_buffers::PickableBuffers;
+
+pub fn pickable_buffers_populated(pickable_buffers: &ResMut<PickableBuffers>) -> bool {
+    if pickable_buffers.scenes_not_instanced.len() > 0
+        || pickable_buffers.scenes_not_ready.len() > 0
+    {
+        true
+    } else {
+        false
+    }
+}

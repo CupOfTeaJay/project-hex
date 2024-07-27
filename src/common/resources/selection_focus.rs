@@ -16,16 +16,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+#[derive(Component, Resource)]
+pub struct SelectionFocus {
+    pub focus: Option<Entity>,
+}
+
+impl SelectionFocus {
+    pub fn new() -> Self {
+        SelectionFocus { focus: None }
+    }
+
+    pub fn clear_focus(&mut self) {
+        self.focus = None;
+    }
+
+    pub fn set_focus(&mut self, entity: &Entity) {
+        self.focus = Some(*entity);
+    }
+}

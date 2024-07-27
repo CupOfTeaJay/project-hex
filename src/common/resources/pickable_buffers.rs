@@ -16,16 +16,36 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use std::collections::HashSet;
+
+use bevy::prelude::*;
+
+#[derive(Component, Resource)]
+pub struct PickableBuffers {
+    pub scenes_not_instanced: HashSet<Entity>,
+    pub scenes_not_ready: HashSet<Entity>,
+}
+
+impl PickableBuffers {
+    pub fn new() -> Self {
+        PickableBuffers {
+            scenes_not_instanced: HashSet::new(),
+            scenes_not_ready: HashSet::new(),
+        }
+    }
+}
+
+#[derive(Component, Resource)]
+pub struct PickableBufferHelpers {
+    pub scenes_instanced: Vec<Entity>,
+    pub scenes_ready: Vec<Entity>,
+}
+
+impl PickableBufferHelpers {
+    pub fn new() -> Self {
+        PickableBufferHelpers {
+            scenes_instanced: Vec::new(),
+            scenes_ready: Vec::new(),
+        }
+    }
+}

@@ -16,16 +16,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+mod clear_selection_focus;
+pub mod make_entity_pickable;
+mod make_meshes_pickable;
+mod pickable_buffers_populated;
+pub mod process_scenes_not_instanced;
+pub mod process_scenes_not_ready;
+pub mod select_ancestor_only;

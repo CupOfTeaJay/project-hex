@@ -22,26 +22,23 @@ use crate::common::states::app_state::AppState;
 use crate::common::states::assets_state::AssetsState;
 use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
+use crate::common::states::pickable_buffers_state::PickableBuffersState;
 
-/// Plugin that defines the game's user interface. Currently, the UIPlugin:
-///     - Null.
-pub struct AiPlugin;
+/// Plugin that registers states with the main application. Currently, the StatesPlugin:
+///     - Initializes "AppState" to "AppState::InBoot".
+///     - Initializes "AssetsState" to "AssetsState::NotLoaded".
+///     - Initializes "BootState" to "BootState::LoadingAssets".
+///     - Initializes "GameState" to "GameState::NotInGame".
+///     - Initializes "PickableBufferState" to "PickableBufferState::Empty"
+pub struct StatesPlugin;
 
-impl Plugin for AiPlugin {
+impl Plugin for StatesPlugin {
     fn build(&self, app: &mut App) {
-        // Add GameState::OpponentTurn entry scheduled systems to the main
-        // application.
-        app.add_systems(
-            OnEnter(GameState::OpponentTurn),
-            (|mut next_game_state: ResMut<NextState<GameState>>| {
-                println!("AI thinking really hard!");
-                println!("Phew! All done.");
-                next_game_state.set(GameState::PlayerTurn);
-            })
-            .run_if(in_state(AppState::InGame))
-            .run_if(in_state(AssetsState::Loaded))
-            .run_if(in_state(BootState::NotInBoot))
-            .run_if(not(in_state(GameState::NotInGame))),
-        );
+        // Register states with the main application.
+        app.insert_state(AppState::InBoot)
+            .insert_state(AssetsState::NotLoaded)
+            .insert_state(BootState::LoadingAssets)
+            .insert_state(GameState::NotInGame)
+            .insert_state(PickableBuffersState::Empty);
     }
 }

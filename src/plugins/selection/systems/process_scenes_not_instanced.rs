@@ -16,16 +16,22 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::{prelude::*, scene::SceneInstance};
+
+use crate::common::resources::pickable_buffers::{PickableBufferHelpers, PickableBuffers};
+
+pub fn process_scenes_not_instanced(
+    mut helper_vecs: ResMut<PickableBufferHelpers>,
+    mut pickable_buffers: ResMut<PickableBuffers>,
+    scene_instances: Query<&SceneInstance>,
+) {
+    for entity in pickable_buffers.scenes_not_instanced.iter() {
+        if let Ok(_) = scene_instances.get(*entity) {
+            helper_vecs.scenes_instanced.push(*entity);
+        }
+    }
+    for entity in helper_vecs.scenes_instanced.iter() {
+        pickable_buffers.scenes_not_instanced.remove(entity);
+        pickable_buffers.scenes_not_ready.insert(*entity);
+    }
+}

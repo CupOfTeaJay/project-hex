@@ -16,16 +16,20 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+use indexmap::IndexMap;
+
+use crate::common::components::movement::HexPos;
+
+#[derive(Component, Resource)]
+pub struct PosNeighborsMap {
+    pub map: IndexMap<HexPos, Vec<HexPos>>,
+}
+
+impl PosNeighborsMap {
+    pub fn new() -> Self {
+        PosNeighborsMap {
+            map: IndexMap::new(),
+        }
+    }
+}

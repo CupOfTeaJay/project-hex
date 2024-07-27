@@ -2,7 +2,7 @@
     Project Hex
     Copyright (C) 2024 Clevermeld™ LLC
 
-    This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or pub modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -16,16 +16,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+pub mod debug_app_state_transition;
+pub mod debug_assets_state_transition;
+pub mod debug_boot_state_transition;
+pub mod debug_game_state_transition;
+pub mod debug_pickable_buffers_state_transition;

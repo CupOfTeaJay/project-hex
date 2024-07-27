@@ -16,16 +16,18 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+use crate::plugins::movement::systems::common::Node;
+
+#[derive(Event)]
+pub struct BuildPathEvent {
+    pub entity: Entity,
+    pub root: Node,
+}
+
+impl BuildPathEvent {
+    pub fn new(entity: Entity, root: Node) -> Self {
+        BuildPathEvent { entity, root }
+    }
+}

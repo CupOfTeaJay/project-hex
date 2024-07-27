@@ -16,32 +16,29 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
+use ::bevy::prelude::*;
 
 use crate::common::states::app_state::AppState;
 use crate::common::states::assets_state::AssetsState;
 use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
 
-/// Plugin that defines the game's user interface. Currently, the UIPlugin:
-///     - Null.
-pub struct AiPlugin;
+use crate::plugins::ambience::systems::spawn_sun::spawn_sun;
 
-impl Plugin for AiPlugin {
+/// Plugin that decorates the in-game environment. Currently, StageSettingPlugin:
+///     - Spawns a sun into the world.
+pub struct StageSettingPlugin;
+
+impl Plugin for StageSettingPlugin {
     fn build(&self, app: &mut App) {
-        // Add GameState::OpponentTurn entry scheduled systems to the main
-        // application.
+        // Add GameState::MapGen exit scheduled systems to the main application.
         app.add_systems(
-            OnEnter(GameState::OpponentTurn),
-            (|mut next_game_state: ResMut<NextState<GameState>>| {
-                println!("AI thinking really hard!");
-                println!("Phew! All done.");
-                next_game_state.set(GameState::PlayerTurn);
-            })
-            .run_if(in_state(AppState::InGame))
-            .run_if(in_state(AssetsState::Loaded))
-            .run_if(in_state(BootState::NotInBoot))
-            .run_if(not(in_state(GameState::NotInGame))),
+            OnExit(GameState::MapGen),
+            spawn_sun
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
         );
     }
 }

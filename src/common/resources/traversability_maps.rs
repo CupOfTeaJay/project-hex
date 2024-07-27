@@ -16,16 +16,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use std::collections::HashMap;
+
+use bevy::prelude::*;
+
+use crate::common::components::movement::HexPos;
+
+#[derive(Component, Resource)]
+pub struct TraversabilityMaps {
+    pub pos_land_map: HashMap<HexPos, bool>,
+    pub pos_sea_map: HashMap<HexPos, bool>,
+}
+
+impl TraversabilityMaps {
+    pub fn new() -> Self {
+        TraversabilityMaps {
+            pos_land_map: HashMap::new(),
+            pos_sea_map: HashMap::new(),
+        }
+    }
+}

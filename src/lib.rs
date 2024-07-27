@@ -17,11 +17,4 @@
 */
 
 mod common;
-mod components;
-mod events;
-mod resources;
-mod states;
-mod systems;
-mod utils;
-
 pub mod plugins;

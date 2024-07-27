@@ -22,14 +22,11 @@ use bevy_mod_picking::prelude::*;
 use crate::common::bundles::constituents::Unit;
 use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
+use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::systems::utils::hexpos_to_vec3;
-
+use crate::plugins::selection::systems::select_ancestor_only::select_ancestor_only;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_bottom_right_widget_default_view;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_bottom_right_widget_pilgrim_view;
-
-use crate::resources::asset_handles::AssetHandles;
-
-use crate::systems::selection::select_ancestor_only::select_ancestor_only;
 
 /// Builds a new 'Unit' bundle given a 'label' that corresponds to a unit.
 pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> Unit {

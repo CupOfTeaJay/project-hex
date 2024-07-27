@@ -16,16 +16,22 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+use crate::common::events::build_path_event::BuildPathEvent;
+use crate::common::events::movement_event::MovementEvent;
+use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
+
+/// Plugin that registers events with the main application. Currently, the EventsPlugin:
+///     - Registers "TileSpawnEvent".
+///     - Registers "UnitSpawnEvent".
+pub struct EventsPlugin;
+
+impl Plugin for EventsPlugin {
+    fn build(&self, app: &mut App) {
+        // Register events with the main application.
+        app.add_event::<BuildPathEvent>()
+            .add_event::<MovementEvent>()
+            .add_event::<PickableSpawnEvent>();
+    }
+}

@@ -18,20 +18,16 @@
 
 use bevy::prelude::*;
 
-#[rustfmt::skip]
-use crate::states::{
-    app_state::AppState,
-    assets_state::AssetsState,
-    boot_state::BootState,
-    game_state::GameState,
-};
-
+use crate::common::states::app_state::AppState;
+use crate::common::states::assets_state::AssetsState;
+use crate::common::states::boot_state::BootState;
+use crate::common::states::game_state::GameState;
 use crate::plugins::ui::frontend::systems::init_hud::init_hud;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_view;
 
 // TODO: Decouple camera plugin.
-use crate::systems::camera_management::spawn_camera::spawn_camera;
+use crate::plugins::camera::systems::spawn_camera::spawn_camera;
 
 /// Plugin that defines the game's user interface. Currently, the UIPlugin:
 ///     - Initializes the player's HUD (Heads Up Display) at the start of the
