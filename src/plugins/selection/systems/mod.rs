@@ -16,10 +16,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod clear_selection_focus;
+pub mod clear_selection_focus;
 pub mod make_entity_pickable;
 mod make_meshes_pickable;
 mod pickable_buffers_populated;
 pub mod process_scenes_not_instanced;
 pub mod process_scenes_not_ready;
-pub mod select_ancestor_only;
+pub mod set_selection_focus;

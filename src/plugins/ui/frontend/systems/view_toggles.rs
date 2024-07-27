@@ -19,7 +19,7 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::plugins::ui::backend::systems::button_callbacks::settle;
+use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
 use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
@@ -90,7 +90,9 @@ pub fn toggle_bottom_right_widget_pilgrim_view(
                         border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                         ..default()
                     },
-                    On::<Pointer<Click>>::run(toggle_bottom_right_widget_default_view.pipe(settle)),
+                    On::<Pointer<Click>>::run(
+                        toggle_bottom_right_widget_default_view.pipe(send_settle_event),
+                    ),
                 ))
                 // "Settle" button text.
                 .with_children(|parent| {

@@ -23,6 +23,7 @@ use project_hex::plugins::ai::ai_plugin::AiPlugin;
 use project_hex::plugins::ambience::ambience_plugin::StageSettingPlugin;
 use project_hex::plugins::boot::boot_plugin::BootPlugin;
 use project_hex::plugins::camera::camera_plugin::CameraPlugin;
+use project_hex::plugins::city::city_plugin::CityPlugin;
 use project_hex::plugins::debug::debug_plugin::DebugPlugin;
 use project_hex::plugins::events::events_plugin::EventsPlugin;
 use project_hex::plugins::map::map_plugin::MapPlugin;
@@ -42,6 +43,7 @@ fn main() {
             AiPlugin,
             BootPlugin,
             CameraPlugin,
+            CityPlugin,
             DebugPlugin,
             GameStartPlugin,
             MapPlugin,

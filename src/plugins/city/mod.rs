@@ -16,31 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::common::components::movement::HexPos;
-
-#[derive(Component, Resource)]
-pub struct SelectionFocus {
-    pub position: Option<HexPos>,
-    pub subject: Option<Entity>,
-}
-
-impl SelectionFocus {
-    pub fn new() -> Self {
-        SelectionFocus {
-            position: None,
-            subject: None,
-        }
-    }
-
-    pub fn clear_focus(&mut self) {
-        self.position = None;
-        self.subject = None;
-    }
-
-    pub fn set_focus(&mut self, position: &HexPos, subject: &Entity) {
-        self.position = Some(*position);
-        self.subject = Some(*subject);
-    }
-}
+pub mod city_plugin;
+mod systems;

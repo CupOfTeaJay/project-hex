@@ -18,22 +18,30 @@
 
 use bevy::prelude::*;
 
-use crate::common::events::build_path_event::BuildPathEvent;
-use crate::common::events::movement_event::MovementEvent;
-use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
-use crate::common::events::settle_event::SettleEvent;
+#[rustfmt::skip]
+use crate::common::states::{
+    app_state::AppState,
+    assets_state::AssetsState,
+    boot_state::BootState,
+    game_state::GameState,
+};
+
+use crate::plugins::city::systems::settle::settle;
 
 /// Plugin that registers events with the main application. Currently, the EventsPlugin:
-///     - Registers "TileSpawnEvent".
-///     - Registers "UnitSpawnEvent".
-pub struct EventsPlugin;
+///     - Null
+pub struct CityPlugin;
 
-impl Plugin for EventsPlugin {
+impl Plugin for CityPlugin {
     fn build(&self, app: &mut App) {
-        // Register events with the main application.
-        app.add_event::<BuildPathEvent>()
-            .add_event::<SettleEvent>()
-            .add_event::<MovementEvent>()
-            .add_event::<PickableSpawnEvent>();
+        // Add 'Update' scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            settle
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
     }
 }

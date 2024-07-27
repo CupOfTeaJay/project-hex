@@ -20,6 +20,7 @@ pub mod ai;
 pub mod ambience;
 pub mod boot;
 pub mod camera;
+pub mod city;
 pub mod debug;
 pub mod events;
 pub mod map;
