@@ -19,7 +19,7 @@
 use bevy::prelude::*;
 use indexmap::IndexSet;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 
 use crate::events::build_path_event::BuildPathEvent;
 use crate::events::movement_event::MovementEvent;

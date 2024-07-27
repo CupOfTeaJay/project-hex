@@ -19,7 +19,7 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::common::Elevation;

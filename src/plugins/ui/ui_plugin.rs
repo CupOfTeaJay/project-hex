@@ -27,8 +27,8 @@ use crate::states::{
 };
 
 use crate::plugins::ui::frontend::systems::init_hud::init_hud;
-use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_exit;
-use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_exit;
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_view;
 
 // TODO: Decouple camera plugin.
 use crate::systems::camera_management::spawn_camera::spawn_camera;
@@ -57,7 +57,7 @@ impl Plugin for UiPlugin {
         // application.
         app.add_systems(
             OnExit(GameState::PlayerTurn),
-            toggle_end_turn_button_player_turn_exit
+            toggle_end_turn_button_player_turn_view
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
@@ -67,7 +67,7 @@ impl Plugin for UiPlugin {
         // application.
         app.add_systems(
             OnExit(GameState::OpponentTurn),
-            toggle_end_turn_button_opponent_turn_exit
+            toggle_end_turn_button_opponent_turn_view
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

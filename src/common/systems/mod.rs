@@ -17,4 +17,4 @@
 */
 
 pub mod builders;
-mod utils;
+pub mod utils;

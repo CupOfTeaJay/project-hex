@@ -18,8 +18,8 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::movement_buffer::MovementBuffer;
+use crate::common::components::movement::HexPos;
+use crate::common::components::movement::MovementBuffer;
 use crate::events::build_path_event::BuildPathEvent;
 use crate::systems::movement::common::Node;
 

@@ -20,10 +20,10 @@ use bevy::prelude::*;
 use bevy_mod_picking::selection::PickSelection;
 
 #[rustfmt::skip]
-use crate::components::{
-    common::hex_pos::HexPos,
-    common::is_movable::IsMovable,
-    common::is_traversable::IsTraversable,
+use crate::common::components::{
+    movement::HexPos,
+    movement::IsMovable,
+    movement::IsTraversable,
 };
 
 #[rustfmt::skip]
@@ -44,7 +44,7 @@ pub fn post_movement_event(
     //     - Could possibly be selected.
     for (entity, origin_position, is_movable, origin_pick_selection) in movable_entities.iter() {
         // If there is in fact an entity that is selected AND movable...
-        if origin_pick_selection.is_selected && is_movable.status {
+        if origin_pick_selection.is_selected && is_movable.truthful {
             // ...then iterate over all non-movable entities that:
             //     - Could possibly be traversed.
             //     - Count possibly be selected.
@@ -56,7 +56,7 @@ pub fn post_movement_event(
                 // traversable...
                 if origin_position != destination_position
                     && destination_pick_selection.is_selected
-                    && is_traversable.status
+                    && is_traversable.truthful
                 {
                     // ...then all criteria have been met. Send a movement
                     // event and commence pathfinding.

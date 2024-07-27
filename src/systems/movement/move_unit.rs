@@ -18,9 +18,9 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::movement_buffer::MovementBuffer;
-use crate::utils::coord_conversions::cube_to_cartesian;
+use crate::common::components::movement::HexPos;
+use crate::common::components::movement::MovementBuffer;
+use crate::common::systems::utils::hexpos_to_vec3;
 
 pub fn move_unit(mut movable_units: Query<(&mut HexPos, &mut MovementBuffer, &mut Transform)>) {
     for (mut pos, mut movbuff, mut transform) in movable_units.iter_mut() {
@@ -29,8 +29,7 @@ pub fn move_unit(mut movable_units: Query<(&mut HexPos, &mut MovementBuffer, &mu
             pos.q = bonk.q;
             pos.r = bonk.r;
             pos.s = bonk.s;
-            let (x, y, z) = cube_to_cartesian(pos.q as f32, pos.r as f32, pos.s as f32);
-            transform.translation = Vec3::new(x, y, z);
+            transform.translation = hexpos_to_vec3(&pos);
         }
     }
 }

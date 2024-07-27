@@ -22,7 +22,7 @@ use bevy::prelude::*;
 use indexmap::IndexMap;
 use noise::{NoiseFn, Simplex, Worley};
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 use crate::resources::map_parameters::MapParameters;
 use crate::resources::map_parameters::NoiseType;
 use crate::systems::map_generation::common::Elevation;

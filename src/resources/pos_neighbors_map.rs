@@ -19,7 +19,7 @@
 use bevy::prelude::*;
 use indexmap::IndexMap;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 
 #[derive(Resource)]
 pub struct PosNeighborsMap {

@@ -16,8 +16,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::components::common::hex_pos::HexPos;
-use crate::utils::coord_conversions::calc_distance;
+use crate::common::components::movement::HexPos;
+use crate::common::systems::utils::calc_distance;
 
 /// An A* Node. Can be linked to a proceeding Node by way of the 'next'
 /// pointer.

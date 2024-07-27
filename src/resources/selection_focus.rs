@@ -18,29 +18,21 @@
 
 use bevy::prelude::*;
 
-use crate::components::selection::label::Label;
-
 #[derive(Resource)]
 pub struct SelectionFocus {
     pub focus: Option<Entity>,
-    pub label: Label,
 }
 
 impl SelectionFocus {
     pub fn new() -> Self {
-        SelectionFocus {
-            focus: None,
-            label: Label::Void,
-        }
+        SelectionFocus { focus: None }
     }
 
     pub fn clear_focus(&mut self) {
         self.focus = None;
-        self.label = Label::Void;
     }
 
-    pub fn set_focus(&mut self, entity: &Entity, label: &Label) {
+    pub fn set_focus(&mut self, entity: &Entity) {
         self.focus = Some(*entity);
-        self.label = *label;
     }
 }

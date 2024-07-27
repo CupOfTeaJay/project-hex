@@ -21,7 +21,8 @@ use bevy_mod_picking::prelude::*;
 use indexmap::IndexMap;
 use std::f32::consts::FRAC_PI_2;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
+use crate::common::systems::utils::hexpos_to_vec3;
 use crate::components::map_generation::terrain::Terrain;
 use crate::components::map_generation::tile_bundle::TileBundle;
 use crate::events::pickable_spawn_event::PickableSpawnEvent;
@@ -31,7 +32,6 @@ use crate::resources::pos_neighbors_map::PosNeighborsMap;
 use crate::resources::traversability_maps::TraversabilityMaps;
 use crate::states::game_state::GameState;
 use crate::systems::map_generation::generate_map_data::generate_map_data;
-use crate::utils::coord_conversions::cube_to_cartesian;
 use crate::utils::get_ancestor::get_ancestor;
 
 pub fn spawn_map(
@@ -59,11 +59,7 @@ pub fn spawn_map(
     // Spawn.
     let (mut x, mut y, mut z): (f32, f32, f32);
     for (pos, terrain) in pos_terr_map.iter() {
-        (x, y, z) = cube_to_cartesian(pos.q as f32, pos.r as f32, pos.s as f32);
-        transform.translation.x = x;
-        transform.translation.y = y;
-        transform.translation.z = z;
-
+        transform.translation = hexpos_to_vec3(pos);
         let scene_handle: Handle<Scene>;
         match terrain {
             &Terrain::Coastal => {

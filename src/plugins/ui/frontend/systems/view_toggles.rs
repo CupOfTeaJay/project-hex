@@ -26,7 +26,7 @@ use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
 use crate::plugins::ui::frontend::components::markers::HudBottomRightWidget;
 use crate::plugins::ui::frontend::components::markers::HudEndTurnButton;
 
-pub fn toggle_end_turn_button_player_turn_exit(
+pub fn toggle_end_turn_button_player_turn_view(
     mut commands: Commands,
     ui_query: Query<Entity, With<HudEndTurnButton>>,
 ) {
@@ -38,7 +38,7 @@ pub fn toggle_end_turn_button_player_turn_exit(
         });
 }
 
-pub fn toggle_end_turn_button_opponent_turn_exit(
+pub fn toggle_end_turn_button_opponent_turn_view(
     mut commands: Commands,
     ui_query: Query<Entity, With<HudEndTurnButton>>,
 ) {
@@ -51,7 +51,7 @@ pub fn toggle_end_turn_button_opponent_turn_exit(
 }
 
 // TODO: decouple EndTurnButton.
-pub fn toggle_bottom_right_widget_default(
+pub fn toggle_bottom_right_widget_default_view(
     mut commands: Commands,
     ui_query: Query<Entity, With<HudBottomRightWidget>>,
 ) {
@@ -68,7 +68,7 @@ pub fn toggle_bottom_right_widget_default(
 }
 
 // TODO: make bundle.
-pub fn toggle_bottom_right_widget_pilgrim(
+pub fn toggle_bottom_right_widget_pilgrim_view(
     mut commands: Commands,
     ui_query: Query<Entity, With<HudBottomRightWidget>>,
 ) {
@@ -90,7 +90,7 @@ pub fn toggle_bottom_right_widget_pilgrim(
                         border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                         ..default()
                     },
-                    On::<Pointer<Click>>::run(toggle_bottom_right_widget_default.pipe(settle)),
+                    On::<Pointer<Click>>::run(toggle_bottom_right_widget_default_view.pipe(settle)),
                 ))
                 // "Settle" button text.
                 .with_children(|parent| {

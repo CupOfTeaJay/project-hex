@@ -18,7 +18,7 @@
 
 use indexmap::IndexMap;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 
 /// Applies a convoloution to map terrain. The number of passes is specified in the map parameters.

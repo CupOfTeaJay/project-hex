@@ -18,7 +18,7 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 
 #[derive(Event)]
 /// An event sent whenever the movement of some entity has been requested.

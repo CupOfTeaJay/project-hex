@@ -24,7 +24,12 @@ use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
 use crate::common::systems::utils::hexpos_to_vec3;
 
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_bottom_right_widget_default_view;
+use crate::plugins::ui::frontend::systems::view_toggles::toggle_bottom_right_widget_pilgrim_view;
+
 use crate::resources::asset_handles::AssetHandles;
+
+use crate::systems::selection::select_ancestor_only::select_ancestor_only;
 
 /// Builds a new 'Unit' bundle given a 'label' that corresponds to a unit.
 pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> Unit {
@@ -35,9 +40,11 @@ pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos
                 transform: Transform::from_translation(hexpos_to_vec3(position)),
                 ..Default::default()
             },
-            On::<Pointer<Deselect>>::run(|| println!("Deselected pilgrim.")),
-            On::<Pointer<Over>>::run(|| println!("Hovering over pilgrim.")),
-            On::<Pointer<Select>>::run(|| println!("Selected pilgrim.")),
+            On::<Pointer<Deselect>>::run(toggle_bottom_right_widget_default_view),
+            On::<Pointer<Over>>::run(|| {}),
+            On::<Pointer<Select>>::run(
+                toggle_bottom_right_widget_pilgrim_view.pipe(select_ancestor_only),
+            ),
             position,
         ),
         _ => {

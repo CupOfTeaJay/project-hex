@@ -18,9 +18,8 @@
 
 use bevy::prelude::*;
 
-use crate::components::common::hex_pos::HexPos;
-use crate::components::common::is_populated::IsPopulated;
-use crate::components::common::is_traversable::IsTraversable;
+use crate::common::components::movement::HexPos;
+use crate::common::components::movement::IsTraversable;
 use crate::components::map_generation::terrain::Terrain;
 
 /// Suite of components for tile entities.
@@ -28,7 +27,6 @@ use crate::components::map_generation::terrain::Terrain;
 pub struct TileBundle {
     pos: HexPos,
     terrain: Terrain,
-    populated: IsPopulated,
     scene_bundle: SceneBundle,
     is_traversable: IsTraversable,
 }
@@ -39,9 +37,8 @@ impl TileBundle {
         TileBundle {
             pos: pos,
             terrain: terrain,
-            populated: IsPopulated::new(false),
             scene_bundle: scene_bundle,
-            is_traversable: IsTraversable::new(true),
+            is_traversable: IsTraversable::new(),
         }
     }
 }

@@ -21,7 +21,7 @@ use indexmap::IndexMap;
 use std::f32::consts::E;
 use std::f32::consts::PI;
 
-use crate::components::common::hex_pos::HexPos;
+use crate::common::components::movement::HexPos;
 use crate::components::map_generation::terrain::Terrain;
 use crate::resources::map_parameters::MapParameters;
 use crate::systems::map_generation::common::WaveFunction;
