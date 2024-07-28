@@ -19,24 +19,24 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::plugins::ui::frontend::components::markers::HudBottomLeftWidget;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidget;
-use crate::plugins::ui::frontend::components::markers::HudLeftPane;
-use crate::plugins::ui::frontend::components::markers::HudRightPane;
-use crate::plugins::ui::frontend::components::markers::HudRoot;
-use crate::plugins::ui::frontend::components::markers::HudTopLeftWidget;
-use crate::plugins::ui::frontend::components::markers::HudTopRightWidget;
+use crate::plugins::ui::frontend::components::markers::HudBottomLeftWidgetMarker;
+use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetMarker;
+use crate::plugins::ui::frontend::components::markers::HudLeftPaneMarker;
+use crate::plugins::ui::frontend::components::markers::HudRightPaneMarker;
+use crate::plugins::ui::frontend::components::markers::HudRootMarker;
+use crate::plugins::ui::frontend::components::markers::HudTopLeftWidgetMarker;
+use crate::plugins::ui::frontend::components::markers::HudTopRightWidgetMarker;
 
 #[derive(Bundle)]
-pub struct HudBottomLeftWidgetNode {
-    marker: HudBottomLeftWidget,
+pub struct HudBottomLeftWidget {
+    marker: HudBottomLeftWidgetMarker,
     node: NodeBundle,
 }
 
-impl HudBottomLeftWidgetNode {
+impl HudBottomLeftWidget {
     pub fn new() -> Self {
-        HudBottomLeftWidgetNode {
-            marker: HudBottomLeftWidget,
+        HudBottomLeftWidget {
+            marker: HudBottomLeftWidgetMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(75.0),
@@ -52,15 +52,15 @@ impl HudBottomLeftWidgetNode {
 }
 
 #[derive(Bundle)]
-pub struct HudBottomRightWidgetNode {
-    marker: HudBottomRightWidget,
+pub struct HudBottomRightWidget {
+    marker: HudBottomRightWidgetMarker,
     node: NodeBundle,
 }
 
-impl HudBottomRightWidgetNode {
+impl HudBottomRightWidget {
     pub fn new() -> Self {
-        HudBottomRightWidgetNode {
-            marker: HudBottomRightWidget,
+        HudBottomRightWidget {
+            marker: HudBottomRightWidgetMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(75.0),
@@ -78,15 +78,15 @@ impl HudBottomRightWidgetNode {
 }
 
 #[derive(Bundle)]
-pub struct HudTopLeftWidgetNode {
-    marker: HudTopLeftWidget,
+pub struct HudTopLeftWidget {
+    marker: HudTopLeftWidgetMarker,
     node: NodeBundle,
 }
 
-impl HudTopLeftWidgetNode {
+impl HudTopLeftWidget {
     pub fn new() -> Self {
-        HudTopLeftWidgetNode {
-            marker: HudTopLeftWidget,
+        HudTopLeftWidget {
+            marker: HudTopLeftWidgetMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(75.0),
@@ -102,15 +102,15 @@ impl HudTopLeftWidgetNode {
 }
 
 #[derive(Bundle)]
-pub struct HudTopRightWidgetNode {
-    marker: HudTopRightWidget,
+pub struct HudTopRightWidget {
+    marker: HudTopRightWidgetMarker,
     node: NodeBundle,
 }
 
-impl HudTopRightWidgetNode {
+impl HudTopRightWidget {
     pub fn new() -> Self {
-        HudTopRightWidgetNode {
-            marker: HudTopRightWidget,
+        HudTopRightWidget {
+            marker: HudTopRightWidgetMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(75.0),
@@ -127,16 +127,16 @@ impl HudTopRightWidgetNode {
 }
 
 #[derive(Bundle)]
-pub struct HudLeftPaneNode {
-    marker: HudLeftPane,
+pub struct HudLeftPane {
+    marker: HudLeftPaneMarker,
     node: NodeBundle,
     pickability: Pickable,
 }
 
-impl HudLeftPaneNode {
+impl HudLeftPane {
     pub fn new() -> Self {
-        HudLeftPaneNode {
-            marker: HudLeftPane,
+        HudLeftPane {
+            marker: HudLeftPaneMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(50.0),
@@ -154,16 +154,16 @@ impl HudLeftPaneNode {
 }
 
 #[derive(Bundle)]
-pub struct HudRightPaneNode {
-    marker: HudRightPane,
+pub struct HudRightPane {
+    marker: HudRightPaneMarker,
     node: NodeBundle,
     pickability: Pickable,
 }
 
-impl HudRightPaneNode {
+impl HudRightPane {
     pub fn new() -> Self {
-        HudRightPaneNode {
-            marker: HudRightPane,
+        HudRightPane {
+            marker: HudRightPaneMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(50.0),
@@ -181,16 +181,16 @@ impl HudRightPaneNode {
 }
 
 #[derive(Bundle)]
-pub struct HudRootNode {
-    marker: HudRoot,
+pub struct HudRoot {
+    marker: HudRootMarker,
     node: NodeBundle,
     pickability: Pickable,
 }
 
-impl HudRootNode {
+impl HudRoot {
     pub fn new() -> Self {
-        HudRootNode {
-            marker: HudRoot,
+        HudRoot {
+            marker: HudRootMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(100.0),

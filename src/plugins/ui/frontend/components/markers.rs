@@ -23,40 +23,40 @@ use bevy::prelude::*;
 /// Marker component for the root node of the heads up display (encapsulates
 /// the entire screen).
 #[derive(Component)]
-pub struct HudRoot;
+pub struct HudRootMarker;
 
 /// Marker component for the HUD's left pane (encapsulates the left side of the
 /// screen).
 #[derive(Component)]
-pub struct HudLeftPane;
+pub struct HudLeftPaneMarker;
 
 /// Marker component for the HUD's top-left widget (encapsulates top-left
 /// corner of the screen).
 #[derive(Component)]
-pub struct HudTopLeftWidget;
+pub struct HudTopLeftWidgetMarker;
 
 /// Marker component for the HUD's bottom-left widget (encapsulates bottom-left
 /// corner of the screen).
 #[derive(Component)]
-pub struct HudBottomLeftWidget;
+pub struct HudBottomLeftWidgetMarker;
 
 /// Marker component for the HUD's right pane (encapsulates the left side of
 /// the screen).
 #[derive(Component)]
-pub struct HudRightPane;
+pub struct HudRightPaneMarker;
 
 /// Marker component for the HUD's top-right widget (encapsulates top-right
 /// corner of the screen).
 #[derive(Component)]
-pub struct HudTopRightWidget;
+pub struct HudTopRightWidgetMarker;
 
 /// Marker component for the HUD's bottom-right widget (encapsulates bottom-
 /// right corner of the screen).
 #[derive(Component)]
-pub struct HudBottomRightWidget;
+pub struct HudBottomRightWidgetMarker;
 
 // NOTE: Button marker components.
 
 /// Marker component for the bottom-right widget's "End turn" button.
 #[derive(Component)]
-pub struct HudEndTurnButton;
+pub struct HudEndTurnButtonMarker;

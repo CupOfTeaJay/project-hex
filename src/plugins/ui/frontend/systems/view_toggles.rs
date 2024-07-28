@@ -23,12 +23,12 @@ use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
 use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidget;
-use crate::plugins::ui::frontend::components::markers::HudEndTurnButton;
+use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetMarker;
+use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
 
 pub fn toggle_end_turn_button_player_turn_view(
     mut commands: Commands,
-    ui_query: Query<Entity, With<HudEndTurnButton>>,
+    ui_query: Query<Entity, With<HudEndTurnButtonMarker>>,
 ) {
     commands
         .entity(ui_query.get_single().unwrap())
@@ -40,7 +40,7 @@ pub fn toggle_end_turn_button_player_turn_view(
 
 pub fn toggle_end_turn_button_opponent_turn_view(
     mut commands: Commands,
-    ui_query: Query<Entity, With<HudEndTurnButton>>,
+    ui_query: Query<Entity, With<HudEndTurnButtonMarker>>,
 ) {
     commands
         .entity(ui_query.get_single().unwrap())
@@ -53,7 +53,7 @@ pub fn toggle_end_turn_button_opponent_turn_view(
 // TODO: decouple EndTurnButton.
 pub fn toggle_bottom_right_widget_default_view(
     mut commands: Commands,
-    ui_query: Query<Entity, With<HudBottomRightWidget>>,
+    ui_query: Query<Entity, With<HudBottomRightWidgetMarker>>,
 ) {
     // Update view.
     commands
@@ -70,7 +70,7 @@ pub fn toggle_bottom_right_widget_default_view(
 // TODO: make bundle.
 pub fn toggle_bottom_right_widget_pilgrim_view(
     mut commands: Commands,
-    ui_query: Query<Entity, With<HudBottomRightWidget>>,
+    ui_query: Query<Entity, With<HudBottomRightWidgetMarker>>,
 ) {
     // Update view.
     commands

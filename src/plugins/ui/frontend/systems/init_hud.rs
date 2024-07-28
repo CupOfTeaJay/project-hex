@@ -19,44 +19,42 @@
 use bevy::prelude::*;
 
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
-use crate::plugins::ui::frontend::bundles::nodes::HudBottomLeftWidgetNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidgetNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudLeftPaneNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudRightPaneNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudRootNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudTopLeftWidgetNode;
-use crate::plugins::ui::frontend::bundles::nodes::HudTopRightWidgetNode;
+use crate::plugins::ui::frontend::bundles::nodes::HudBottomLeftWidget;
+use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidget;
+use crate::plugins::ui::frontend::bundles::nodes::HudLeftPane;
+use crate::plugins::ui::frontend::bundles::nodes::HudRightPane;
+use crate::plugins::ui::frontend::bundles::nodes::HudRoot;
+use crate::plugins::ui::frontend::bundles::nodes::HudTopLeftWidget;
+use crate::plugins::ui::frontend::bundles::nodes::HudTopRightWidget;
 use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 
 /// Initializes the HUD (Heads Up Display) at game start.
 pub fn init_hud(mut commands: Commands) {
     // Root node. Encapsulates the entire screen.
-    commands.spawn(HudRootNode::new()).with_children(|root| {
+    commands.spawn(HudRoot::new()).with_children(|root| {
         // Left "pane" (leftmost vertical split of root).
-        root.spawn(HudLeftPaneNode::new())
-            .with_children(|left_pane| {
-                // Top-left "widget".
-                left_pane.spawn(HudTopLeftWidgetNode::new());
-                // Bottom-left "widget".
-                left_pane.spawn(HudBottomLeftWidgetNode::new());
-            });
+        root.spawn(HudLeftPane::new()).with_children(|left_pane| {
+            // Top-left "widget".
+            left_pane.spawn(HudTopLeftWidget::new());
+            // Bottom-left "widget".
+            left_pane.spawn(HudBottomLeftWidget::new());
+        });
         // Right "pane" (rightmost vertical split of root).
-        root.spawn(HudRightPaneNode::new())
-            .with_children(|right_pane| {
-                // Top-right "widget".
-                right_pane.spawn(HudTopRightWidgetNode::new());
-                // Bottom-right "widget".
-                right_pane
-                    .spawn(HudBottomRightWidgetNode::new())
-                    .with_children(|bottom_right_widget| {
-                        // "End turn" button.
-                        bottom_right_widget
-                            .spawn(EndTurnButton::new())
-                            .with_children(|end_turn_button| {
-                                // ""End turn" text.
-                                end_turn_button.spawn(EndTurnText::new());
-                            });
-                    });
-            });
+        root.spawn(HudRightPane::new()).with_children(|right_pane| {
+            // Top-right "widget".
+            right_pane.spawn(HudTopRightWidget::new());
+            // Bottom-right "widget".
+            right_pane
+                .spawn(HudBottomRightWidget::new())
+                .with_children(|bottom_right_widget| {
+                    // "End turn" button.
+                    bottom_right_widget
+                        .spawn(EndTurnButton::new())
+                        .with_children(|end_turn_button| {
+                            // ""End turn" text.
+                            end_turn_button.spawn(EndTurnText::new());
+                        });
+                });
+        });
     });
 }

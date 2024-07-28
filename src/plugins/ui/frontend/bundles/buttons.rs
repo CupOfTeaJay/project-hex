@@ -20,13 +20,13 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::plugins::ui::backend::systems::button_callbacks::end_turn;
-use crate::plugins::ui::frontend::components::markers::HudEndTurnButton;
+use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
 
 #[derive(Bundle)]
 pub struct EndTurnButton {
     button: ButtonBundle,
     callback: On<Pointer<Click>>,
-    marker: HudEndTurnButton,
+    marker: HudEndTurnButtonMarker,
 }
 
 impl EndTurnButton {
@@ -44,7 +44,7 @@ impl EndTurnButton {
                 ..default()
             },
             callback: On::<Pointer<Click>>::run(end_turn),
-            marker: HudEndTurnButton,
+            marker: HudEndTurnButtonMarker,
         }
     }
 }
