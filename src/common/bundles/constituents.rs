@@ -23,6 +23,38 @@ use crate::common::components::combat::Health;
 use crate::common::components::movement::HexPos;
 use crate::common::components::movement::IsMovable;
 use crate::common::components::movement::MovementBuffer;
+use crate::plugins::names::components::markers::UnnamedCityMarker;
+
+#[derive(Bundle)]
+pub struct City {
+    marker: UnnamedCityMarker,
+    model: SceneBundle,
+    pick_selection: PickSelection,
+    pointer_deselect_callback: On<Pointer<Deselect>>,
+    pointer_over_callback: On<Pointer<Over>>,
+    pointer_select_callback: On<Pointer<Select>>,
+    position: HexPos,
+}
+
+impl City {
+    pub fn new(
+        model: &SceneBundle,
+        pointer_deselect_callback: On<Pointer<Deselect>>,
+        pointer_over_callback: On<Pointer<Over>>,
+        pointer_select_callback: On<Pointer<Select>>,
+        position: &HexPos,
+    ) -> Self {
+        City {
+            marker: UnnamedCityMarker,
+            model: model.clone(),
+            pick_selection: PickSelection { is_selected: false },
+            pointer_deselect_callback,
+            pointer_over_callback,
+            pointer_select_callback,
+            position: *position,
+        }
+    }
+}
 
 #[derive(Bundle)]
 pub struct Unit {

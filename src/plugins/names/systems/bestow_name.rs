@@ -18,30 +18,27 @@
 
 use bevy::prelude::*;
 
-use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
+use crate::common::systems::utils::hexpos_to_vec3;
+use crate::plugins::names::components::markers::UnnamedCityMarker;
 
-#[derive(Component, Resource)]
-pub struct SelectionFocus {
-    pub label: Label,
-    pub subject: Option<Entity>,
-}
-
-impl SelectionFocus {
-    pub fn new() -> Self {
-        SelectionFocus {
-            label: Label::Void,
-            subject: None,
-        }
-    }
-
-    pub fn clear_focus(&mut self) {
-        self.label = Label::Void;
-        self.subject = None;
-    }
-
-    pub fn set_focus(&mut self, label: &Label, subject: &Entity) {
-        self.label = *label;
-        self.subject = Some(*subject);
+pub fn bestow_city_name(
+    mut commands: Commands,
+    unnamed_cities: Query<(Entity, &HexPos), With<UnnamedCityMarker>>,
+) {
+    for (city, position) in unnamed_cities.iter() {
+        commands.entity(city).remove::<UnnamedCityMarker>();
+        commands.spawn(Text2dBundle {
+            text: Text::from_section(
+                "Poop town",
+                TextStyle {
+                    font_size: 100.0,
+                    ..default()
+                },
+            ),
+            transform: Transform::from_translation(hexpos_to_vec3(position).with_y(10.0)),
+            ..default()
+        });
+        println!("City named.");
     }
 }

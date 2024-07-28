@@ -20,8 +20,10 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::plugins::ui::frontend::components::markers::HudBottomLeftWidgetMarker;
+use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetContentMarker;
 use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetMarker;
 use crate::plugins::ui::frontend::components::markers::HudLeftPaneMarker;
+use crate::plugins::ui::frontend::components::markers::HudRightBannerMarker;
 use crate::plugins::ui::frontend::components::markers::HudRightPaneMarker;
 use crate::plugins::ui::frontend::components::markers::HudRootMarker;
 use crate::plugins::ui::frontend::components::markers::HudTopLeftWidgetMarker;
@@ -52,6 +54,33 @@ impl HudBottomLeftWidget {
 }
 
 #[derive(Bundle)]
+pub struct HudRightBanner {
+    marker: HudRightBannerMarker,
+    node: NodeBundle,
+    pickability: Pickable,
+}
+
+impl HudRightBanner {
+    pub fn new() -> Self {
+        HudRightBanner {
+            marker: HudRightBannerMarker,
+            node: NodeBundle {
+                style: Style {
+                    width: Val::Percent(25.0),
+                    height: Val::Percent(75.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    align_self: AlignSelf::End,
+                    ..default()
+                },
+                border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                ..default()
+            },
+            pickability: Pickable::IGNORE,
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct HudBottomRightWidget {
     marker: HudBottomRightWidgetMarker,
     node: NodeBundle,
@@ -66,11 +95,35 @@ impl HudBottomRightWidget {
                     width: Val::Percent(75.0),
                     height: Val::Percent(12.5),
                     border: UiRect::all(Val::Px(5.0)),
-                    flex_direction: FlexDirection::Column,
+                    flex_direction: FlexDirection::Row,
                     align_self: AlignSelf::End,
                     ..default()
                 },
                 border_color: Color::srgb(0.2, 0.0, 0.8).into(),
+                ..default()
+            },
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct HudBottomRightWidgetContent {
+    marker: HudBottomRightWidgetContentMarker,
+    node: NodeBundle,
+}
+
+impl HudBottomRightWidgetContent {
+    pub fn new() -> Self {
+        HudBottomRightWidgetContent {
+            marker: HudBottomRightWidgetContentMarker,
+            node: NodeBundle {
+                style: Style {
+                    width: Val::Percent(75.0),
+                    height: Val::Percent(100.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    ..default()
+                },
+                border_color: Color::srgb(1.0, 0.0, 0.0).into(),
                 ..default()
             },
         }
@@ -169,7 +222,6 @@ impl HudRightPane {
                     width: Val::Percent(50.0),
                     // border: UiRect::all(Val::Px(5.0)),
                     flex_direction: FlexDirection::Column,
-                    justify_content: JustifyContent::SpaceBetween,
                     ..default()
                 },
                 // border_color: Color::srgb(0.6, 0.0, 0.4).into(),

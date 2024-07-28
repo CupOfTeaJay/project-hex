@@ -16,18 +16,23 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod city;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod names;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+#[derive(Component)]
+pub struct Cost {
+    cumulative: u32,
+    modifier: f32,
+    principal: u32,
+    spent: u32,
+}
+
+impl Cost {
+    pub fn new() -> Self {
+        Cost {
+            cumulative: 0,
+            modifier: 0.0,
+            principal: 0,
+            spent: 0,
+        }
+    }
+}

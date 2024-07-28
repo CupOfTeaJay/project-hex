@@ -18,22 +18,25 @@
 
 use bevy::prelude::*;
 
+use crate::common::components::labels::Label;
+use crate::common::components::movement::HexPos;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::events::settle_event::SettleEvent;
 use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::resources::selection_focus::SelectionFocus;
-use crate::common::systems::utils::hexpos_to_vec3;
+use crate::common::systems::builders::city_builder;
 
 pub fn settle(
     assets: Res<AssetHandles>,
     mut commands: Commands,
     mut pickable_spawn_event: EventWriter<PickableSpawnEvent>,
+    positions: Query<&HexPos>,
     mut selection_focus: ResMut<SelectionFocus>,
     mut settle_event: EventReader<SettleEvent>,
 ) {
     for _ in settle_event.read() {
         if let Some(subject) = selection_focus.subject {
-            if let Some(position) = selection_focus.position {
+            if let Ok(position) = positions.get(subject) {
                 // Despawn the pilgrim (should be the subject of the selection
                 // focus).
                 commands.entity(subject).despawn_recursive();
@@ -42,11 +45,7 @@ pub fn settle(
                 // and make sure it is selectable.
                 pickable_spawn_event.send(PickableSpawnEvent::new(
                     commands
-                        .spawn(SceneBundle {
-                            scene: assets.scenes.city_center.clone().unwrap(),
-                            transform: Transform::from_translation(hexpos_to_vec3(&position)),
-                            ..default()
-                        })
+                        .spawn(city_builder(&assets, &Label::City, &position))
                         .id(),
                 ));
 

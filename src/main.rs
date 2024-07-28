@@ -28,6 +28,7 @@ use project_hex::plugins::debug::debug_plugin::DebugPlugin;
 use project_hex::plugins::events::events_plugin::EventsPlugin;
 use project_hex::plugins::map::map_plugin::MapPlugin;
 use project_hex::plugins::movement::movement_plugin::MovementPlugin;
+use project_hex::plugins::names::names_plugin::NamesPlugin;
 use project_hex::plugins::resources::resources_plugin::ResourcesPlugin;
 use project_hex::plugins::selection::selection_plugin::SelectionPlugin;
 use project_hex::plugins::start::start_plugin::GameStartPlugin;
@@ -48,6 +49,7 @@ fn main() {
             GameStartPlugin,
             MapPlugin,
             MovementPlugin,
+            NamesPlugin,
             EventsPlugin,
             ResourcesPlugin,
             SelectionPlugin,

@@ -21,7 +21,9 @@ use bevy::prelude::*;
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
 use crate::plugins::ui::frontend::bundles::nodes::HudBottomLeftWidget;
 use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidget;
+use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidgetContent;
 use crate::plugins::ui::frontend::bundles::nodes::HudLeftPane;
+use crate::plugins::ui::frontend::bundles::nodes::HudRightBanner;
 use crate::plugins::ui::frontend::bundles::nodes::HudRightPane;
 use crate::plugins::ui::frontend::bundles::nodes::HudRoot;
 use crate::plugins::ui::frontend::bundles::nodes::HudTopLeftWidget;
@@ -43,10 +45,14 @@ pub fn init_hud(mut commands: Commands) {
         root.spawn(HudRightPane::new()).with_children(|right_pane| {
             // Top-right "widget".
             right_pane.spawn(HudTopRightWidget::new());
+            // Right "banner".
+            right_pane.spawn(HudRightBanner::new());
             // Bottom-right "widget".
             right_pane
                 .spawn(HudBottomRightWidget::new())
                 .with_children(|bottom_right_widget| {
+                    // Content node for bottom-right "widget".
+                    bottom_right_widget.spawn(HudBottomRightWidgetContent::new());
                     // "End turn" button.
                     bottom_right_widget
                         .spawn(EndTurnButton::new())

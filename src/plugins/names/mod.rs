@@ -16,18 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod city;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod names;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+pub mod components;
+pub mod names_plugin;
+pub mod systems;

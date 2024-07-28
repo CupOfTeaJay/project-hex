@@ -23,6 +23,7 @@ use crate::common::states::assets_state::AssetsState;
 use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
 use crate::plugins::ui::frontend::systems::init_hud::init_hud;
+use crate::plugins::ui::frontend::systems::update_hud::update_hud;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
 use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_view;
 
@@ -49,6 +50,7 @@ impl Plugin for UiPlugin {
                 .run_if(in_state(BootState::NotInBoot))
                 .run_if(not(in_state(GameState::NotInGame))),
         );
+
         // Add GameState::PlayerTurn exit scheduled systems to the main
         // application.
         app.add_systems(
@@ -59,11 +61,22 @@ impl Plugin for UiPlugin {
                 .run_if(in_state(BootState::NotInBoot))
                 .run_if(not(in_state(GameState::NotInGame))),
         );
+
         // Add GameState::OpponentTurn exit scheduled systems to the main
         // application.
         app.add_systems(
             OnExit(GameState::OpponentTurn),
             toggle_end_turn_button_opponent_turn_view
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add Update scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            update_hud
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

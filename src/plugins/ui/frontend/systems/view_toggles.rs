@@ -17,9 +17,7 @@
 */
 
 use bevy::prelude::*;
-use bevy_mod_picking::prelude::*;
 
-use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
 use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
 use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
 use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
@@ -60,47 +58,6 @@ pub fn toggle_bottom_right_widget_default_view(
         .entity(ui_query.get_single().unwrap())
         .despawn_descendants()
         .with_children(|parent| {
-            // "End turn" button.
-            parent.spawn(EndTurnButton::new()).with_children(|parent| {
-                parent.spawn(EndTurnText::new());
-            });
-        });
-}
-
-// TODO: make bundle.
-pub fn toggle_bottom_right_widget_pilgrim_view(
-    mut commands: Commands,
-    ui_query: Query<Entity, With<HudBottomRightWidgetMarker>>,
-) {
-    // Update view.
-    commands
-        .entity(ui_query.get_single().unwrap())
-        .despawn_descendants()
-        .with_children(|parent| {
-            // "Settle" button.
-            parent
-                .spawn((
-                    ButtonBundle {
-                        style: Style {
-                            width: Val::Percent(30.0),
-                            height: Val::Percent(40.0),
-                            border: UiRect::all(Val::Px(5.0)),
-                            ..default()
-                        },
-                        border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                        ..default()
-                    },
-                    On::<Pointer<Click>>::run(
-                        toggle_bottom_right_widget_default_view.pipe(send_settle_event),
-                    ),
-                ))
-                // "Settle" button text.
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Settle",
-                        TextStyle { ..default() },
-                    ));
-                });
             // "End turn" button.
             parent.spawn(EndTurnButton::new()).with_children(|parent| {
                 parent.spawn(EndTurnText::new());

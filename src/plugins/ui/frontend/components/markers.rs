@@ -55,6 +55,19 @@ pub struct HudTopRightWidgetMarker;
 #[derive(Component)]
 pub struct HudBottomRightWidgetMarker;
 
+/// FIXME:
+#[derive(Component)]
+pub struct HudBottomRightWidgetContentMarker;
+
+/// FIXME:
+#[derive(Component)]
+pub struct SettleButtonMarker;
+
+/// Marker component for the HUD's bottom-right banner (encapsulates far-right
+/// side of the screen extending from the bottom-right widget).
+#[derive(Component)]
+pub struct HudRightBannerMarker;
+
 // NOTE: Button marker components.
 
 /// Marker component for the bottom-right widget's "End turn" button.

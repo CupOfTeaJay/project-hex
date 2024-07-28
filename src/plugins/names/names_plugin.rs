@@ -18,12 +18,24 @@
 
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy)]
-pub enum Label {
-    // No label.
-    Void,
-    // Units.
-    Pilgrim,
-    // Cities.
-    City,
+use crate::common::states::app_state::AppState;
+use crate::common::states::assets_state::AssetsState;
+use crate::common::states::boot_state::BootState;
+use crate::common::states::game_state::GameState;
+use crate::plugins::names::systems::bestow_name::bestow_city_name;
+
+pub struct NamesPlugin;
+
+impl Plugin for NamesPlugin {
+    fn build(&self, app: &mut App) {
+        // Add "Update" scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            bestow_city_name
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+    }
 }

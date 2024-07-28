@@ -43,3 +43,16 @@ impl OpponentTurnText {
         }
     }
 }
+
+#[derive(Bundle)]
+pub struct SettleText {
+    text: TextBundle,
+}
+
+impl SettleText {
+    pub fn new() -> Self {
+        SettleText {
+            text: TextBundle::from_section("Settle", TextStyle { ..default() }),
+        }
+    }
+}

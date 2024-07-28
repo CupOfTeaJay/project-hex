@@ -17,4 +17,5 @@
 */
 
 pub mod init_hud;
+pub mod update_hud;
 pub mod view_toggles;

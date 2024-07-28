@@ -20,7 +20,9 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::plugins::ui::backend::systems::button_callbacks::end_turn;
+use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
 use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
+use crate::plugins::ui::frontend::components::markers::SettleButtonMarker;
 
 #[derive(Bundle)]
 pub struct EndTurnButton {
@@ -45,6 +47,32 @@ impl EndTurnButton {
             },
             callback: On::<Pointer<Click>>::run(end_turn),
             marker: HudEndTurnButtonMarker,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct SettleButton {
+    button: ButtonBundle,
+    callback: On<Pointer<Click>>,
+    marker: SettleButtonMarker,
+}
+
+impl SettleButton {
+    pub fn new() -> Self {
+        SettleButton {
+            button: ButtonBundle {
+                style: Style {
+                    width: Val::Percent(30.0),
+                    height: Val::Percent(40.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    ..default()
+                },
+                border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                ..default()
+            },
+            callback: On::<Pointer<Click>>::run(send_settle_event),
+            marker: SettleButtonMarker,
         }
     }
 }

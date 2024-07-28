@@ -19,14 +19,16 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::common::components::movement::HexPos;
+use crate::common::components::labels::Label;
 use crate::common::resources::selection_focus::SelectionFocus;
 use crate::common::systems::utils::get_ancestor;
 
-/// Sets the 'SelectionFocus' resource to the constituent (unit, city, etc.)
-/// the player just clicked on.
-pub fn set_selection_focus(
-    hex_positions: Query<&HexPos>,
+// TODO: Can all of these be boiled down to a single generic? We're just
+//       pivoting off of the label enum.
+
+/// Sets the 'SelectionFocus' resource to the constituent pilgrim the player
+/// just clicked on.
+pub fn set_pilgrim_focus(
     listener: Listener<Pointer<Select>>,
     parents: Query<&Parent>,
     mut selectables: Query<&mut PickSelection>,
@@ -39,5 +41,23 @@ pub fn set_selection_focus(
     // and set it as the focus.
     let ancestor: Entity = get_ancestor(&listener.target, &parents);
     selectables.get_mut(ancestor).unwrap().is_selected = true;
-    selection_focus.set_focus(hex_positions.get(ancestor).unwrap(), &ancestor);
+    selection_focus.set_focus(&Label::Pilgrim, &ancestor);
+}
+
+/// Sets the 'SelectionFocus' resource to the constituent city the player just
+/// clicked on.
+pub fn set_city_focus(
+    listener: Listener<Pointer<Select>>,
+    parents: Query<&Parent>,
+    mut selectables: Query<&mut PickSelection>,
+    mut selection_focus: ResMut<SelectionFocus>,
+) {
+    // Unselect the entity that is the subject of this event.
+    selectables.get_mut(listener.target).unwrap().is_selected = false;
+
+    // Determine this entity's ancestor (greatest parent), select it instead,
+    // and set it as the focus.
+    let ancestor: Entity = get_ancestor(&listener.target, &parents);
+    selectables.get_mut(ancestor).unwrap().is_selected = true;
+    selection_focus.set_focus(&Label::City, &ancestor);
 }
