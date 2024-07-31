@@ -16,9 +16,12 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+// External plugins.
 use bevy::prelude::*;
+use bevy_mod_billboard::prelude::BillboardPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 
+// Internal plugins.
 use project_hex::plugins::ai::ai_plugin::AiPlugin;
 use project_hex::plugins::ambience::ambience_plugin::StageSettingPlugin;
 use project_hex::plugins::boot::boot_plugin::BootPlugin;
@@ -38,7 +41,7 @@ use project_hex::plugins::ui::ui_plugin::UiPlugin;
 fn main() {
     App::new()
         // External plugins.
-        .add_plugins((DefaultPlugins, DefaultPickingPlugins))
+        .add_plugins((DefaultPlugins, DefaultPickingPlugins, BillboardPlugin))
         // Internal plugins.
         .add_plugins((
             AiPlugin,

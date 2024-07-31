@@ -17,26 +17,30 @@
 */
 
 use bevy::prelude::*;
+use bevy_mod_billboard::prelude::*;
 
 use crate::common::components::movement::HexPos;
+use crate::common::resources::city_names::CityNames;
 use crate::common::systems::utils::hexpos_to_vec3;
 use crate::plugins::names::components::markers::UnnamedCityMarker;
 
 pub fn bestow_city_name(
+    city_names: Res<CityNames<'static>>,
     mut commands: Commands,
     unnamed_cities: Query<(Entity, &HexPos), With<UnnamedCityMarker>>,
 ) {
     for (city, position) in unnamed_cities.iter() {
         commands.entity(city).remove::<UnnamedCityMarker>();
-        commands.spawn(Text2dBundle {
+        commands.spawn(BillboardTextBundle {
+            transform: Transform::from_translation(hexpos_to_vec3(position).with_y(1.5))
+                .with_scale(Vec3::splat(0.0085)),
             text: Text::from_section(
-                "Poop town",
+                city_names.get_random_name(),
                 TextStyle {
-                    font_size: 100.0,
+                    font_size: 60.0,
                     ..default()
                 },
             ),
-            transform: Transform::from_translation(hexpos_to_vec3(position).with_y(10.0)),
             ..default()
         });
         println!("City named.");

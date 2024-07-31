@@ -21,6 +21,7 @@ use bevy::prelude::*;
 #[rustfmt::skip]
 use crate::common::resources::{
     asset_handles::AssetHandles,
+    city_names::CityNames,
     map_parameters::MapParameters,
     pickable_buffers::PickableBuffers,
     pickable_buffers::PickableBufferHelpers,
@@ -41,6 +42,7 @@ impl Plugin for ResourcesPlugin {
     fn build(&self, app: &mut App) {
         // Register resources with the main application.
         app.insert_resource(AssetHandles::new())
+            .insert_resource(CityNames::new())
             .insert_resource(MapParameters::new())
             .insert_resource(PickableBuffers::new())
             .insert_resource(PickableBufferHelpers::new())
