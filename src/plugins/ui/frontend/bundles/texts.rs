@@ -19,6 +19,19 @@
 use bevy::prelude::*;
 
 #[derive(Bundle)]
+pub struct CityNameText {
+    text: TextBundle,
+}
+
+impl CityNameText {
+    pub fn new(name: String) -> Self {
+        CityNameText {
+            text: TextBundle::from_section(name, TextStyle { ..default() }),
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct EndTurnText {
     text: TextBundle,
 }

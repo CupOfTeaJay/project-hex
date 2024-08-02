@@ -22,20 +22,21 @@ use bevy_mod_billboard::prelude::*;
 use crate::common::components::movement::HexPos;
 use crate::common::resources::city_names::CityNames;
 use crate::common::systems::utils::hexpos_to_vec3;
-use crate::plugins::names::components::markers::UnnamedCityMarker;
+use crate::plugins::city::components::markers::CityMarker;
 
 pub fn bestow_city_name(
     city_names: Res<CityNames<'static>>,
     mut commands: Commands,
-    unnamed_cities: Query<(Entity, &HexPos), With<UnnamedCityMarker>>,
+    unnamed_cities: Query<(Entity, &HexPos), (With<CityMarker>, Without<Name>)>,
 ) {
     for (city, position) in unnamed_cities.iter() {
-        commands.entity(city).remove::<UnnamedCityMarker>();
+        let city_name: String = city_names.get_random_name();
+        commands.entity(city).insert(Name::new(city_name.clone()));
         commands.spawn(BillboardTextBundle {
             transform: Transform::from_translation(hexpos_to_vec3(position).with_y(1.5))
                 .with_scale(Vec3::splat(0.0085)),
             text: Text::from_section(
-                city_names.get_random_name(),
+                city_name.clone(),
                 TextStyle {
                     font_size: 60.0,
                     ..default()
@@ -43,6 +44,5 @@ pub fn bestow_city_name(
             ),
             ..default()
         });
-        println!("City named.");
     }
 }

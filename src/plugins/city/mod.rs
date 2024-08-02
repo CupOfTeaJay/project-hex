@@ -17,4 +17,5 @@
 */
 
 pub mod city_plugin;
+pub mod components;
 mod systems;

@@ -20,12 +20,16 @@ use bevy::prelude::*;
 
 use crate::common::components::labels::Label;
 use crate::common::resources::selection_focus::SelectionFocus;
+use crate::plugins::city::components::markers::CityMarker;
+use crate::plugins::ui::frontend::bundles::buttons::CityNameButton;
 use crate::plugins::ui::frontend::bundles::buttons::SettleButton;
+use crate::plugins::ui::frontend::bundles::texts::CityNameText;
 use crate::plugins::ui::frontend::bundles::texts::SettleText;
 use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetContentMarker;
 
 pub fn update_hud(
     bottom_right_widget_content: Query<Entity, With<HudBottomRightWidgetContentMarker>>,
+    city_names: Query<&Name, With<CityMarker>>,
     mut commands: Commands,
     selection_focus: Res<SelectionFocus>,
 ) {
@@ -52,7 +56,21 @@ pub fn update_hud(
             }
             // View to show when a city becomes the selection focus.
             Label::City => {
-                println!("Focus: City.");
+                commands
+                    .entity(bottom_right_widget_content.get_single().unwrap())
+                    .despawn_descendants()
+                    .with_children(|bottom_right_widget_content| {
+                        bottom_right_widget_content
+                            .spawn(CityNameButton::new())
+                            .with_children(|settle_button| {
+                                settle_button.spawn(CityNameText::new(
+                                    city_names
+                                        .get(selection_focus.subject.unwrap())
+                                        .unwrap()
+                                        .to_string(),
+                                ));
+                            });
+                    });
             }
         }
     }

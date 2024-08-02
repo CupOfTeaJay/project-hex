@@ -25,6 +25,31 @@ use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
 use crate::plugins::ui::frontend::components::markers::SettleButtonMarker;
 
 #[derive(Bundle)]
+pub struct CityNameButton {
+    button: ButtonBundle,
+    callback: On<Pointer<Click>>,
+}
+
+impl CityNameButton {
+    pub fn new() -> Self {
+        CityNameButton {
+            button: ButtonBundle {
+                style: Style {
+                    width: Val::Percent(50.0),
+                    height: Val::Percent(50.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    align_self: AlignSelf::End,
+                    ..default()
+                },
+                border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                ..default()
+            },
+            callback: On::<Pointer<Click>>::run(|| println!("'CityNameButton' clicked.")),
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct EndTurnButton {
     button: ButtonBundle,
     callback: On<Pointer<Click>>,
@@ -36,7 +61,7 @@ impl EndTurnButton {
         EndTurnButton {
             button: ButtonBundle {
                 style: Style {
-                    width: Val::Percent(25.0),
+                    width: Val::Percent(36.0),
                     height: Val::Percent(100.0),
                     border: UiRect::all(Val::Px(5.0)),
                     align_self: AlignSelf::End,
