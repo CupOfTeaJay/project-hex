@@ -18,7 +18,7 @@
 
 // External plugins.
 use bevy::prelude::*;
-use bevy_mod_billboard::prelude::BillboardPlugin;
+use bevy_mod_billboard::prelude::*;
 use bevy_mod_picking::DefaultPickingPlugins;
 
 // Internal plugins.
@@ -27,6 +27,7 @@ use project_hex::plugins::ambience::ambience_plugin::StageSettingPlugin;
 use project_hex::plugins::boot::boot_plugin::BootPlugin;
 use project_hex::plugins::camera::camera_plugin::CameraPlugin;
 use project_hex::plugins::city::city_plugin::CityPlugin;
+use project_hex::plugins::cost::cost_plugin::CostPlugin;
 use project_hex::plugins::debug::debug_plugin::DebugPlugin;
 use project_hex::plugins::events::events_plugin::EventsPlugin;
 use project_hex::plugins::map::map_plugin::MapPlugin;
@@ -48,6 +49,7 @@ fn main() {
             BootPlugin,
             CameraPlugin,
             CityPlugin,
+            CostPlugin,
             DebugPlugin,
             GameStartPlugin,
             MapPlugin,
@@ -58,8 +60,8 @@ fn main() {
             SelectionPlugin,
             StatesPlugin,
             StageSettingPlugin,
-            UiPlugin,
         ))
+        .add_plugins(UiPlugin)
         // Execute execute execute!
         .run();
 }

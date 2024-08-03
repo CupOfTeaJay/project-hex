@@ -22,18 +22,18 @@ use crate::common::components::labels::Label;
 
 #[derive(Component, Debug)]
 pub struct Cost {
+    pub cumulative: u32,
     pub fruit: Label,
-    cumulative: u32,
-    modifier: f32,
-    principal: u32,
-    spent: u32,
+    pub modifier: f32,
+    pub principal: u32,
+    pub spent: u32,
 }
 
 impl Cost {
     pub fn new(fruit: &Label, principal: &u32) -> Self {
         Cost {
-            fruit: *fruit,
             cumulative: 0,
+            fruit: *fruit,
             modifier: 1.0,
             principal: *principal,
             spent: 0,

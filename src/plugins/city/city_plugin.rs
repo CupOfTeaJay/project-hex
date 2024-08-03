@@ -28,6 +28,7 @@ use crate::common::states::{
 
 use crate::plugins::city::systems::event_handlers::handle_train_unit_event;
 use crate::plugins::city::systems::settle::settle;
+use crate::plugins::city::systems::spawn_trained_units::spawn_trained_units;
 
 /// Plugin that registers events with the main application. Currently, the EventsPlugin:
 ///     - Null
@@ -39,6 +40,16 @@ impl Plugin for CityPlugin {
         app.add_systems(
             Update,
             (handle_train_unit_event, settle)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add 'Update' scheduled systems to the main application.
+        app.add_systems(
+            OnEnter(GameState::PlayerTurn),
+            spawn_trained_units
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

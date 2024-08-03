@@ -23,3 +23,6 @@ pub struct ActiveCostMarker;
 
 #[derive(Component)]
 pub struct PassiveCostMarker;
+
+#[derive(Component)]
+pub struct TrainingUnitCostMarker;

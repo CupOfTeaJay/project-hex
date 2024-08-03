@@ -24,6 +24,7 @@ use crate::plugins::city::components::markers::CityMarker;
 use crate::plugins::cost::components::cost::Cost;
 use crate::plugins::cost::components::markers::ActiveCostMarker;
 use crate::plugins::cost::components::markers::PassiveCostMarker;
+use crate::plugins::cost::components::markers::TrainingUnitCostMarker;
 
 pub fn handle_train_unit_event(
     active_costs: Query<(&Parent, &Cost), With<ActiveCostMarker>>,
@@ -95,7 +96,11 @@ fn train_pilgrim(
         } else {
             // Actively train a new one.
             commands.entity(*city).with_children(|city| {
-                city.spawn((Cost::new(&Label::Pilgrim, &5), ActiveCostMarker));
+                city.spawn((
+                    Cost::new(&Label::Pilgrim, &5),
+                    ActiveCostMarker,
+                    TrainingUnitCostMarker,
+                ));
             });
             println!("Training pilgrim!");
         }

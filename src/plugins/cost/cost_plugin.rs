@@ -15,3 +15,27 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+use bevy::prelude::*;
+
+use crate::common::states::app_state::AppState;
+use crate::common::states::assets_state::AssetsState;
+use crate::common::states::boot_state::BootState;
+use crate::common::states::game_state::GameState;
+use crate::plugins::cost::systems::iter_costs::decr_passive_costs;
+use crate::plugins::cost::systems::iter_costs::incr_active_costs;
+
+pub struct CostPlugin;
+
+impl Plugin for CostPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(
+            OnExit(GameState::PlayerTurn),
+            (decr_passive_costs, incr_active_costs)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+    }
+}
