@@ -18,7 +18,7 @@
 
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy)]
+#[derive(Component, Clone, Copy, Debug)]
 pub enum Label {
     // No label.
     Void,

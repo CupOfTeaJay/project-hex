@@ -20,3 +20,4 @@ pub mod build_path_event;
 pub mod movement_event;
 pub mod pickable_spawn_event;
 pub mod settle_event;
+pub mod train_unit_event;

@@ -22,6 +22,7 @@ use crate::common::events::build_path_event::BuildPathEvent;
 use crate::common::events::movement_event::MovementEvent;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::events::settle_event::SettleEvent;
+use crate::common::events::train_unit_event::TrainUnitEvent;
 
 /// Plugin that registers events with the main application. Currently, the EventsPlugin:
 ///     - Registers "TileSpawnEvent".
@@ -32,8 +33,9 @@ impl Plugin for EventsPlugin {
     fn build(&self, app: &mut App) {
         // Register events with the main application.
         app.add_event::<BuildPathEvent>()
-            .add_event::<SettleEvent>()
             .add_event::<MovementEvent>()
-            .add_event::<PickableSpawnEvent>();
+            .add_event::<PickableSpawnEvent>()
+            .add_event::<SettleEvent>()
+            .add_event::<TrainUnitEvent>();
     }
 }

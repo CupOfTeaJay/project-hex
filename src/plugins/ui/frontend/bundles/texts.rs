@@ -58,6 +58,19 @@ impl OpponentTurnText {
 }
 
 #[derive(Bundle)]
+pub struct TrainPilgrimText {
+    text: TextBundle,
+}
+
+impl TrainPilgrimText {
+    pub fn new() -> Self {
+        TrainPilgrimText {
+            text: TextBundle::from_section("Train pilgrim", TextStyle { ..default() }),
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct SettleText {
     text: TextBundle,
 }

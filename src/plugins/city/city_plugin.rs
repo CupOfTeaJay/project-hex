@@ -26,6 +26,7 @@ use crate::common::states::{
     game_state::GameState,
 };
 
+use crate::plugins::city::systems::event_handlers::handle_train_unit_event;
 use crate::plugins::city::systems::settle::settle;
 
 /// Plugin that registers events with the main application. Currently, the EventsPlugin:
@@ -37,7 +38,7 @@ impl Plugin for CityPlugin {
         // Add 'Update' scheduled systems to the main application.
         app.add_systems(
             Update,
-            settle
+            (handle_train_unit_event, settle)
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

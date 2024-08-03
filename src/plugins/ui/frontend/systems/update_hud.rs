@@ -23,14 +23,18 @@ use crate::common::resources::selection_focus::SelectionFocus;
 use crate::plugins::city::components::markers::CityMarker;
 use crate::plugins::ui::frontend::bundles::buttons::CityNameButton;
 use crate::plugins::ui::frontend::bundles::buttons::SettleButton;
+use crate::plugins::ui::frontend::bundles::buttons::TrainPilgrimButton;
 use crate::plugins::ui::frontend::bundles::texts::CityNameText;
 use crate::plugins::ui::frontend::bundles::texts::SettleText;
+use crate::plugins::ui::frontend::bundles::texts::TrainPilgrimText;
 use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetContentMarker;
+use crate::plugins::ui::frontend::components::markers::HudRightBannerMarker;
 
 pub fn update_hud(
     bottom_right_widget_content: Query<Entity, With<HudBottomRightWidgetContentMarker>>,
     city_names: Query<&Name, With<CityMarker>>,
     mut commands: Commands,
+    right_banner: Query<Entity, With<HudRightBannerMarker>>,
     selection_focus: Res<SelectionFocus>,
 ) {
     if selection_focus.is_changed() {
@@ -39,6 +43,9 @@ pub fn update_hud(
             Label::Void => {
                 if let Ok(brw) = bottom_right_widget_content.get_single() {
                     commands.entity(brw).despawn_descendants();
+                }
+                if let Ok(rb) = right_banner.get_single() {
+                    commands.entity(rb).despawn_descendants();
                 }
             }
             // View to show when a pilgrim becomes the selection focus.
@@ -56,6 +63,7 @@ pub fn update_hud(
             }
             // View to show when a city becomes the selection focus.
             Label::City => {
+                // Update brwc.
                 commands
                     .entity(bottom_right_widget_content.get_single().unwrap())
                     .despawn_descendants()
@@ -70,6 +78,17 @@ pub fn update_hud(
                                         .to_string(),
                                 ));
                             });
+                    });
+                // Update right banner.
+                commands
+                    .entity(right_banner.get_single().unwrap())
+                    .despawn_descendants()
+                    .with_children(|right_banner| {
+                        right_banner.spawn(TrainPilgrimButton::new()).with_children(
+                            |train_pilgrim_button| {
+                                train_pilgrim_button.spawn(TrainPilgrimText::new());
+                            },
+                        );
                     });
             }
         }

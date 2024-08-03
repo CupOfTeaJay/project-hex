@@ -16,19 +16,27 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod city;
-pub mod cost;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod names;
-pub mod resources;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+use crate::common::components::labels::Label;
+
+#[derive(Component, Debug)]
+pub struct Cost {
+    pub fruit: Label,
+    cumulative: u32,
+    modifier: f32,
+    principal: u32,
+    spent: u32,
+}
+
+impl Cost {
+    pub fn new(fruit: &Label, principal: &u32) -> Self {
+        Cost {
+            fruit: *fruit,
+            cumulative: 0,
+            modifier: 1.0,
+            principal: *principal,
+            spent: 0,
+        }
+    }
+}

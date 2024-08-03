@@ -19,6 +19,9 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+use crate::common::components::labels::Label;
+use crate::common::events::train_unit_event::TrainUnitEvent;
+use crate::common::resources::selection_focus::SelectionFocus;
 use crate::plugins::ui::backend::systems::button_callbacks::end_turn;
 use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
 use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
@@ -98,6 +101,46 @@ impl SettleButton {
             },
             callback: On::<Pointer<Click>>::run(send_settle_event),
             marker: SettleButtonMarker,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct TrainPilgrimButton {
+    button: ButtonBundle,
+    callback: On<Pointer<Click>>,
+}
+
+impl TrainPilgrimButton {
+    pub fn new() -> Self {
+        TrainPilgrimButton {
+            button: ButtonBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(20.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    ..default()
+                },
+                border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                ..default()
+            },
+            callback: On::<Pointer<Click>>::run(
+                |selection_focus: Res<SelectionFocus>,
+                 mut train_unit_event: EventWriter<TrainUnitEvent>| {
+                    if let Some(city) = selection_focus.subject {
+                        match selection_focus.label {
+                            Label::City => {
+                                train_unit_event.send(TrainUnitEvent::new(&city, &Label::Pilgrim));
+                            }
+                            _ => {
+                                panic!("Error: bad 'label' for 'TrainPilgrimButton'.");
+                            }
+                        }
+                    } else {
+                        panic!("Error: bad 'subject' for 'TrainPilgrimButton'.");
+                    }
+                },
+            ),
         }
     }
 }

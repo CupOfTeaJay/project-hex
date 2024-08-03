@@ -15,24 +15,3 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
-use bevy::prelude::*;
-
-#[derive(Component)]
-pub struct Cost {
-    cumulative: u32,
-    modifier: f32,
-    principal: u32,
-    spent: u32,
-}
-
-impl Cost {
-    pub fn new() -> Self {
-        Cost {
-            cumulative: 0,
-            modifier: 0.0,
-            principal: 0,
-            spent: 0,
-        }
-    }
-}

@@ -17,6 +17,5 @@
 */
 
 pub mod combat;
-pub mod cost;
 pub mod labels;
 pub mod movement;
