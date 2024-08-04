@@ -95,6 +95,9 @@ fn validate_scenes_loaded(
 
     // Check city scenes.
     *assets_loaded &= asset_server
-        .load_state(asset_handles.scenes.city_center.clone().unwrap().id())
+        .load_state(asset_handles.scenes.city_executive.clone().unwrap().id())
+        == LoadState::Loaded;
+    *assets_loaded &= asset_server
+        .load_state(asset_handles.scenes.city_martial.clone().unwrap().id())
         == LoadState::Loaded;
 }

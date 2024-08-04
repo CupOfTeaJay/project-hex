@@ -45,5 +45,6 @@ fn load_scenes(asset_handles: &mut ResMut<AssetHandles>, asset_server: &Res<Asse
     asset_handles.scenes.unit_unit = Some(asset_server.load("units/debug.glb#Scene0"));
 
     // Load city scene handles.
-    asset_handles.scenes.city_center = Some(asset_server.load("city/cityCenter.glb#Scene0"));
+    asset_handles.scenes.city_executive = Some(asset_server.load("city/cityExecutive.glb#Scene0"));
+    asset_handles.scenes.city_martial = Some(asset_server.load("city/cityMartial.glb#Scene0"));
 }

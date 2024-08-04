@@ -46,7 +46,8 @@ pub struct SceneHandles {
     // Unit scene handles.
     pub unit_unit: Option<Handle<Scene>>,
     // City scene handles.
-    pub city_center: Option<Handle<Scene>>,
+    pub city_executive: Option<Handle<Scene>>,
+    pub city_martial: Option<Handle<Scene>>,
 }
 
 impl SceneHandles {
@@ -66,7 +67,8 @@ impl SceneHandles {
             // Unit scene handles.
             unit_unit: None,
             // City scene handles.
-            city_center: None,
+            city_executive: None,
+            city_martial: None,
         }
     }
 }

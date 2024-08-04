@@ -34,7 +34,7 @@ pub fn city_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos
     match label {
         &Label::City => City::new(
             &SceneBundle {
-                scene: assets.scenes.city_center.clone().unwrap(),
+                scene: assets.scenes.city_executive.clone().unwrap(),
                 transform: Transform::from_translation(hexpos_to_vec3(position)),
                 ..Default::default()
             },
@@ -55,7 +55,8 @@ pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos
         &Label::Pilgrim => Unit::new(
             &SceneBundle {
                 scene: assets.scenes.unit_unit.clone().unwrap(),
-                transform: Transform::from_translation(hexpos_to_vec3(position)),
+                transform: Transform::from_translation(hexpos_to_vec3(position))
+                    .with_scale(Vec3::splat(0.45)),
                 ..Default::default()
             },
             On::<Pointer<Deselect>>::run(clear_selection_focus),
