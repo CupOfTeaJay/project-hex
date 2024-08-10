@@ -70,6 +70,7 @@ impl HudRightBanner {
                     height: Val::Percent(75.0),
                     border: UiRect::all(Val::Px(5.0)),
                     align_self: AlignSelf::End,
+                    flex_direction: FlexDirection::Column,
                     ..default()
                 },
                 border_color: Color::srgb(0.2, 0.0, 0.8).into(),

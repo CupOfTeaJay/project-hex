@@ -27,6 +27,7 @@ pub mod events;
 pub mod map;
 pub mod movement;
 pub mod names;
+pub mod placement;
 pub mod resources;
 pub mod selection;
 pub mod start;

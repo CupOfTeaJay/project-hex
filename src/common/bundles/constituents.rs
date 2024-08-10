@@ -57,6 +57,37 @@ impl City {
 }
 
 #[derive(Bundle)]
+pub struct MartialZone {
+    // marker: CityMarker,
+    model: SceneBundle,
+    pick_selection: PickSelection,
+    pointer_deselect_callback: On<Pointer<Deselect>>,
+    pointer_over_callback: On<Pointer<Over>>,
+    pointer_select_callback: On<Pointer<Select>>,
+    position: HexPos,
+}
+
+impl MartialZone {
+    pub fn new(
+        model: &SceneBundle,
+        pointer_deselect_callback: On<Pointer<Deselect>>,
+        pointer_over_callback: On<Pointer<Over>>,
+        pointer_select_callback: On<Pointer<Select>>,
+        position: &HexPos,
+    ) -> Self {
+        MartialZone {
+            // marker: CityMarker,
+            model: model.clone(),
+            pick_selection: PickSelection { is_selected: false },
+            pointer_deselect_callback,
+            pointer_over_callback,
+            pointer_select_callback,
+            position: *position,
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct Unit {
     health: Health,
     is_movable: IsMovable,

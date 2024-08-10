@@ -22,25 +22,23 @@ use crate::common::states::app_state::AppState;
 use crate::common::states::assets_state::AssetsState;
 use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
-use crate::common::states::pickable_buffers_state::PickableBuffersState;
 use crate::common::states::placement_state::PlacementState;
 
-/// Plugin that registers states with the main application. Currently, the StatesPlugin:
-///     - Initializes "AppState" to "AppState::InBoot".
-///     - Initializes "AssetsState" to "AssetsState::NotLoaded".
-///     - Initializes "BootState" to "BootState::LoadingAssets".
-///     - Initializes "GameState" to "GameState::NotInGame".
-///     - Initializes "PickableBufferState" to "PickableBufferState::Empty"
-pub struct StatesPlugin;
+use crate::plugins::placement::systems::place::place;
 
-impl Plugin for StatesPlugin {
+pub struct PlacementPlugin;
+
+impl Plugin for PlacementPlugin {
     fn build(&self, app: &mut App) {
-        // Register states with the main application.
-        app.insert_state(AppState::InBoot)
-            .insert_state(AssetsState::NotLoaded)
-            .insert_state(BootState::LoadingAssets)
-            .insert_state(GameState::NotInGame)
-            .insert_state(PickableBuffersState::Empty)
-            .insert_state(PlacementState::Inactive);
+        // Add "Update" scheduled systems to the main application.
+        app.add_systems(
+            Update,
+            place
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame)))
+                .run_if(in_state(PlacementState::Active)),
+        );
     }
 }

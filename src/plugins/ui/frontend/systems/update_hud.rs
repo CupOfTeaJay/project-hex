@@ -21,9 +21,11 @@ use bevy::prelude::*;
 use crate::common::components::labels::Label;
 use crate::common::resources::selection_focus::SelectionFocus;
 use crate::plugins::city::components::markers::CityMarker;
+use crate::plugins::ui::frontend::bundles::buttons::BuildMartialZoneButton;
 use crate::plugins::ui::frontend::bundles::buttons::CityNameButton;
 use crate::plugins::ui::frontend::bundles::buttons::SettleButton;
 use crate::plugins::ui::frontend::bundles::buttons::TrainPilgrimButton;
+use crate::plugins::ui::frontend::bundles::texts::BuildMartialZoneText;
 use crate::plugins::ui::frontend::bundles::texts::CityNameText;
 use crate::plugins::ui::frontend::bundles::texts::SettleText;
 use crate::plugins::ui::frontend::bundles::texts::TrainPilgrimText;
@@ -89,8 +91,16 @@ pub fn update_hud(
                                 train_pilgrim_button.spawn(TrainPilgrimText::new());
                             },
                         );
+                    })
+                    .with_children(|right_banner| {
+                        right_banner
+                            .spawn(BuildMartialZoneButton::new())
+                            .with_children(|train_pilgrim_button| {
+                                train_pilgrim_button.spawn(BuildMartialZoneText::new());
+                            });
                     });
             }
+            _ => {}
         }
     }
 }

@@ -16,15 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-#[derive(Component, Clone, Copy, Debug)]
-pub enum Label {
-    // No label.
-    Void,
-    // Units.
-    Pilgrim,
-    // Cities.
-    City,
-    MartialZone,
-}
+pub mod placement_plugin;
+mod systems;

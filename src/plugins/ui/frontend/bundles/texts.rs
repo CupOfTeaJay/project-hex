@@ -19,6 +19,19 @@
 use bevy::prelude::*;
 
 #[derive(Bundle)]
+pub struct BuildMartialZoneText {
+    text: TextBundle,
+}
+
+impl BuildMartialZoneText {
+    pub fn new() -> Self {
+        BuildMartialZoneText {
+            text: TextBundle::from_section("Martial Zone", TextStyle { ..default() }),
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct CityNameText {
     text: TextBundle,
 }

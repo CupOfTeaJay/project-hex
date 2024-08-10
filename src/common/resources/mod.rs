@@ -20,6 +20,7 @@ pub mod asset_handles;
 pub mod city_names;
 pub mod map_parameters;
 pub mod pickable_buffers;
+pub mod placement_focus;
 pub mod pos_neighbors_map;
 pub mod selection_focus;
 pub mod traversability_maps;

@@ -15,16 +15,10 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy, Debug)]
-pub enum Label {
-    // No label.
-    Void,
-    // Units.
-    Pilgrim,
-    // Cities.
-    City,
-    MartialZone,
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum PlacementState {
+    Inactive,
+    Active,
 }

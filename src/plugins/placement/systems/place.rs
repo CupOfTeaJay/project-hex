@@ -18,13 +18,9 @@
 
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy, Debug)]
-pub enum Label {
-    // No label.
-    Void,
-    // Units.
-    Pilgrim,
-    // Cities.
-    City,
-    MartialZone,
+use crate::common::states::placement_state::PlacementState;
+
+pub fn place(mut next_placement_state: ResMut<NextState<PlacementState>>) {
+    println!("Exiting PlacementState::Active");
+    next_placement_state.set(PlacementState::Inactive);
 }

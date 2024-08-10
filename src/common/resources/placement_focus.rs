@@ -18,13 +18,29 @@
 
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy, Debug)]
-pub enum Label {
-    // No label.
-    Void,
-    // Units.
-    Pilgrim,
-    // Cities.
-    City,
-    MartialZone,
+use crate::common::components::labels::Label;
+
+#[derive(Component, Resource)]
+pub struct PlacementFocus {
+    pub label: Label,
+    pub subject: Option<Entity>,
+}
+
+impl PlacementFocus {
+    pub fn new() -> Self {
+        PlacementFocus {
+            label: Label::Void,
+            subject: None,
+        }
+    }
+
+    pub fn clear_focus(&mut self) {
+        self.label = Label::Void;
+        self.subject = None;
+    }
+
+    pub fn set_focus(&mut self, label: &Label, subject: &Entity) {
+        self.label = *label;
+        self.subject = Some(*subject);
+    }
 }
