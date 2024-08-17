@@ -16,6 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+pub mod bundles;
 pub mod city_plugin;
 pub mod components;
 mod systems;

@@ -24,6 +24,7 @@ use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
 use crate::common::states::placement_state::PlacementState;
 
+use crate::plugins::placement::systems::listen_for_placement_event::listen_for_placement_event;
 use crate::plugins::placement::systems::place::place;
 
 pub struct PlacementPlugin;
@@ -33,7 +34,8 @@ impl Plugin for PlacementPlugin {
         // Add "Update" scheduled systems to the main application.
         app.add_systems(
             Update,
-            place
+            (listen_for_placement_event, place)
+                .chain()
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))

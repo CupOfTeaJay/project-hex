@@ -19,17 +19,17 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::common::components::combat::Health;
 use crate::common::components::movement::HexPos;
-use crate::common::components::movement::IsMovable;
-use crate::common::components::movement::MovementBuffer;
+use crate::common::resources::asset_handles::AssetHandles;
+use crate::common::systems::utils::hexpos_to_vec3;
+use crate::plugins::city::components::heirarchy::City;
+use crate::plugins::city::components::markers::MartialZoneMarker;
 
 #[derive(Bundle)]
-pub struct Unit {
-    health: Health,
-    is_movable: IsMovable,
+pub struct MartialZone {
+    city: City,
+    marker: MartialZoneMarker,
     model: SceneBundle,
-    movement_buffer: MovementBuffer,
     pick_selection: PickSelection,
     pointer_deselect_callback: On<Pointer<Deselect>>,
     pointer_over_callback: On<Pointer<Over>>,
@@ -37,23 +37,20 @@ pub struct Unit {
     position: HexPos,
 }
 
-impl Unit {
-    pub fn new(
-        model: &SceneBundle,
-        pointer_deselect_callback: On<Pointer<Deselect>>,
-        pointer_over_callback: On<Pointer<Over>>,
-        pointer_select_callback: On<Pointer<Select>>,
-        position: &HexPos,
-    ) -> Self {
-        Unit {
-            health: Health::new(),
-            is_movable: IsMovable::new(),
-            model: model.clone(),
-            movement_buffer: MovementBuffer::new(Vec::new()),
+impl MartialZone {
+    pub fn new(assets: &Res<AssetHandles>, city: &Entity, position: &HexPos) -> Self {
+        MartialZone {
+            city: City::new(city),
+            marker: MartialZoneMarker,
+            model: SceneBundle {
+                scene: assets.scenes.city_martial_zone.clone().unwrap(),
+                transform: Transform::from_translation(hexpos_to_vec3(position)),
+                ..default()
+            },
             pick_selection: PickSelection { is_selected: false },
-            pointer_deselect_callback,
-            pointer_over_callback,
-            pointer_select_callback,
+            pointer_deselect_callback: On::<Pointer<Deselect>>::run(|| {}),
+            pointer_over_callback: On::<Pointer<Over>>::run(|| {}),
+            pointer_select_callback: On::<Pointer<Select>>::run(|| {}),
             position: *position,
         }
     }

@@ -45,9 +45,10 @@ pub struct SceneHandles {
     pub terrain_tundra: Option<Handle<Scene>>,
     // Unit scene handles.
     pub unit_unit: Option<Handle<Scene>>,
+    pub unit_archer_player0: Option<Handle<Scene>>,
     // City scene handles.
-    pub city_executive: Option<Handle<Scene>>,
-    pub city_martial: Option<Handle<Scene>>,
+    pub city_center: Option<Handle<Scene>>,
+    pub city_martial_zone: Option<Handle<Scene>>,
 }
 
 impl SceneHandles {
@@ -66,9 +67,10 @@ impl SceneHandles {
             terrain_tundra: None,
             // Unit scene handles.
             unit_unit: None,
+            unit_archer_player0: None,
             // City scene handles.
-            city_executive: None,
-            city_martial: None,
+            city_center: None,
+            city_martial_zone: None,
         }
     }
 }

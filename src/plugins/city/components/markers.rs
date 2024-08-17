@@ -19,4 +19,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct CityMarker;
+pub struct CityCenterMarker;
+
+#[derive(Component)]
+pub struct MartialZoneMarker;

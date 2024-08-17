@@ -16,5 +16,21 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod heirarchy;
-pub mod markers;
+use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
+
+use crate::common::components::movement::HexPos;
+use crate::common::components::movement::IsTraversable;
+use crate::common::events::placement_event::PlacementEvent;
+
+pub fn listen_for_placement_event(
+    mut placement_event: EventWriter<PlacementEvent>,
+    positions: Query<(&HexPos, &PickSelection), With<IsTraversable>>,
+) {
+    for (position, selection) in positions.iter() {
+        if selection.is_selected {
+            placement_event.send(PlacementEvent::new(position));
+            break;
+        }
+    }
+}

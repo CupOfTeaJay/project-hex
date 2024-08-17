@@ -22,12 +22,12 @@ use bevy_mod_billboard::prelude::*;
 use crate::common::components::movement::HexPos;
 use crate::common::resources::city_names::CityNames;
 use crate::common::systems::utils::hexpos_to_vec3;
-use crate::plugins::city::components::markers::CityMarker;
+use crate::plugins::city::components::markers::CityCenterMarker;
 
 pub fn bestow_city_name(
     city_names: Res<CityNames<'static>>,
     mut commands: Commands,
-    unnamed_cities: Query<(Entity, &HexPos), (With<CityMarker>, Without<Name>)>,
+    unnamed_cities: Query<(Entity, &HexPos), (With<CityCenterMarker>, Without<Name>)>,
 ) {
     for (city, position) in unnamed_cities.iter() {
         let city_name: String = city_names.get_random_name();

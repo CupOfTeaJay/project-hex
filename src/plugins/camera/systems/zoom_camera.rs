@@ -19,7 +19,8 @@
 use bevy::input::mouse::*;
 use bevy::prelude::*;
 
-const CAMERA_ZOOM_SPEED_FACTOR: f32 = 0.92;
+const ZOOM_STEP_SIZE: f32 = 0.25;
+const ZOOM_GRADIENT: f32 = 0.1;
 
 pub fn zoom_camera(
     mut query: Query<&mut Transform, With<Camera>>,
@@ -32,21 +33,33 @@ pub fn zoom_camera(
         match scroll.unit {
             MouseScrollUnit::Line => {
                 if scroll.y > 0.0 {
-                    transform.translation.y *= CAMERA_ZOOM_SPEED_FACTOR;
-                    transform.translation.z *= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
+                    transform.translation.z -= ZOOM_STEP_SIZE;
+                    transform.translation.y -=
+                        2.0 * ZOOM_GRADIENT * transform.translation.x * ZOOM_STEP_SIZE;
                 } else {
-                    transform.translation.y /= CAMERA_ZOOM_SPEED_FACTOR;
-                    transform.translation.z /= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
+                    transform.translation.z += ZOOM_STEP_SIZE;
+                    transform.translation.y +=
+                        2.0 * ZOOM_GRADIENT * transform.translation.x * ZOOM_STEP_SIZE;
                 }
+                *transform = transform.looking_at(
+                    Vec3::new(transform.translation.x, 0.0, 0.5 * transform.translation.z),
+                    Vec3::Y,
+                );
             }
             MouseScrollUnit::Pixel => {
                 if scroll.y > 0.0 {
-                    transform.translation.y *= CAMERA_ZOOM_SPEED_FACTOR;
-                    transform.translation.z *= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
+                    transform.translation.z -= ZOOM_STEP_SIZE;
+                    transform.translation.y -=
+                        2.0 * ZOOM_GRADIENT * transform.translation.x * ZOOM_STEP_SIZE;
                 } else {
-                    transform.translation.y /= CAMERA_ZOOM_SPEED_FACTOR;
-                    transform.translation.z /= CAMERA_ZOOM_SPEED_FACTOR.sqrt();
+                    transform.translation.z += ZOOM_STEP_SIZE;
+                    transform.translation.y +=
+                        2.0 * ZOOM_GRADIENT * transform.translation.x * ZOOM_STEP_SIZE;
                 }
+                *transform = transform.looking_at(
+                    Vec3::new(transform.translation.x, 0.0, 0.5 * transform.translation.z),
+                    Vec3::Y,
+                );
             }
         }
     }

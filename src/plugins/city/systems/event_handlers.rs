@@ -20,7 +20,7 @@ use bevy::prelude::*;
 
 use crate::common::components::labels::Label;
 use crate::common::events::train_unit_event::TrainUnitEvent;
-use crate::plugins::city::components::markers::CityMarker;
+use crate::plugins::city::components::markers::CityCenterMarker;
 use crate::plugins::cost::components::cost::Cost;
 use crate::plugins::cost::components::markers::ActiveCostMarker;
 use crate::plugins::cost::components::markers::PassiveCostMarker;
@@ -28,7 +28,7 @@ use crate::plugins::cost::components::markers::TrainingUnitCostMarker;
 
 pub fn handle_train_unit_event(
     active_costs: Query<(&Parent, &Cost), With<ActiveCostMarker>>,
-    cities: Query<Entity, With<CityMarker>>,
+    cities: Query<Entity, With<CityCenterMarker>>,
     mut commands: Commands,
     passive_costs: Query<(Entity, &Parent, &Cost), With<PassiveCostMarker>>,
     mut train_unit_event: EventReader<TrainUnitEvent>,

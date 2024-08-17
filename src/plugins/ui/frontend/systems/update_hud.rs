@@ -20,7 +20,7 @@ use bevy::prelude::*;
 
 use crate::common::components::labels::Label;
 use crate::common::resources::selection_focus::SelectionFocus;
-use crate::plugins::city::components::markers::CityMarker;
+use crate::plugins::city::components::markers::CityCenterMarker;
 use crate::plugins::ui::frontend::bundles::buttons::BuildMartialZoneButton;
 use crate::plugins::ui::frontend::bundles::buttons::CityNameButton;
 use crate::plugins::ui::frontend::bundles::buttons::SettleButton;
@@ -34,7 +34,7 @@ use crate::plugins::ui::frontend::components::markers::HudRightBannerMarker;
 
 pub fn update_hud(
     bottom_right_widget_content: Query<Entity, With<HudBottomRightWidgetContentMarker>>,
-    city_names: Query<&Name, With<CityMarker>>,
+    city_names: Query<&Name, With<CityCenterMarker>>,
     mut commands: Commands,
     right_banner: Query<Entity, With<HudRightBannerMarker>>,
     selection_focus: Res<SelectionFocus>,

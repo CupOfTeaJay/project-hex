@@ -21,6 +21,7 @@ use bevy::prelude::*;
 use crate::common::events::build_path_event::BuildPathEvent;
 use crate::common::events::movement_event::MovementEvent;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
+use crate::common::events::placement_event::PlacementEvent;
 use crate::common::events::settle_event::SettleEvent;
 use crate::common::events::train_unit_event::TrainUnitEvent;
 
@@ -35,6 +36,7 @@ impl Plugin for EventsPlugin {
         app.add_event::<BuildPathEvent>()
             .add_event::<MovementEvent>()
             .add_event::<PickableSpawnEvent>()
+            .add_event::<PlacementEvent>()
             .add_event::<SettleEvent>()
             .add_event::<TrainUnitEvent>();
     }

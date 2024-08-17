@@ -16,5 +16,26 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod heirarchy;
-pub mod markers;
+use bevy::prelude::*;
+
+#[derive(Component, Clone, Copy)]
+pub struct City {
+    pub id: Entity,
+}
+
+impl City {
+    pub fn new(id: &Entity) -> Self {
+        City { id: *id }
+    }
+}
+
+#[derive(Component, Clone)]
+pub struct Zones {
+    pub ids: Vec<Entity>,
+}
+
+impl Zones {
+    pub fn new() -> Self {
+        Zones { ids: Vec::new() }
+    }
+}

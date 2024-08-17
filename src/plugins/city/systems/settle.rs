@@ -18,13 +18,12 @@
 
 use bevy::prelude::*;
 
-use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::events::settle_event::SettleEvent;
 use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::resources::selection_focus::SelectionFocus;
-use crate::common::systems::builders::city_builder;
+use crate::plugins::city::bundles::city_center::CityCenter;
 
 pub fn settle(
     assets: Res<AssetHandles>,
@@ -44,9 +43,7 @@ pub fn settle(
                 // Spawn (settle) a new city in the despawned pilgrim's place,
                 // and make sure it is selectable.
                 pickable_spawn_event.send(PickableSpawnEvent::new(
-                    commands
-                        .spawn(city_builder(&assets, &Label::City, &position))
-                        .id(),
+                    commands.spawn(CityCenter::new(&assets, &position)).id(),
                 ));
 
                 // Clear the selection focus.

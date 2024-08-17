@@ -18,45 +18,25 @@
 
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
+use core::f32::consts::PI;
 
-use crate::common::bundles::constituents::City;
 use crate::common::bundles::constituents::Unit;
 use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
 use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::systems::utils::hexpos_to_vec3;
 use crate::plugins::selection::systems::clear_selection_focus::clear_selection_focus;
-use crate::plugins::selection::systems::set_selection_focus::set_city_focus;
 use crate::plugins::selection::systems::set_selection_focus::set_pilgrim_focus;
-
-/// Builds a new 'City' bundle given a 'label' that corresponds to a city.
-pub fn city_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> City {
-    match label {
-        &Label::City => City::new(
-            &SceneBundle {
-                scene: assets.scenes.city_executive.clone().unwrap(),
-                transform: Transform::from_translation(hexpos_to_vec3(position)),
-                ..Default::default()
-            },
-            On::<Pointer<Deselect>>::run(clear_selection_focus),
-            On::<Pointer<Over>>::run(|| {}),
-            On::<Pointer<Select>>::run(set_city_focus),
-            position,
-        ),
-        _ => {
-            panic!("Error: invalid 'label' passed to 'city_builder'.");
-        }
-    }
-}
 
 /// Builds a new 'Unit' bundle given a 'label' that corresponds to a unit.
 pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> Unit {
     match label {
         &Label::Pilgrim => Unit::new(
             &SceneBundle {
-                scene: assets.scenes.unit_unit.clone().unwrap(),
+                scene: assets.scenes.unit_archer_player0.clone().unwrap(),
                 transform: Transform::from_translation(hexpos_to_vec3(position))
-                    .with_scale(Vec3::splat(0.45)),
+                    .with_scale(Vec3::splat(0.45))
+                    .with_rotation(Quat::from_rotation_y(PI)),
                 ..Default::default()
             },
             On::<Pointer<Deselect>>::run(clear_selection_focus),

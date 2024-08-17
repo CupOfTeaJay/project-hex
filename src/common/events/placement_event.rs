@@ -16,5 +16,19 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod heirarchy;
-pub mod markers;
+use bevy::prelude::*;
+
+use crate::common::components::movement::HexPos;
+
+#[derive(Event)]
+pub struct PlacementEvent {
+    pub position: HexPos,
+}
+
+impl PlacementEvent {
+    pub fn new(position: &HexPos) -> Self {
+        PlacementEvent {
+            position: *position,
+        }
+    }
+}
