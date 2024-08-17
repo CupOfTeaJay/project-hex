@@ -19,4 +19,13 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
+pub struct EconomyButtonMarker;
+
+#[derive(Component)]
+pub struct MilitaryButtonMarker;
+
+#[derive(Component)]
+pub struct TechnologyButtonMarker;
+
+#[derive(Component)]
 pub struct RndLandingRootMarker;

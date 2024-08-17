@@ -18,8 +18,40 @@
 
 use bevy::prelude::*;
 
+use crate::plugins::ui::rnd::bundles::buttons::EconomyButton;
+use crate::plugins::ui::rnd::bundles::buttons::MilitaryButton;
+use crate::plugins::ui::rnd::bundles::buttons::TechnologyButton;
 use crate::plugins::ui::rnd::bundles::nodes::RndLandingRoot;
+use crate::plugins::ui::rnd::bundles::texts::EconomyButtonText;
+use crate::plugins::ui::rnd::bundles::texts::MilitaryButtonText;
+use crate::plugins::ui::rnd::bundles::texts::TechnologyButtonText;
 
 pub fn construct_rnd_landing(mut commands: Commands) {
-    commands.spawn(RndLandingRoot::new());
+    // Root node.
+    commands
+        .spawn(RndLandingRoot::new())
+        .with_children(|rnd_landing_root| {
+            // "Economy" button.
+            rnd_landing_root
+                .spawn(EconomyButton::new())
+                .with_children(|economy_button| {
+                    economy_button.spawn(EconomyButtonText::new());
+                });
+        })
+        .with_children(|rnd_landing_root| {
+            // "Military" button.
+            rnd_landing_root
+                .spawn(MilitaryButton::new())
+                .with_children(|military_button| {
+                    military_button.spawn(MilitaryButtonText::new());
+                });
+        })
+        .with_children(|rnd_landing_root| {
+            // "Technology" button.
+            rnd_landing_root
+                .spawn(TechnologyButton::new())
+                .with_children(|technology_button| {
+                    technology_button.spawn(TechnologyButtonText::new());
+                });
+        });
 }
