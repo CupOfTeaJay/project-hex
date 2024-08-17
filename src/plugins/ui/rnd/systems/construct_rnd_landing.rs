@@ -16,6 +16,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod hud;
-mod rnd;
-pub mod ui_plugin;
+use bevy::prelude::*;
+
+use crate::plugins::ui::rnd::bundles::nodes::RndLandingRoot;
+
+pub fn construct_rnd_landing(mut commands: Commands) {
+    commands.spawn(RndLandingRoot::new());
+}

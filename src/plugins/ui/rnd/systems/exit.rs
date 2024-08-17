@@ -16,6 +16,21 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod hud;
-mod rnd;
-pub mod ui_plugin;
+use bevy::input::keyboard::*;
+use bevy::prelude::*;
+
+use crate::common::states::ui_state::UiState;
+
+pub fn exit_on_escape(
+    mut keyboard_input: EventReader<KeyboardInput>,
+    mut next_ui_state: ResMut<NextState<UiState>>,
+) {
+    for event in keyboard_input.read() {
+        match event.key_code {
+            KeyCode::Escape => {
+                next_ui_state.set(UiState::Hud);
+            }
+            _ => {}
+        }
+    }
+}

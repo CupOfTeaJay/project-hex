@@ -16,17 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-
-use crate::common::events::settle_event::SettleEvent;
-use crate::common::states::game_state::GameState;
-
-/// Callback function for the "End turn" button.
-pub fn end_turn(mut next_game_state: ResMut<NextState<GameState>>) {
-    next_game_state.set(GameState::OpponentTurn);
-}
-
-/// Callback function for the "Settle" button.
-pub fn send_settle_event(mut settle_event: EventWriter<SettleEvent>) {
-    settle_event.send(SettleEvent);
-}
+pub mod construct_hud;
+pub mod destruct_hud;
+pub mod update_hud;
+pub mod view_toggles;

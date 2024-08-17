@@ -20,14 +20,16 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::common::components::labels::Label;
+use crate::common::events::settle_event::SettleEvent;
 use crate::common::events::train_unit_event::TrainUnitEvent;
 use crate::common::resources::placement_focus::PlacementFocus;
 use crate::common::resources::selection_focus::SelectionFocus;
+use crate::common::states::game_state::GameState;
 use crate::common::states::placement_state::PlacementState;
-use crate::plugins::ui::backend::systems::button_callbacks::end_turn;
-use crate::plugins::ui::backend::systems::button_callbacks::send_settle_event;
-use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
-use crate::plugins::ui::frontend::components::markers::SettleButtonMarker;
+use crate::common::states::ui_state::UiState;
+use crate::plugins::ui::hud::components::markers::HudEndTurnButtonMarker;
+use crate::plugins::ui::hud::components::markers::RndButtonMarker;
+use crate::plugins::ui::hud::components::markers::SettleButtonMarker;
 
 #[derive(Bundle)]
 pub struct BuildMartialZoneButton {
@@ -107,8 +109,40 @@ impl EndTurnButton {
                 border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                 ..default()
             },
-            callback: On::<Pointer<Click>>::run(end_turn),
+            callback: On::<Pointer<Click>>::run(
+                |mut next_game_state: ResMut<NextState<GameState>>| {
+                    next_game_state.set(GameState::OpponentTurn);
+                },
+            ),
             marker: HudEndTurnButtonMarker,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct RndButton {
+    button: ButtonBundle,
+    callback: On<Pointer<Click>>,
+    marker: RndButtonMarker,
+}
+
+impl RndButton {
+    pub fn new() -> Self {
+        RndButton {
+            button: ButtonBundle {
+                style: Style {
+                    width: Val::Percent(30.0),
+                    height: Val::Percent(100.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    ..default()
+                },
+                border_color: Color::srgb(0.0, 1.0, 0.0).into(),
+                ..default()
+            },
+            callback: On::<Pointer<Click>>::run(|mut next_ui_state: ResMut<NextState<UiState>>| {
+                next_ui_state.set(UiState::RndLanding);
+            }),
+            marker: RndButtonMarker,
         }
     }
 }
@@ -133,7 +167,9 @@ impl SettleButton {
                 border_color: Color::srgb(0.0, 1.0, 0.0).into(),
                 ..default()
             },
-            callback: On::<Pointer<Click>>::run(send_settle_event),
+            callback: On::<Pointer<Click>>::run(|mut settle_event: EventWriter<SettleEvent>| {
+                settle_event.send(SettleEvent);
+            }),
             marker: SettleButtonMarker,
         }
     }

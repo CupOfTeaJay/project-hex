@@ -61,6 +61,10 @@ pub struct HudBottomRightWidgetContentMarker;
 
 /// FIXME:
 #[derive(Component)]
+pub struct RndButtonMarker;
+
+/// FIXME:
+#[derive(Component)]
 pub struct SettleButtonMarker;
 
 /// Marker component for the HUD's bottom-right banner (encapsulates far-right

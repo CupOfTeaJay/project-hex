@@ -23,10 +23,14 @@ use crate::common::states::assets_state::AssetsState;
 use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
 use crate::common::states::ui_state::UiState;
-use crate::plugins::ui::frontend::systems::init_hud::init_hud;
-use crate::plugins::ui::frontend::systems::update_hud::update_hud;
-use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
-use crate::plugins::ui::frontend::systems::view_toggles::toggle_end_turn_button_player_turn_view;
+use crate::plugins::ui::hud::systems::construct_hud::construct_hud;
+use crate::plugins::ui::hud::systems::destruct_hud::destruct_hud;
+use crate::plugins::ui::hud::systems::update_hud::update_hud;
+use crate::plugins::ui::hud::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
+use crate::plugins::ui::hud::systems::view_toggles::toggle_end_turn_button_player_turn_view;
+use crate::plugins::ui::rnd::systems::construct_rnd_landing::construct_rnd_landing;
+use crate::plugins::ui::rnd::systems::destruct_rnd_landing::destruct_rnd_landing;
+use crate::plugins::ui::rnd::systems::exit::exit_on_escape;
 
 // TODO: Decouple camera plugin.
 use crate::plugins::camera::systems::spawn_camera::spawn_camera;
@@ -39,13 +43,46 @@ pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        // Add GameState::PlayerInit exit scheduled systems to the main
+        // Add UiState::Hud entry scheduled systems to the main
         // application.
         app.add_systems(
             OnEnter(UiState::Hud),
-            init_hud
+            construct_hud
                 // TODO: Decouple camera plugin?
                 .after(spawn_camera)
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add UiState::Hud exit scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnExit(UiState::Hud),
+            destruct_hud
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add UiState::Rnd entry scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnEnter(UiState::RndLanding),
+            construct_rnd_landing
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add UiState::Rnd exit scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnExit(UiState::RndLanding),
+            destruct_rnd_landing
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
@@ -77,12 +114,22 @@ impl Plugin for UiPlugin {
         // Add Update scheduled systems to the main application.
         app.add_systems(
             Update,
-            update_hud
-                .run_if(in_state(AppState::InGame))
-                .run_if(in_state(AssetsState::Loaded))
-                .run_if(in_state(BootState::NotInBoot))
-                .run_if(not(in_state(GameState::NotInGame)))
-                .run_if(in_state(UiState::Hud)),
+            (
+                // Update scheduled systems for UiState::Hud.
+                update_hud
+                    .run_if(in_state(AppState::InGame))
+                    .run_if(in_state(AssetsState::Loaded))
+                    .run_if(in_state(BootState::NotInBoot))
+                    .run_if(not(in_state(GameState::NotInGame)))
+                    .run_if(in_state(UiState::Hud)),
+                // Update scheduled systems for UiState::RndLanding.
+                exit_on_escape
+                    .run_if(in_state(AppState::InGame))
+                    .run_if(in_state(AssetsState::Loaded))
+                    .run_if(in_state(BootState::NotInBoot))
+                    .run_if(not(in_state(GameState::NotInGame)))
+                    .run_if(in_state(UiState::RndLanding)),
+            ),
         );
     }
 }

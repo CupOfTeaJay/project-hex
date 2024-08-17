@@ -21,16 +21,16 @@ use bevy::prelude::*;
 use crate::common::components::labels::Label;
 use crate::common::resources::selection_focus::SelectionFocus;
 use crate::plugins::city::components::markers::CityCenterMarker;
-use crate::plugins::ui::frontend::bundles::buttons::BuildMartialZoneButton;
-use crate::plugins::ui::frontend::bundles::buttons::CityNameButton;
-use crate::plugins::ui::frontend::bundles::buttons::SettleButton;
-use crate::plugins::ui::frontend::bundles::buttons::TrainPilgrimButton;
-use crate::plugins::ui::frontend::bundles::texts::BuildMartialZoneText;
-use crate::plugins::ui::frontend::bundles::texts::CityNameText;
-use crate::plugins::ui::frontend::bundles::texts::SettleText;
-use crate::plugins::ui::frontend::bundles::texts::TrainPilgrimText;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetContentMarker;
-use crate::plugins::ui::frontend::components::markers::HudRightBannerMarker;
+use crate::plugins::ui::hud::bundles::buttons::BuildMartialZoneButton;
+use crate::plugins::ui::hud::bundles::buttons::CityNameButton;
+use crate::plugins::ui::hud::bundles::buttons::SettleButton;
+use crate::plugins::ui::hud::bundles::buttons::TrainPilgrimButton;
+use crate::plugins::ui::hud::bundles::texts::BuildMartialZoneText;
+use crate::plugins::ui::hud::bundles::texts::CityNameText;
+use crate::plugins::ui::hud::bundles::texts::SettleText;
+use crate::plugins::ui::hud::bundles::texts::TrainPilgrimText;
+use crate::plugins::ui::hud::components::markers::HudBottomRightWidgetContentMarker;
+use crate::plugins::ui::hud::components::markers::HudRightBannerMarker;
 
 pub fn update_hud(
     bottom_right_widget_content: Query<Entity, With<HudBottomRightWidgetContentMarker>>,

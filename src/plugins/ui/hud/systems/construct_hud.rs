@@ -18,26 +18,38 @@
 
 use bevy::prelude::*;
 
-use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
-use crate::plugins::ui::frontend::bundles::nodes::HudBottomLeftWidget;
-use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidget;
-use crate::plugins::ui::frontend::bundles::nodes::HudBottomRightWidgetContent;
-use crate::plugins::ui::frontend::bundles::nodes::HudLeftPane;
-use crate::plugins::ui::frontend::bundles::nodes::HudRightBanner;
-use crate::plugins::ui::frontend::bundles::nodes::HudRightPane;
-use crate::plugins::ui::frontend::bundles::nodes::HudRoot;
-use crate::plugins::ui::frontend::bundles::nodes::HudTopLeftWidget;
-use crate::plugins::ui::frontend::bundles::nodes::HudTopRightWidget;
-use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
+use crate::plugins::ui::hud::bundles::buttons::EndTurnButton;
+use crate::plugins::ui::hud::bundles::buttons::RndButton;
+use crate::plugins::ui::hud::bundles::nodes::HudBottomLeftWidget;
+use crate::plugins::ui::hud::bundles::nodes::HudBottomRightWidget;
+use crate::plugins::ui::hud::bundles::nodes::HudBottomRightWidgetContent;
+use crate::plugins::ui::hud::bundles::nodes::HudLeftPane;
+use crate::plugins::ui::hud::bundles::nodes::HudRightBanner;
+use crate::plugins::ui::hud::bundles::nodes::HudRightPane;
+use crate::plugins::ui::hud::bundles::nodes::HudRoot;
+use crate::plugins::ui::hud::bundles::nodes::HudTopLeftWidget;
+use crate::plugins::ui::hud::bundles::nodes::HudTopRightWidget;
+use crate::plugins::ui::hud::bundles::texts::EndTurnText;
+use crate::plugins::ui::hud::bundles::texts::RndText;
 
 /// Initializes the HUD (Heads Up Display) at game start.
-pub fn init_hud(mut commands: Commands) {
+pub fn construct_hud(mut commands: Commands) {
     // Root node. Encapsulates the entire screen.
     commands.spawn(HudRoot::new()).with_children(|root| {
         // Left "pane" (leftmost vertical split of root).
         root.spawn(HudLeftPane::new()).with_children(|left_pane| {
             // Top-left "widget".
-            left_pane.spawn(HudTopLeftWidget::new());
+            left_pane
+                .spawn(HudTopLeftWidget::new())
+                .with_children(|top_right_widget| {
+                    // "R&D" button.
+                    top_right_widget
+                        .spawn(RndButton::new())
+                        .with_children(|rnd_button| {
+                            // "R&D" text.
+                            rnd_button.spawn(RndText::new());
+                        });
+                });
             // Bottom-left "widget".
             left_pane.spawn(HudBottomLeftWidget::new());
         });
@@ -57,7 +69,7 @@ pub fn init_hud(mut commands: Commands) {
                     bottom_right_widget
                         .spawn(EndTurnButton::new())
                         .with_children(|end_turn_button| {
-                            // ""End turn" text.
+                            // "End turn" text.
                             end_turn_button.spawn(EndTurnText::new());
                         });
                 });

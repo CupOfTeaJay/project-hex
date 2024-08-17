@@ -16,4 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod button_callbacks;
+use bevy::prelude::*;
+
+#[derive(Component)]
+pub struct RndLandingRootMarker;

@@ -18,11 +18,11 @@
 
 use bevy::prelude::*;
 
-use crate::plugins::ui::frontend::bundles::buttons::EndTurnButton;
-use crate::plugins::ui::frontend::bundles::texts::EndTurnText;
-use crate::plugins::ui::frontend::bundles::texts::OpponentTurnText;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetMarker;
-use crate::plugins::ui::frontend::components::markers::HudEndTurnButtonMarker;
+use crate::plugins::ui::hud::bundles::buttons::EndTurnButton;
+use crate::plugins::ui::hud::bundles::texts::EndTurnText;
+use crate::plugins::ui::hud::bundles::texts::OpponentTurnText;
+use crate::plugins::ui::hud::components::markers::HudBottomRightWidgetMarker;
+use crate::plugins::ui::hud::components::markers::HudEndTurnButtonMarker;
 
 pub fn toggle_end_turn_button_player_turn_view(
     mut commands: Commands,

@@ -16,4 +16,12 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod systems;
+use bevy::prelude::*;
+
+use crate::plugins::ui::hud::components::markers::HudRootMarker;
+
+pub fn destruct_hud(mut commands: Commands, hud_root: Query<Entity, With<HudRootMarker>>) {
+    commands
+        .entity(hud_root.get_single().unwrap())
+        .despawn_recursive();
+}

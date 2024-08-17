@@ -84,6 +84,19 @@ impl TrainPilgrimText {
 }
 
 #[derive(Bundle)]
+pub struct RndText {
+    text: TextBundle,
+}
+
+impl RndText {
+    pub fn new() -> Self {
+        RndText {
+            text: TextBundle::from_section("R&D", TextStyle { ..default() }),
+        }
+    }
+}
+
+#[derive(Bundle)]
 pub struct SettleText {
     text: TextBundle,
 }

@@ -19,15 +19,15 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
-use crate::plugins::ui::frontend::components::markers::HudBottomLeftWidgetMarker;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetContentMarker;
-use crate::plugins::ui::frontend::components::markers::HudBottomRightWidgetMarker;
-use crate::plugins::ui::frontend::components::markers::HudLeftPaneMarker;
-use crate::plugins::ui::frontend::components::markers::HudRightBannerMarker;
-use crate::plugins::ui::frontend::components::markers::HudRightPaneMarker;
-use crate::plugins::ui::frontend::components::markers::HudRootMarker;
-use crate::plugins::ui::frontend::components::markers::HudTopLeftWidgetMarker;
-use crate::plugins::ui::frontend::components::markers::HudTopRightWidgetMarker;
+use crate::plugins::ui::hud::components::markers::HudBottomLeftWidgetMarker;
+use crate::plugins::ui::hud::components::markers::HudBottomRightWidgetContentMarker;
+use crate::plugins::ui::hud::components::markers::HudBottomRightWidgetMarker;
+use crate::plugins::ui::hud::components::markers::HudLeftPaneMarker;
+use crate::plugins::ui::hud::components::markers::HudRightBannerMarker;
+use crate::plugins::ui::hud::components::markers::HudRightPaneMarker;
+use crate::plugins::ui::hud::components::markers::HudRootMarker;
+use crate::plugins::ui::hud::components::markers::HudTopLeftWidgetMarker;
+use crate::plugins::ui::hud::components::markers::HudTopRightWidgetMarker;
 
 #[derive(Bundle)]
 pub struct HudBottomLeftWidget {

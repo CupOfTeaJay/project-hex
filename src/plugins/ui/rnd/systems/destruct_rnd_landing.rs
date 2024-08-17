@@ -16,7 +16,15 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod systems;
+use bevy::prelude::*;
 
-mod bundles;
-mod components;
+use crate::plugins::ui::rnd::components::markers::RndLandingRootMarker;
+
+pub fn destruct_rnd_landing(
+    mut commands: Commands,
+    rnd_landing_root: Query<Entity, With<RndLandingRootMarker>>,
+) {
+    commands
+        .entity(rnd_landing_root.get_single().unwrap())
+        .despawn_recursive();
+}

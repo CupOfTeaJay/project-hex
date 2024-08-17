@@ -16,6 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod hud;
-mod rnd;
-pub mod ui_plugin;
+pub mod construct_rnd_landing;
+pub mod destruct_rnd_landing;
+pub mod exit;

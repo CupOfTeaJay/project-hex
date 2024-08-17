@@ -16,6 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod hud;
-mod rnd;
-pub mod ui_plugin;
+pub mod bundles;
+pub mod components;
+pub mod systems;
