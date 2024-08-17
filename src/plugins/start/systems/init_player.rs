@@ -27,6 +27,7 @@ use crate::common::components::movement::HexPos;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::states::game_state::GameState;
+use crate::common::states::ui_state::UiState;
 use crate::common::systems::builders::unit_builder;
 use crate::plugins::map::components::terrain::Terrain;
 
@@ -34,6 +35,7 @@ pub fn init_player(
     assets: Res<AssetHandles>,
     mut commands: Commands,
     mut next_game_state: ResMut<NextState<GameState>>,
+    mut next_ui_state: ResMut<NextState<UiState>>,
     query: Query<(&HexPos, &Terrain)>,
     mut unit_spawn_event: EventWriter<PickableSpawnEvent>,
 ) {
@@ -72,4 +74,5 @@ pub fn init_player(
     unit_spawn_event.send(PickableSpawnEvent::new(entity));
 
     next_game_state.set(GameState::PlayerTurn);
+    next_ui_state.set(UiState::Hud);
 }

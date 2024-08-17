@@ -22,3 +22,4 @@ pub mod boot_state;
 pub mod game_state;
 pub mod pickable_buffers_state;
 pub mod placement_state;
+pub mod ui_state;

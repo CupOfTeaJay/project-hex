@@ -16,21 +16,14 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pub mod ai;
-pub mod ambience;
-pub mod boot;
-pub mod camera;
-pub mod city;
-pub mod cost;
-pub mod debug;
-pub mod events;
-pub mod map;
-pub mod movement;
-pub mod names;
-pub mod placement;
-pub mod resources;
-pub mod rnd;
-pub mod selection;
-pub mod start;
-pub mod states;
-pub mod ui;
+use bevy::prelude::*;
+
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum UiState {
+    Null,
+    Hud,
+    RndLanding,
+    RndEconomy,
+    RndMilitary,
+    RndTechnology,
+}

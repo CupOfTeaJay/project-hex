@@ -24,6 +24,7 @@ use crate::common::states::boot_state::BootState;
 use crate::common::states::game_state::GameState;
 use crate::common::states::pickable_buffers_state::PickableBuffersState;
 use crate::common::states::placement_state::PlacementState;
+use crate::common::states::ui_state::UiState;
 
 /// Plugin that registers states with the main application. Currently, the StatesPlugin:
 ///     - Initializes "AppState" to "AppState::InBoot".
@@ -41,6 +42,7 @@ impl Plugin for StatesPlugin {
             .insert_state(BootState::LoadingAssets)
             .insert_state(GameState::NotInGame)
             .insert_state(PickableBuffersState::Empty)
-            .insert_state(PlacementState::Inactive);
+            .insert_state(PlacementState::Inactive)
+            .insert_state(UiState::Null);
     }
 }
