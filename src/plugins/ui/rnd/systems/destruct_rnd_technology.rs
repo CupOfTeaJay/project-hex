@@ -18,17 +18,13 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct EconomyButtonMarker;
+use crate::plugins::ui::rnd::components::markers::RndTechnologyRootMarker;
 
-#[derive(Component)]
-pub struct MilitaryButtonMarker;
-
-#[derive(Component)]
-pub struct TechnologyButtonMarker;
-
-#[derive(Component)]
-pub struct RndLandingRootMarker;
-
-#[derive(Component)]
-pub struct RndTechnologyRootMarker;
+pub fn destruct_rnd_technology(
+    mut commands: Commands,
+    rnd_technology_root: Query<Entity, With<RndTechnologyRootMarker>>,
+) {
+    commands
+        .entity(rnd_technology_root.get_single().unwrap())
+        .despawn_recursive();
+}

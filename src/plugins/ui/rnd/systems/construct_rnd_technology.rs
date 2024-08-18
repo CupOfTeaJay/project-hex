@@ -18,17 +18,9 @@
 
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct EconomyButtonMarker;
+use crate::plugins::ui::rnd::bundles::nodes::RndTechnologyRoot;
 
-#[derive(Component)]
-pub struct MilitaryButtonMarker;
-
-#[derive(Component)]
-pub struct TechnologyButtonMarker;
-
-#[derive(Component)]
-pub struct RndLandingRootMarker;
-
-#[derive(Component)]
-pub struct RndTechnologyRootMarker;
+pub fn construct_rnd_technology(mut commands: Commands) {
+    // Root node.
+    commands.spawn(RndTechnologyRoot::new());
+}

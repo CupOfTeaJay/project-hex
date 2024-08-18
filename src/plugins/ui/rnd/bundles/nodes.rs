@@ -20,6 +20,7 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
 use crate::plugins::ui::rnd::components::markers::RndLandingRootMarker;
+use crate::plugins::ui::rnd::components::markers::RndTechnologyRootMarker;
 
 #[derive(Bundle)]
 pub struct RndLandingRoot {
@@ -32,6 +33,33 @@ impl RndLandingRoot {
     pub fn new() -> Self {
         RndLandingRoot {
             marker: RndLandingRootMarker,
+            node: NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    border: UiRect::all(Val::Px(5.0)),
+                    flex_direction: FlexDirection::Row,
+                    ..default()
+                },
+                border_color: BorderColor(Color::srgb(1.00, 0.00, 0.00)),
+                ..default()
+            },
+            pickability: Pickable::IGNORE,
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct RndTechnologyRoot {
+    marker: RndTechnologyRootMarker,
+    node: NodeBundle,
+    pickability: Pickable,
+}
+
+impl RndTechnologyRoot {
+    pub fn new() -> Self {
+        RndTechnologyRoot {
+            marker: RndTechnologyRootMarker,
             node: NodeBundle {
                 style: Style {
                     width: Val::Percent(100.0),

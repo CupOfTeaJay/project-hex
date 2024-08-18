@@ -29,7 +29,9 @@ use crate::plugins::ui::hud::systems::update_hud::update_hud;
 use crate::plugins::ui::hud::systems::view_toggles::toggle_end_turn_button_opponent_turn_view;
 use crate::plugins::ui::hud::systems::view_toggles::toggle_end_turn_button_player_turn_view;
 use crate::plugins::ui::rnd::systems::construct_rnd_landing::construct_rnd_landing;
+use crate::plugins::ui::rnd::systems::construct_rnd_technology::construct_rnd_technology;
 use crate::plugins::ui::rnd::systems::destruct_rnd_landing::destruct_rnd_landing;
+use crate::plugins::ui::rnd::systems::destruct_rnd_technology::destruct_rnd_technology;
 use crate::plugins::ui::rnd::systems::exit::exit_on_escape;
 
 // TODO: Decouple camera plugin.
@@ -67,7 +69,7 @@ impl Plugin for UiPlugin {
                 .run_if(not(in_state(GameState::NotInGame))),
         );
 
-        // Add UiState::Rnd entry scheduled systems to the main
+        // Add UiState::RndLanding entry scheduled systems to the main
         // application.
         app.add_systems(
             OnEnter(UiState::RndLanding),
@@ -78,11 +80,33 @@ impl Plugin for UiPlugin {
                 .run_if(not(in_state(GameState::NotInGame))),
         );
 
-        // Add UiState::Rnd exit scheduled systems to the main
+        // Add UiState::RndLanding exit scheduled systems to the main
         // application.
         app.add_systems(
             OnExit(UiState::RndLanding),
             destruct_rnd_landing
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add UiState::RndTechnology entry scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnEnter(UiState::RndTechnology),
+            construct_rnd_technology
+                .run_if(in_state(AppState::InGame))
+                .run_if(in_state(AssetsState::Loaded))
+                .run_if(in_state(BootState::NotInBoot))
+                .run_if(not(in_state(GameState::NotInGame))),
+        );
+
+        // Add UiState::RndTechnology exit scheduled systems to the main
+        // application.
+        app.add_systems(
+            OnExit(UiState::RndTechnology),
+            destruct_rnd_technology
                 .run_if(in_state(AppState::InGame))
                 .run_if(in_state(AssetsState::Loaded))
                 .run_if(in_state(BootState::NotInBoot))
@@ -122,13 +146,13 @@ impl Plugin for UiPlugin {
                     .run_if(in_state(BootState::NotInBoot))
                     .run_if(not(in_state(GameState::NotInGame)))
                     .run_if(in_state(UiState::Hud)),
-                // Update scheduled systems for UiState::RndLanding.
+                // Update scheduled systems for NOT UiState::Hud.
                 exit_on_escape
                     .run_if(in_state(AppState::InGame))
                     .run_if(in_state(AssetsState::Loaded))
                     .run_if(in_state(BootState::NotInBoot))
                     .run_if(not(in_state(GameState::NotInGame)))
-                    .run_if(in_state(UiState::RndLanding)),
+                    .run_if(not(in_state(UiState::Hud))),
             ),
         );
     }

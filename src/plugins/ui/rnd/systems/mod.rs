@@ -17,5 +17,7 @@
 */
 
 pub mod construct_rnd_landing;
+pub mod construct_rnd_technology;
 pub mod destruct_rnd_landing;
+pub mod destruct_rnd_technology;
 pub mod exit;

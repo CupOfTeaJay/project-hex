@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 
+use crate::common::states::ui_state::UiState;
 use crate::plugins::ui::rnd::components::markers::EconomyButtonMarker;
 use crate::plugins::ui::rnd::components::markers::MilitaryButtonMarker;
 use crate::plugins::ui::rnd::components::markers::TechnologyButtonMarker;
@@ -41,7 +42,7 @@ impl EconomyButton {
                     ..default()
                 },
                 border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                background_color: BackgroundColor(Color::linear_rgba(224.0, 181.0, 63.0, 0.5)),
+                background_color: BackgroundColor(Color::srgb(1.00, 0.79, 0.48)),
                 ..default()
             },
             callback: On::<Pointer<Click>>::run(|| println!("'Economy' button clicked.")),
@@ -68,7 +69,7 @@ impl MilitaryButton {
                     ..default()
                 },
                 border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                background_color: BackgroundColor(Color::linear_rgba(207.0, 95.0, 41.0, 0.5)),
+                background_color: BackgroundColor(Color::srgb(0.65, 0.13, 0.0)),
                 ..default()
             },
             callback: On::<Pointer<Click>>::run(|| println!("'Military' button clicked.")),
@@ -95,10 +96,12 @@ impl TechnologyButton {
                     ..default()
                 },
                 border_color: Color::srgb(0.0, 1.0, 0.0).into(),
-                background_color: BackgroundColor(Color::linear_rgba(63.0, 160.0, 224.0, 0.5)),
+                background_color: BackgroundColor(Color::srgb(0.0, 0.23, 0.34)),
                 ..default()
             },
-            callback: On::<Pointer<Click>>::run(|| println!("'Technology' button clicked.")),
+            callback: On::<Pointer<Click>>::run(|mut next_ui_state: ResMut<NextState<UiState>>| {
+                next_ui_state.set(UiState::RndTechnology);
+            }),
             marker: TechnologyButtonMarker,
         }
     }
