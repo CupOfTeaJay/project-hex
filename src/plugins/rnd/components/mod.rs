@@ -16,5 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-pub mod rnd_plugin;
+mod tech;
+mod tech_table;

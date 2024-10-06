@@ -16,5 +16,20 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
-pub mod rnd_plugin;
+use bevy::prelude::*;
+use indexmap::IndexMap;
+
+use crate::plugins::rnd::components::tech::Tech;
+
+#[derive(Component)]
+pub struct TechTable {
+    table: IndexMap<Tech, bool>,
+}
+
+impl TechTable {
+    pub fn new() -> Self {
+        TechTable {
+            table: IndexMap::from([(Tech::NULL, false)]),
+        }
+    }
+}
