@@ -11,6 +11,7 @@ mkShell rec {
         cargo
         pkg-config
         rustc
+        rustfmt
     ];
     buildInputs = [
       udev alsa-lib vulkan-loader
