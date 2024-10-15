@@ -20,5 +20,10 @@ use bevy::prelude::*;
 
 #[derive(Component, Hash, Eq, PartialEq)]
 pub enum Tech {
-    NULL,
+    // Prehistoric-Age technologies.
+    ANIMAL_HUSBANDRY,
+    FIREMAKING,
+    IRRIGATION,
+    METALLURGY,
+    WRITING,
 }

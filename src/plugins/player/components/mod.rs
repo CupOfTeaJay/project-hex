@@ -16,27 +16,5 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use bevy::prelude::*;
-use indexmap::IndexMap;
+mod player_markers;
 
-use crate::plugins::rnd::components::tech::Tech;
-
-#[derive(Component)]
-pub struct TechTable {
-    table: IndexMap<Tech, bool>,
-}
-
-impl TechTable {
-    pub fn new() -> Self {
-        TechTable {
-            table: IndexMap::from([
-                // Prehistoric-Age technologies.
-                (Tech::WRITING, false),
-                (Tech::FIREMAKING, false),
-                (Tech::IRRIGATION, false),
-                (Tech::METALLURGY, false),
-                (Tech::ANIMAL_HUSBANDRY, false),
-            ]),
-        }
-    }
-}

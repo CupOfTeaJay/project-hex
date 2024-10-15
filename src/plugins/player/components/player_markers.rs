@@ -17,26 +17,40 @@
 */
 
 use bevy::prelude::*;
-use indexmap::IndexMap;
-
-use crate::plugins::rnd::components::tech::Tech;
 
 #[derive(Component)]
-pub struct TechTable {
-    table: IndexMap<Tech, bool>,
-}
+pub struct PlayerOneMarker;
 
-impl TechTable {
-    pub fn new() -> Self {
-        TechTable {
-            table: IndexMap::from([
-                // Prehistoric-Age technologies.
-                (Tech::WRITING, false),
-                (Tech::FIREMAKING, false),
-                (Tech::IRRIGATION, false),
-                (Tech::METALLURGY, false),
-                (Tech::ANIMAL_HUSBANDRY, false),
-            ]),
-        }
-    }
-}
+#[derive(Component)]
+pub struct PlayerTwoMarker;
+
+#[derive(Component)]
+pub struct PlayerThreeMarker;
+
+#[derive(Component)]
+pub struct PlayerFourMarker;
+
+#[derive(Component)]
+pub struct PlayerFiveMarker;
+
+#[derive(Component)]
+pub struct PlayerSixMarker;
+
+#[derive(Component)]
+pub struct PlayerSevenMarker;
+
+#[derive(Component)]
+pub struct PlayerEightMarker;
+
+#[derive(Component)]
+pub struct PlayerNineMarker;
+
+#[derive(Component)]
+pub struct PlayerTenMarker;
+
+#[derive(Component)]
+pub struct PlayerElevenMarker;
+
+#[derive(Component)]
+pub struct PlayerTwelveMarker;
+

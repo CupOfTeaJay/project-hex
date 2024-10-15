@@ -24,3 +24,4 @@ pub mod placement_focus;
 pub mod pos_neighbors_map;
 pub mod selection_focus;
 pub mod traversability_maps;
+pub mod players;

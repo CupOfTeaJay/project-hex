@@ -28,6 +28,7 @@ pub mod map;
 pub mod movement;
 pub mod names;
 pub mod placement;
+pub mod player;
 pub mod resources;
 pub mod rnd;
 pub mod selection;
