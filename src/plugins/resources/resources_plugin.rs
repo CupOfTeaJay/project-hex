@@ -26,6 +26,7 @@ use crate::common::resources::{
     pickable_buffers::PickableBuffers,
     pickable_buffers::PickableBufferHelpers,
     placement_focus::PlacementFocus,
+    players::Players,
     pos_neighbors_map::PosNeighborsMap,
     selection_focus::SelectionFocus,
     traversability_maps::TraversabilityMaps,
@@ -48,6 +49,7 @@ impl Plugin for ResourcesPlugin {
             .insert_resource(PickableBuffers::new())
             .insert_resource(PickableBufferHelpers::new())
             .insert_resource(PlacementFocus::new())
+            .insert_resource(Players::new())
             .insert_resource(PosNeighborsMap::new())
             .insert_resource(SelectionFocus::new())
             .insert_resource(TraversabilityMaps::new());

@@ -16,7 +16,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod components;
+pub mod components;
 mod systems;
 mod player_plugin;
 

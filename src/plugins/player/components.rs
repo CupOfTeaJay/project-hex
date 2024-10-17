@@ -18,39 +18,76 @@
 
 use bevy::prelude::*;
 
+/// Player enumerations. Each enumeration should have an associated marker
+/// component.
+///
+/// TODO: If something like Box<dyn Component> becomes possible in the future,
+///       then I believe we can get rid of this.
+#[derive(Component)]
+pub enum Player {
+    PlayerOne,
+    PlayerTwo,
+    PlayerThree,
+    PlayerFour,
+    PlayerFive,
+    PlayerSix,
+    PlayerSeven,
+    PlayerEight,
+    PlayerNine,
+    PlayerTen,
+    PlayerEleven,
+    PlayerTwelve,
+}
+
+/*
+ * Marker components.
+ */
+
+/// Marker component for player one.
 #[derive(Component)]
 pub struct PlayerOneMarker;
 
+/// Marker component for player two.
 #[derive(Component)]
 pub struct PlayerTwoMarker;
 
+/// Marker component for player three.
 #[derive(Component)]
 pub struct PlayerThreeMarker;
 
+/// Marker component for player four
 #[derive(Component)]
 pub struct PlayerFourMarker;
 
+/// Marker component for player five.
 #[derive(Component)]
 pub struct PlayerFiveMarker;
 
+/// Marker component for player six.
 #[derive(Component)]
 pub struct PlayerSixMarker;
 
+/// Marker component for player seven.
 #[derive(Component)]
 pub struct PlayerSevenMarker;
 
+/// Marker component for player eight.
 #[derive(Component)]
 pub struct PlayerEightMarker;
 
+/// Marker component for player nine.
 #[derive(Component)]
 pub struct PlayerNineMarker;
 
+/// Marker component for player ten.
 #[derive(Component)]
 pub struct PlayerTenMarker;
 
+/// Marker component for player eleven.
 #[derive(Component)]
 pub struct PlayerElevenMarker;
 
+/// Marker component for player twelve.
 #[derive(Component)]
 pub struct PlayerTwelveMarker;
 

@@ -18,8 +18,16 @@
 
 use bevy::prelude::*;
 
+use crate::plugins::player::components::Player;
+
 #[derive(Resource)]
 pub struct Players {
-    buffer: Vec<>
+    pub buffer: Vec<Player>
+}
+
+impl Players {
+    pub fn new() -> Self {
+        Players {buffer: Vec::new()}
+    }
 }
 
