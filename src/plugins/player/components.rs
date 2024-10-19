@@ -39,6 +39,39 @@ pub enum Player {
     PlayerTwelve,
 }
 
+/// TODO: document.
+#[derive(Component)]
+pub enum PlayerType {
+    Computer,
+    Human,
+}
+
+/// Buffer for holding the entity IDs of all cities owned by a player.
+#[derive(Component)]
+pub struct CityBuffer {
+    pub units: Vec<Entity>,
+}
+
+impl CityBuffer {
+    /// Initializes a new UnitBuffer.
+    pub fn new() -> Self {
+        CityBuffer { units: Vec::new() }
+    }
+}
+
+/// Buffer for holding the entity IDs of all units owned by a player.
+#[derive(Component)]
+pub struct UnitBuffer {
+    pub units: Vec<Entity>,
+}
+
+impl UnitBuffer {
+    /// Initializes a new UnitBuffer.
+    pub fn new() -> Self {
+        UnitBuffer { units: Vec::new() }
+    }
+}
+
 /*
  * Marker components.
  */

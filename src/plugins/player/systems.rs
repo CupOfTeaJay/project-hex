@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 
 use crate::common::resources::players::Players;
+use crate::plugins::player::components::CityBuffer;
 use crate::plugins::player::components::Player;
 use crate::plugins::player::components::PlayerEightMarker;
 use crate::plugins::player::components::PlayerElevenMarker;
@@ -32,46 +33,47 @@ use crate::plugins::player::components::PlayerTenMarker;
 use crate::plugins::player::components::PlayerThreeMarker;
 use crate::plugins::player::components::PlayerTwelveMarker;
 use crate::plugins::player::components::PlayerTwoMarker;
+use crate::plugins::player::components::UnitBuffer;
 
 /// TODO:
 pub fn spawn_players(mut commands: Commands, players: Res<Players>) {
     for player in players.buffer.iter() {
-        match player {
-            &Player::PlayerOne => {
-                commands.spawn(PlayerOneMarker);
+        match player.0 {
+            Player::PlayerOne => {
+                commands.spawn((PlayerOneMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerTwo => {
-                commands.spawn(PlayerTwoMarker);
+            Player::PlayerTwo => {
+                commands.spawn((PlayerTwoMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerThree => {
-                commands.spawn(PlayerThreeMarker);
+            Player::PlayerThree => {
+                commands.spawn((PlayerThreeMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerFour => {
-                commands.spawn(PlayerFourMarker);
+            Player::PlayerFour => {
+                commands.spawn((PlayerFourMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerFive => {
-                commands.spawn(PlayerFiveMarker);
+            Player::PlayerFive => {
+                commands.spawn((PlayerFiveMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerSix => {
-                commands.spawn(PlayerSixMarker);
+            Player::PlayerSix => {
+                commands.spawn((PlayerSixMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerSeven => {
-                commands.spawn(PlayerSevenMarker);
+            Player::PlayerSeven => {
+                commands.spawn((PlayerSevenMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerEight => {
-                commands.spawn(PlayerEightMarker);
+            Player::PlayerEight => {
+                commands.spawn((PlayerEightMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerNine => {
-                commands.spawn(PlayerNineMarker);
+            Player::PlayerNine => {
+                commands.spawn((PlayerNineMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerTen => {
-                commands.spawn(PlayerTenMarker);
+            Player::PlayerTen => {
+                commands.spawn((PlayerTenMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerEleven => {
-                commands.spawn(PlayerElevenMarker);
+            Player::PlayerEleven => {
+                commands.spawn((PlayerElevenMarker, CityBuffer::new(), UnitBuffer::new()));
             }
-            &Player::PlayerTwelve => {
-                commands.spawn(PlayerTwelveMarker);
+            Player::PlayerTwelve => {
+                commands.spawn((PlayerTwelveMarker, CityBuffer::new(), UnitBuffer::new()));
             }
         }
     }

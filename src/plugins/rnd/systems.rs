@@ -51,63 +51,63 @@ pub fn spawn_tech_trees(
     player_twelve_query: Query<Entity, With<PlayerTwelveMarker>>,
 ) {
     for player in players.buffer.iter() {
-        match player {
-            &Player::PlayerOne => {
+        match player.0 {
+            Player::PlayerOne => {
                 commands
                     .entity(player_one_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerTwo => {
+            Player::PlayerTwo => {
                 commands
                     .entity(player_two_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerThree => {
+            Player::PlayerThree => {
                 commands
                     .entity(player_three_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerFour => {
+            Player::PlayerFour => {
                 commands
                     .entity(player_four_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerFive => {
+            Player::PlayerFive => {
                 commands
                     .entity(player_five_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerSix => {
+            Player::PlayerSix => {
                 commands
                     .entity(player_six_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerSeven => {
+            Player::PlayerSeven => {
                 commands
                     .entity(player_seven_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerEight => {
+            Player::PlayerEight => {
                 commands
                     .entity(player_eight_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerNine => {
+            Player::PlayerNine => {
                 commands
                     .entity(player_nine_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerTen => {
+            Player::PlayerTen => {
                 commands
                     .entity(player_ten_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerEleven => {
+            Player::PlayerEleven => {
                 commands
                     .entity(player_eleven_query.get_single().unwrap())
                     .insert(TechTree::new());
             }
-            &Player::PlayerTwelve => {
+            Player::PlayerTwelve => {
                 commands
                     .entity(player_twelve_query.get_single().unwrap())
                     .insert(TechTree::new());

@@ -1,5 +1,5 @@
 # Current Target.
-- [ ] Spawn a tech tree component for each player entity.
+- [ ]
 
 # In Progress.
 - [ ] Prehistoric-age techs.
@@ -10,4 +10,6 @@
 - [ ] Fix pathfinding.
 
 # Done.
+- [x] Spawn a tech tree component for each player entity.
 - [x] Player entities.
+
