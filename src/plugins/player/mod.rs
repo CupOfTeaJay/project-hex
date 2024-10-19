@@ -18,4 +18,4 @@
 
 pub mod components;
 pub mod player_plugin;
-mod systems;
+pub mod systems;

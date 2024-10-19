@@ -36,6 +36,7 @@ use project_hex::plugins::names::names_plugin::NamesPlugin;
 use project_hex::plugins::placement::placement_plugin::PlacementPlugin;
 use project_hex::plugins::player::player_plugin::PlayerPlugin;
 use project_hex::plugins::resources::resources_plugin::ResourcesPlugin;
+use project_hex::plugins::rnd::rnd_plugin::RndPlugin;
 use project_hex::plugins::selection::selection_plugin::SelectionPlugin;
 use project_hex::plugins::start::start_plugin::GameStartPlugin;
 use project_hex::plugins::states::states_plugin::StatesPlugin;
@@ -61,9 +62,9 @@ fn main() {
             PlacementPlugin,
             PlayerPlugin,
             ResourcesPlugin,
-            SelectionPlugin,
+            RndPlugin,
         ))
-        .add_plugins((UiPlugin, StageSettingPlugin, StatesPlugin))
+        .add_plugins((SelectionPlugin, StageSettingPlugin, StatesPlugin, UiPlugin))
         // Execute execute execute!
         .run();
 }

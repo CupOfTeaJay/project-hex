@@ -16,5 +16,35 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod tech;
-mod tech_table;
+use bevy::prelude::*;
+use indexmap::IndexMap;
+
+#[derive(Component, Hash, Eq, PartialEq)]
+pub enum Tech {
+    // Prehistoric-Age technologies.
+    AnimalHusbandry,
+    Firemaking,
+    Irrigation,
+    Metallurgy,
+    Writing,
+}
+
+#[derive(Component)]
+pub struct TechTree {
+    researched: IndexMap<Tech, bool>,
+}
+
+impl TechTree {
+    pub fn new() -> Self {
+        TechTree {
+            researched: IndexMap::from([
+                // Prehistoric-Age technologies.
+                (Tech::Writing, false),
+                (Tech::Firemaking, false),
+                (Tech::Irrigation, false),
+                (Tech::Metallurgy, false),
+                (Tech::AnimalHusbandry, false),
+            ]),
+        }
+    }
+}

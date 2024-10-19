@@ -18,8 +18,17 @@
 
 use bevy::prelude::*;
 
+use crate::common::states::app_state::AppState;
+use crate::plugins::player::systems::spawn_players;
+use crate::plugins::rnd::systems::spawn_tech_trees;
+
 pub struct RndPlugin;
 
 impl Plugin for RndPlugin {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, app: &mut App) {
+        app.add_systems(
+            OnEnter(AppState::LoadGame),
+            spawn_tech_trees.after(spawn_players),
+        );
+    }
 }
