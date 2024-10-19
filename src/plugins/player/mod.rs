@@ -17,6 +17,5 @@
 */
 
 pub mod components;
+pub mod player_plugin;
 mod systems;
-mod player_plugin;
-

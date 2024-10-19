@@ -20,14 +20,31 @@ use bevy::prelude::*;
 
 use crate::plugins::player::components::Player;
 
+/// TODO: Document.
+/// TODO: New should return empty buffer after implementing pre-game menu.
+///       Players added in pre-game menu?
 #[derive(Resource)]
 pub struct Players {
-    pub buffer: Vec<Player>
+    pub buffer: Vec<Player>,
 }
 
 impl Players {
     pub fn new() -> Self {
-        Players {buffer: Vec::new()}
+        Players {
+            buffer: vec![
+                Player::PlayerOne,
+                Player::PlayerTwo,
+                Player::PlayerThree,
+                Player::PlayerFour,
+                Player::PlayerFive,
+                Player::PlayerSix,
+                Player::PlayerSeven,
+                Player::PlayerEight,
+                Player::PlayerNine,
+                Player::PlayerTen,
+                Player::PlayerEleven,
+                Player::PlayerTwelve,
+            ],
+        }
     }
 }
-

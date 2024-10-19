@@ -19,4 +19,3 @@
 pub mod combat;
 pub mod labels;
 pub mod movement;
-pub mod player;

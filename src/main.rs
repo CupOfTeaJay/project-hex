@@ -34,6 +34,7 @@ use project_hex::plugins::map::map_plugin::MapPlugin;
 use project_hex::plugins::movement::movement_plugin::MovementPlugin;
 use project_hex::plugins::names::names_plugin::NamesPlugin;
 use project_hex::plugins::placement::placement_plugin::PlacementPlugin;
+use project_hex::plugins::player::player_plugin::PlayerPlugin;
 use project_hex::plugins::resources::resources_plugin::ResourcesPlugin;
 use project_hex::plugins::selection::selection_plugin::SelectionPlugin;
 use project_hex::plugins::start::start_plugin::GameStartPlugin;
@@ -58,11 +59,11 @@ fn main() {
             MovementPlugin,
             NamesPlugin,
             PlacementPlugin,
+            PlayerPlugin,
             ResourcesPlugin,
             SelectionPlugin,
-            StatesPlugin,
         ))
-        .add_plugins((UiPlugin, StageSettingPlugin))
+        .add_plugins((UiPlugin, StageSettingPlugin, StatesPlugin))
         // Execute execute execute!
         .run();
 }

@@ -90,4 +90,3 @@ pub struct PlayerElevenMarker;
 /// Marker component for player twelve.
 #[derive(Component)]
 pub struct PlayerTwelveMarker;
-

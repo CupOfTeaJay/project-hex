@@ -20,18 +20,18 @@ use bevy::prelude::*;
 
 use crate::common::resources::players::Players;
 use crate::plugins::player::components::Player;
-use crate::plugins::player::components::PlayerOneMarker;
-use crate::plugins::player::components::PlayerTwoMarker;
-use crate::plugins::player::components::PlayerThreeMarker;
-use crate::plugins::player::components::PlayerFourMarker;
-use crate::plugins::player::components::PlayerFiveMarker;
-use crate::plugins::player::components::PlayerSixMarker;
-use crate::plugins::player::components::PlayerSevenMarker;
 use crate::plugins::player::components::PlayerEightMarker;
-use crate::plugins::player::components::PlayerNineMarker;
-use crate::plugins::player::components::PlayerTenMarker;
 use crate::plugins::player::components::PlayerElevenMarker;
+use crate::plugins::player::components::PlayerFiveMarker;
+use crate::plugins::player::components::PlayerFourMarker;
+use crate::plugins::player::components::PlayerNineMarker;
+use crate::plugins::player::components::PlayerOneMarker;
+use crate::plugins::player::components::PlayerSevenMarker;
+use crate::plugins::player::components::PlayerSixMarker;
+use crate::plugins::player::components::PlayerTenMarker;
+use crate::plugins::player::components::PlayerThreeMarker;
 use crate::plugins::player::components::PlayerTwelveMarker;
+use crate::plugins::player::components::PlayerTwoMarker;
 
 /// TODO:
 pub fn spawn_players(mut commands: Commands, players: Res<Players>) {
@@ -40,40 +40,39 @@ pub fn spawn_players(mut commands: Commands, players: Res<Players>) {
             &Player::PlayerOne => {
                 commands.spawn(PlayerOneMarker);
             }
-            &Player::PlayerTwo => { 
+            &Player::PlayerTwo => {
                 commands.spawn(PlayerTwoMarker);
             }
-            &Player::PlayerThree => { 
+            &Player::PlayerThree => {
                 commands.spawn(PlayerThreeMarker);
             }
-            &Player::PlayerFour => { 
+            &Player::PlayerFour => {
                 commands.spawn(PlayerFourMarker);
             }
-            &Player::PlayerFive => { 
+            &Player::PlayerFive => {
                 commands.spawn(PlayerFiveMarker);
             }
-            &Player::PlayerSix => { 
+            &Player::PlayerSix => {
                 commands.spawn(PlayerSixMarker);
             }
-            &Player::PlayerSeven => { 
+            &Player::PlayerSeven => {
                 commands.spawn(PlayerSevenMarker);
             }
-            &Player::PlayerEight => { 
+            &Player::PlayerEight => {
                 commands.spawn(PlayerEightMarker);
             }
-            &Player::PlayerNine => { 
+            &Player::PlayerNine => {
                 commands.spawn(PlayerNineMarker);
             }
-            &Player::PlayerTen => { 
+            &Player::PlayerTen => {
                 commands.spawn(PlayerTenMarker);
             }
-            &Player::PlayerEleven => { 
+            &Player::PlayerEleven => {
                 commands.spawn(PlayerElevenMarker);
             }
-            &Player::PlayerTwelve => { 
+            &Player::PlayerTwelve => {
                 commands.spawn(PlayerTwelveMarker);
             }
         }
     }
 }
-
