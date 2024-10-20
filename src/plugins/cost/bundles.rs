@@ -16,7 +16,10 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod bundles;
-pub mod components;
-pub mod cost_plugin;
-pub mod systems;
+use bevy::prelude::*;
+
+#[derive(Bundle)]
+pub struct UnitCost {
+
+}
+

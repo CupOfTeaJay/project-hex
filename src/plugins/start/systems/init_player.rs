@@ -28,7 +28,7 @@ use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::resources::asset_handles::AssetHandles;
 use crate::common::states::game_state::GameState;
 use crate::common::states::ui_state::UiState;
-use crate::common::systems::builders::unit_builder;
+use crate::plugins::training::systems::build_unit;
 use crate::plugins::map::components::terrain::Terrain;
 
 pub fn init_player(
@@ -68,7 +68,7 @@ pub fn init_player(
     }
 
     let entity = commands
-        .spawn(unit_builder(&assets, &Label::Pilgrim, &random_hex_pos))
+        .spawn(build_unit(&assets, &Label::Pilgrim, &random_hex_pos))
         .id();
 
     unit_spawn_event.send(PickableSpawnEvent::new(entity));

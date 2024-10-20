@@ -16,7 +16,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod bundles;
 pub mod components;
 pub mod events;
 pub mod resources;

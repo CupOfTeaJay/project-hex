@@ -22,7 +22,7 @@ use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
 use crate::common::events::pickable_spawn_event::PickableSpawnEvent;
 use crate::common::resources::asset_handles::AssetHandles;
-use crate::common::systems::builders::unit_builder;
+use crate::plugins::training::systems::build_unit;
 use crate::plugins::cost::components::cost::Cost;
 use crate::plugins::cost::components::markers::TrainingUnitCostMarker;
 
@@ -38,7 +38,7 @@ pub fn spawn_trained_units(
             if let Ok(position) = positions.get(**cost.1) {
                 pickable_spawn_event.send(PickableSpawnEvent::new(
                     commands
-                        .spawn(unit_builder(&assets, &Label::Pilgrim, position))
+                        .spawn(build_unit(&assets, &Label::Pilgrim, position))
                         .id(),
                 ));
                 commands.entity(cost.0).despawn_recursive();

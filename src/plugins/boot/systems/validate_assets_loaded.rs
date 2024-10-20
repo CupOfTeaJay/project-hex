@@ -44,7 +44,7 @@ pub fn validate_assets_loaded(
 
     // Assert state transition if all assets are loaded.
     if assets_loaded {
-        next_app_state.set(AppState::InGame);
+        next_app_state.set(AppState::LoadGame);
         next_assets_state.set(AssetsState::Loaded);
         next_boot_state.set(BootState::NotInBoot);
         next_game_state.set(GameState::MapGen);

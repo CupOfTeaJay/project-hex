@@ -19,6 +19,7 @@
 use bevy::prelude::*;
 
 use crate::common::resources::players::Players;
+use crate::common::states::app_state::AppState;
 use crate::plugins::player::components::Player;
 use crate::plugins::player::components::PlayerEightMarker;
 use crate::plugins::player::components::PlayerElevenMarker;
@@ -36,6 +37,7 @@ use crate::plugins::rnd::components::TechTree;
 
 pub fn spawn_tech_trees(
     mut commands: Commands,
+    mut next_app_state: ResMut<NextState<AppState>>,
     players: Res<Players>,
     player_one_query: Query<Entity, With<PlayerOneMarker>>,
     player_two_query: Query<Entity, With<PlayerTwoMarker>>,
@@ -113,5 +115,8 @@ pub fn spawn_tech_trees(
                     .insert(TechTree::new());
             }
         }
+
+        // Transition to next AppState.
+        next_app_state.set(AppState::InGame);
     }
 }

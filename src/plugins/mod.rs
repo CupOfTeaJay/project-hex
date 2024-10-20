@@ -35,3 +35,5 @@ pub mod selection;
 pub mod start;
 pub mod states;
 pub mod ui;
+pub mod training;
+

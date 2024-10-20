@@ -18,22 +18,39 @@
 
 use bevy::prelude::*;
 
+/// The development of every product in Project Hex (units, research, etc.)
+/// revolves around this component. Every product has an `adjusted` cost
+/// (`principal * modifier`) that represents the number of turns needed to
+/// create said product. The cost is fulfilled when `spent == adjusted`.
 #[derive(Component, Debug)]
 pub struct Cost {
-    pub cumulative: u32,
+    pub adjusted: u32,
     pub modifier: f32,
     pub principal: u32,
     pub spent: u32,
 }
 
 impl Cost {
-    pub fn new(principal: &u32) -> Self {
+    /// Initializes a new `Cost` component.
+    pub fn new(modifier: &u32, principal: &u32) -> Self {
         Cost {
-            cumulative: 0,
-            modifier: 1.0,
+            adjusted: modifier*principal,
+            modifier: *modifier,
             principal: *principal,
             spent: 0,
         }
     }
 }
+
+/*
+ * Marker components.
+ */
+
+/// Marker component for costs actively being fulfilled.
+#[derive(Component)]
+pub struct ActiveCostMarker;
+
+/// Marker component for costs not actively being fulfilled.
+#[derive(Component)]
+pub struct PassiveCostMarker;
 

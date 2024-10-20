@@ -20,7 +20,7 @@ use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 use core::f32::consts::PI;
 
-use crate::common::bundles::constituents::Unit;
+use crate::plugins::training::bundles::Unit;
 use crate::common::components::labels::Label;
 use crate::common::components::movement::HexPos;
 use crate::common::resources::asset_handles::AssetHandles;
@@ -29,7 +29,7 @@ use crate::plugins::selection::systems::clear_selection_focus::clear_selection_f
 use crate::plugins::selection::systems::set_selection_focus::set_pilgrim_focus;
 
 /// Builds a new 'Unit' bundle given a 'label' that corresponds to a unit.
-pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> Unit {
+pub fn build_unit(assets: &Res<AssetHandles>, label: &Label, position: &HexPos) -> Unit {
     match label {
         &Label::Pilgrim => Unit::new(
             &SceneBundle {
@@ -49,3 +49,4 @@ pub fn unit_builder(assets: &Res<AssetHandles>, label: &Label, position: &HexPos
         }
     }
 }
+
